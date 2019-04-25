@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<launch>
+  <arg name="with_gripper"	   default="false" />
+  <arg name="use_present" default="true" />
+
+  <group if="$(arg with_gripper)">
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(find open_manipulator_pro_description)/urdf/open_manipulator_pro_with_gripper.xacro'" />
+  </group>
+  <group unless="$(arg with_gripper)">
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(find open_manipulator_pro_description)/urdf/open_manipulator_pro.xacro'" />
+  </group>
+
+  <!-- send joint values -->
+  <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher">
+    <param name="use_gui" value="FALSE"/>
+    <param name="rate" value="125"/>
+    <remap from="/joint_states" to="/robotis/open_manipulator_pro/joint_states" />
+    <rosparam param="source_list" if="$(arg use_present)">["robotis/present_joint_states"]</rosparam>
+    <rosparam param="source_list" unless="$(arg use_present)">["robotis/goal_joint_states"]</rosparam>
+  </node>
+
+  <!-- Combine joint values to TF-->
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" respawn="true" output="screen">
+    <remap from="/joint_states" to="/robotis/open_manipulator_pro/joint_states"/>
+  </node>
+
+  <!-- Show in Rviz -->
+  <group if="$(arg with_gripper)">
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find open_manipulator_pro_description)/launch/open_manipulator_pro_with_gripper.rviz"/>
+  </group>
+  <group unless="$(arg with_gripper)">
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find open_manipulator_pro_description)/launch/open_manipulator_pro.rviz"/>
+  </group>
+
+</launch>
