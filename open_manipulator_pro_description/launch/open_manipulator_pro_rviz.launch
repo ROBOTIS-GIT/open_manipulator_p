@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<launch>
+  <arg name="with_gripper"	   default="false" />
+
+  <group if="$(arg with_gripper)">
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(find open_manipulator_pro_description)/urdf/open_manipulator_pro_with_gripper.xacro'" />
+  </group>
+  <group unless="$(arg with_gripper)">
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(find open_manipulator_pro_description)/urdf/open_manipulator_pro.xacro'" />
+
+  <!-- send joint values -->
+  <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher">
+    <param name="use_gui" value="TRUE"/>
+    <!--<rosparam param="source_list">["robotis/real_joint_states"]</rosparam>-->
+  </node>
+
+  <!-- Combine joint values -->
+  <node pkg="robot_state_publisher" type="state_publisher" name="robot_state_publisher"/>
+
+  <!-- Show in Rviz -->
+  <group if="$(arg with_gripper)">
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find open_manipulator_pro_description)/launch/open_manipulator_pro_with_gripper.rviz"/>
+  </group>
+  <group unless="$(arg with_gripper)">
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find open_manipulator_pro_description)/launch/open_manipulator_pro.rviz"/>
+  </group>
+</launch>

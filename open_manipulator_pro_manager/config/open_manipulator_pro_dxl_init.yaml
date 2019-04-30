@@ -1,0 +1,60 @@
+joint1 :   # H54P-200-S500-R
+   return_delay_time     :  10
+   operating_mode        :  3
+   shutdown              :  58
+   homing_offset         :  0
+   max_position_limit    :  501923
+   min_position_limit    : -501923
+   position_p_gain       : 250
+   velocity_p_gain       : 5500
+
+joint2 :   # H54P-200-S500-R
+   return_delay_time     :  10
+   operating_mode        :  3
+   shutdown              :  58
+   homing_offset         :  0
+   max_position_limit    :  501923
+   min_position_limit    : -501923
+   position_p_gain       : 250
+   velocity_p_gain       : 5500
+
+joint3 :   # H54P-100-S500-R
+   return_delay_time     :  10 
+   operating_mode        :  3
+   shutdown              :  58
+   homing_offset         :  -125480  # 45 deg
+   max_position_limit    :  501923
+   min_position_limit    : -501923
+   position_p_gain       : 450
+   velocity_p_gain       : 3400
+
+joint4 :   # H54P-100-S500-R
+   return_delay_time     :  10 
+   operating_mode        :  3
+   shutdown              :  58
+   homing_offset         :  0
+   max_position_limit    :  501923
+   min_position_limit    : -501923
+   position_p_gain       : 450
+   velocity_p_gain       : 3400
+
+joint5  :   # H42P-020-S300-R
+   return_delay_time     : 10
+   operating_mode        : 3
+   shutdown              : 58
+   homing_offset         : 0
+   max_position_limit    : 303750
+   min_position_limit    : -303750
+   position_p_gain       : 800
+   velocity_p_gain       : 1332 
+
+joint6  :   # H42P-020-S300-R
+   return_delay_time     : 10
+   operating_mode        : 3
+   shutdown              : 58
+   homing_offset         : 0
+   max_position_limit    : 303750
+   min_position_limit    : -303750
+   position_p_gain       : 800 
+   velocity_p_gain       : 1332 
+
