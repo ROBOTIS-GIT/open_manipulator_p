@@ -1119,6 +1119,8 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
                                  * math::convertRPYToRotationMatrix(0,target_angle[1].position,0)
                                  * math::convertRPYToRotationMatrix(0,target_angle[2].position,0);
   position5 << orientation5(0,0), orientation5(1,0), orientation5(2,0);
+  // target_angle[4].position = acos(position5.dot(position_2));
+
   target_angle[4].position = acos(position5.dot(position_2));
 
   // Compute Joint 4, 6

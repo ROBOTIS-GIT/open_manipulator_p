@@ -148,9 +148,9 @@ bool OpenManipulatorTeleop::setTaskSpacePathFromPresentPositionOnly(std::vector<
 void OpenManipulatorTeleop::printText()
 {
   printf("\n");
-  printf("---------------------------\n");
-  printf("Control Your OpenManipulator!\n");
-  printf("---------------------------\n");
+  printf("---------------------------------\n");
+  printf("Control Your OpenManipulator-PRO!\n");
+  printf("---------------------------------\n");
   printf("w : increase x axis in task space\n");
   printf("s : decrease x axis in task space\n");
   printf("a : increase y axis in task space\n");
@@ -178,9 +178,8 @@ void OpenManipulatorTeleop::printText()
   printf("2 : home pose\n");
   printf("       \n");
   printf("q to quit\n");
-  printf("---------------------------\n");
-
-  printf("Present Joint Angle J1: %.3lf J2: %.3lf J3: %.3lf J4: %.3lf\n",
+  printf("-------------------------------------------------------------------------------\n");
+  printf("Present Joint Angle J1: %.3lf J2: %.3lf J3: %.3lf J4: %.3lf J5: %.3lf J6: %.3lf\n",
          getPresentJointAngle().at(0),
          getPresentJointAngle().at(1),
          getPresentJointAngle().at(2),
@@ -191,8 +190,7 @@ void OpenManipulatorTeleop::printText()
          getPresentKinematicsPose().at(0),
          getPresentKinematicsPose().at(1),
          getPresentKinematicsPose().at(2));
-  printf("---------------------------\n");
-
+  printf("-------------------------------------------------------------------------------\n");
 }
 
 void OpenManipulatorTeleop::setGoal(char ch)

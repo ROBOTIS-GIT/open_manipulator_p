@@ -1,5 +1,5 @@
 <launch>
-  <arg name="robot_name"             default="open_manipulator"/>
+  <arg name="robot_name"             default="open_manipulator_pro"/>
   <arg name="sample_duration"        default="0.010"/>
   <arg name="debug"                  default="false" />
 

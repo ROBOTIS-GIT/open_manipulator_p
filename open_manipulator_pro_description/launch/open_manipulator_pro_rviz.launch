@@ -1,5 +1,5 @@
 <launch>
-  <arg name="robot_name"     default="open_manipulator"/>
+  <arg name="robot_name"     default="open_manipulator_pro"/>
   <arg name="open_rviz"      default="true" />
   <arg name="use_gui"        default="false" />
   <arg name="with_gripper"	 default="false" />
@@ -14,7 +14,7 @@
   </group>
 
   <!-- Send joint values -->
-  <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher">
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
     <param name="/use_gui" value="$(arg use_gui)"/>
     <rosparam param="source_list" subst_value="true">["$(arg robot_name)/joint_states"]</rosparam>
   </node>

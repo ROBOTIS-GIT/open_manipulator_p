@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- Revolute-Revolute Manipulator -->
-<robot name="open_manipulator" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="open_manipulator_pro" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!-- some parameters -->
   <xacro:property name="pi" value="3.141592654" />
