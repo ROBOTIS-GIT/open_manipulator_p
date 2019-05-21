@@ -1,5 +1,6 @@
 # OpenMANIPULATOR-PRO
-![](http://emanual.robotis.com/assets/images/platform/manipulator/manipulator_product.gif)
+<img src="https://github.com/ROBOTIS-GIT/emanual/blob/master/assets/images/platform/openmanipulator_pro/logo.png">
+<img src="https://github.com/ROBOTIS-GIT/emanual/blob/master/assets/images/platform/openmanipulator_pro/product_img.resized.png">
 
 ## ROS Packages for OpenMANIPULATOR-PRO
 
