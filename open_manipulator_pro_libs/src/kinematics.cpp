@@ -1119,17 +1119,18 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
                                  * math::convertRPYToRotationMatrix(0,target_angle[1].position,0)
                                  * math::convertRPYToRotationMatrix(0,target_angle[2].position,0);
   position5 << orientation5(0,0), orientation5(1,0), orientation5(2,0);
-  // target_angle[4].position = acos(position5.dot(position_2));
-
-  target_angle[4].position = acos(position5.dot(position_2));
+  if (position5(2) > position_2(2)) target_angle[4].position = acos(position5.dot(position_2));
+  else target_angle[4].position = -acos(position5.dot(position_2));
 
   // Compute Joint 4, 6
   Eigen::MatrixXd orientation4 = Eigen::MatrixXd::Zero(3,3);
   orientation4 = orientation5.inverse() * orientation;
   target_angle[3].position = atan2(orientation4(1,0), -orientation4(2,0));
   target_angle[5].position = atan2(orientation4(0,1), orientation4(0,2));
-  if (fabs(target_angle[3].position) > 3.14) target_angle[3].position = math::sign(target_angle[3].position) * (fabs(target_angle[3].position)-3.14);
-  if (fabs(target_angle[5].position) > 3.14) target_angle[5].position = math::sign(target_angle[5].position) * (fabs(target_angle[5].position)-3.14);
+  if (target_angle[3].position > PI/2) target_angle[3].position = target_angle[3].position - PI;
+  else if (target_angle[3].position < -PI/2) target_angle[3].position = target_angle[3].position + PI;
+  if (target_angle[5].position > PI/2) target_angle[5].position = target_angle[5].position - PI;
+  else if (target_angle[5].position < -PI/2) target_angle[5].position = target_angle[5].position + PI;
  
   log::println("------------------------------------");
   log::println("End-effector Pose : ");
