@@ -170,9 +170,9 @@ void OpenManipulatorTeleop::printText()
   printf("k : decrease joint 5 angle\n");
   printf("o : increase joint 6 angle\n");
   printf("l : decrease joint 6 angle\n");
-  printf("\n");
-  printf("v : gripper open\n");
-  printf("b : gripper close\n");
+  // printf("\n");
+  // printf("v : gripper open\n");
+  // printf("b : gripper close\n");
   printf("       \n");
   printf("1 : init pose\n");
   printf("2 : home pose\n");
@@ -407,12 +407,12 @@ void OpenManipulatorTeleop::setGoal(char ch)
     std::vector<double> joint_angle;
     double path_time = 2.0;
 
-    joint_name.push_back("joint1"); joint_angle.push_back(0.1);
-    joint_name.push_back("joint2"); joint_angle.push_back(0.1);
-    joint_name.push_back("joint3"); joint_angle.push_back(0.1);
-    joint_name.push_back("joint4"); joint_angle.push_back(0.1);
-    joint_name.push_back("joint5"); joint_angle.push_back(0.1);
-    joint_name.push_back("joint6"); joint_angle.push_back(0.1);
+    joint_name.push_back("joint1"); joint_angle.push_back(0.0);
+    joint_name.push_back("joint2"); joint_angle.push_back(-PI/4);
+    joint_name.push_back("joint3"); joint_angle.push_back(PI/8);
+    joint_name.push_back("joint4"); joint_angle.push_back(0.0);
+    joint_name.push_back("joint5"); joint_angle.push_back(PI/8);
+    joint_name.push_back("joint6"); joint_angle.push_back(0.0);
     setJointSpacePath(joint_name, joint_angle, path_time);
   }
   else if(ch == '1')

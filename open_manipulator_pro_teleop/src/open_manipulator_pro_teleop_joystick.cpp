@@ -210,12 +210,12 @@ void OpenManipulatorTeleop::setGoal(const char* str)
     std::vector<double> joint_angle;
     double path_time = 2.0;
 
-    joint_name.push_back("joint1"); joint_angle.push_back(0.1);
-    joint_name.push_back("joint2"); joint_angle.push_back(0.1);
-    joint_name.push_back("joint3"); joint_angle.push_back(0.1);
-    joint_name.push_back("joint4"); joint_angle.push_back(0.1);
-    joint_name.push_back("joint5"); joint_angle.push_back(0.1);
-    joint_name.push_back("joint6"); joint_angle.push_back(0.1);
+    joint_name.push_back("joint1"); joint_angle.push_back(0.0);
+    joint_name.push_back("joint2"); joint_angle.push_back(-PI/4);
+    joint_name.push_back("joint3"); joint_angle.push_back(PI/8);
+    joint_name.push_back("joint4"); joint_angle.push_back(0.0);
+    joint_name.push_back("joint5"); joint_angle.push_back(PI/8);
+    joint_name.push_back("joint6"); joint_angle.push_back(0.0);
     setJointSpacePath(joint_name, joint_angle, path_time);
   }
   else if(str == "init")

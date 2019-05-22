@@ -27,6 +27,7 @@
 #include "open_manipulator_pro_msgs/SetJointPosition.h"
 #include "open_manipulator_pro_msgs/SetKinematicsPose.h"
 
+#define PI 3.141592
 #define NUM_OF_JOINT 6
 #define DELTA 0.01
 #define JOINT_DELTA 0.05
