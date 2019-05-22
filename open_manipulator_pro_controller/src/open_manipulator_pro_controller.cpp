@@ -210,7 +210,7 @@ void OpenManipulatorController::initServer()
 
 void OpenManipulatorController::openManipulatorOptionCallback(const std_msgs::String::ConstPtr &msg)
 {
-  if(msg->data == "print_open_manipulator_setting")
+  if(msg->data == "print_open_manipulator_pro_setting")
     open_manipulator_.printManipulatorSetting();
 }
 
