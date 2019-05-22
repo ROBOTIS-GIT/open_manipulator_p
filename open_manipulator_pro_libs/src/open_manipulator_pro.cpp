@@ -43,7 +43,7 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
              math::vector3(0.0, 0.0, 0.126),                  // relative position
              math::convertRPYToRotationMatrix(0.0, 0.0, 0.0), // relative orientation
              Z_AXIS,    // axis of rotation
-             11,        // actuator id
+             1,        // actuator id
              M_PI,      // max joint limit (3.14 rad)
              -M_PI,     // min joint limit (-3.14 rad)
              1.0,       // coefficient
@@ -60,7 +60,7 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
              math::vector3(0.0, 0.0, 0.033),                  // relative position
              math::convertRPYToRotationMatrix(0.0, 0.0, 0.0), // relative orientation
              Y_AXIS,    // axis of rotation
-             12,        // actuator id
+             2,        // actuator id
              M_PI,      // max joint limit (3.14 rad)
              -M_PI,     // min joint limit (-3.14 rad)
              1.0,       // coefficient
@@ -77,7 +77,7 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
              math::vector3(0.030, 0.0, 0.264),                // relative position
              math::convertRPYToRotationMatrix(0.0, 0.0, 0.0), // relative orientation
              Y_AXIS,    // axis of rotation
-             13,        // actuator id
+             3,        // actuator id
              M_PI,      // max joint limit (3.14 rad)
              -M_PI,     // min joint limit (-3.14 rad)
              1.0,       // coefficient
@@ -94,7 +94,7 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
              math::vector3(0.195, 0.0, 0.030),                 // relative position
              math::convertRPYToRotationMatrix(0.0, 0.0, 0.0), // relative orientation
              X_AXIS,    // axis of rotation
-             14,        // actuator id
+             4,        // actuator id
              M_PI,      // max joint limit (3.14 rad)
              -M_PI,     // min joint limit (-3.14 rad)
              1.0,       // coefficient
@@ -111,7 +111,7 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
              math::vector3(0.063, 0.0, 0.0),                  // relative position
              math::convertRPYToRotationMatrix(0.0, 0.0, 0.0), // relative orientation
              Y_AXIS,    // axis of rotation
-             15,        // actuator id
+             5,        // actuator id
              M_PI,      // max joint limit (3.14 rad)
              -M_PI,     // min joint limit (-3.14 rad)
              1.0,       // coefficient
@@ -128,7 +128,7 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
              math::vector3(0.123, 0.0, 0.0),                  // relative position
              math::convertRPYToRotationMatrix(0.0, 0.0, 0.0), // relative orientation
              X_AXIS,    // axis of rotation
-             16,        // actuator id
+             6,        // actuator id
              M_PI,      // max joint limit (3.14 rad)
              -M_PI,     // min joint limit (-3.14 rad)
              1.0,       // coefficient
@@ -169,8 +169,8 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
     /*****************************************************************************
     ** Initialize Joint Actuator
     *****************************************************************************/
-    // actuator_ = new dynamixel::JointDynamixel();
-    actuator_ = new dynamixel::JointDynamixelProfileControl(control_loop_time);
+    actuator_ = new dynamixel::JointDynamixel();
+    // actuator_ = new dynamixel::JointDynamixelProfileControl(control_loop_time);
     
     // Set communication arguments
     STRING dxl_comm_arg[2] = {usb_port, baud_rate};
@@ -178,12 +178,12 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
 
     // Set joint actuator id
     std::vector<uint8_t> jointDxlId;
-    jointDxlId.push_back(11);
-    jointDxlId.push_back(12);
-    jointDxlId.push_back(13);
-    jointDxlId.push_back(14);
-    jointDxlId.push_back(15);
-    jointDxlId.push_back(16);
+    jointDxlId.push_back(1);
+    jointDxlId.push_back(2);
+    jointDxlId.push_back(3);
+    jointDxlId.push_back(4);
+    jointDxlId.push_back(5);
+    jointDxlId.push_back(6);
     addJointActuator(JOINT_DYNAMIXEL, actuator_, jointDxlId, p_dxl_comm_arg);
 
     // Set joint actuator control mode
