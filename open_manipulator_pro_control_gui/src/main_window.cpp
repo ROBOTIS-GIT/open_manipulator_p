@@ -114,8 +114,8 @@ void MainWindow::on_btn_timer_start_clicked(void)
   ui.btn_timer_start->setEnabled(false);
   ui.btn_actuator_disable->setEnabled(true);
   ui.btn_actuator_enable->setEnabled(true);
-  ui.btn_gripper_close->setEnabled(true);
-  ui.btn_gripper_open->setEnabled(true);
+  // ui.btn_gripper_close->setEnabled(true);
+  // ui.btn_gripper_open->setEnabled(true);
   ui.btn_home_pose->setEnabled(true);
   ui.btn_init_pose->setEnabled(true);
   ui.btn_read_joint_angle->setEnabled(true);
