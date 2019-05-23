@@ -1132,15 +1132,15 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
   if (target_angle[5].position > PI/2) target_angle[5].position = target_angle[5].position - PI;
   else if (target_angle[5].position < -PI/2) target_angle[5].position = target_angle[5].position + PI;
  
-  log::println("------------------------------------");
-  log::println("End-effector Pose : ");
-  log::println("position1: ", target_angle[0].position);
-  log::println("position2: ", target_angle[1].position);
-  log::println("position3: ", target_angle[2].position);
-  log::println("position5: ", target_angle[4].position);
-  log::println("position4: ", target_angle[3].position);
-  log::println("position6: ", target_angle[5].position);
-  log::println("------------------------------------");
+  // log::println("------------------------------------");
+  // log::println("End-effector Pose : ");
+  // log::println("position1: ", target_angle[0].position);
+  // log::println("position2: ", target_angle[1].position);
+  // log::println("position3: ", target_angle[2].position);
+  // log::println("position5: ", target_angle[4].position);
+  // log::println("position4: ", target_angle[3].position);
+  // log::println("position6: ", target_angle[5].position);
+  // log::println("------------------------------------");
 
   target_angle_vector.push_back(target_angle[0]);
   target_angle_vector.push_back(target_angle[1]);
@@ -1153,36 +1153,3 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
 
   return true;
 }
-
-
-  // log::println("------------------------------------");
-  // log::println("End-effector Pose : ");
-  // log::print_vector(position);
-  // log::print_matrix(orientation);
-  // Eigen::Vector3d cc = Eigen::VectorXd::Zero(3);
-  // cc = math::convertRotationMatrixToRPYVector(orientation);
-  // log::print_vector(cc);
-  // log::println("position1: ", target_angle[0].position);
-  // log::println("position3: ", target_angle[2].position);
-
-  // log::println("------------------------------------");
-  // log::println("End-effector Pose : ");
-  // log::print_vector(position_2);
-  // log::print_vector(position3_3);
-  // log::print_vector(position3_4);
-  // log::println("x: ",position2(0));
-  // log::println("z: ",position2(2));
-  // log::println("beta1: ", alpha1);
-  // log::println("beta1: ", beta1);
-  // log::println("beta1: ", beta2);
-  // log::println("position1: ", target_angle[0].position);
-  // log::println("position2: ", (PI/2-alpha1) - beta1 - beta2);
-  // log::println("position2: ", target_angle[1].position);
-  // log::println("position3: ", target_angle[2].position);
-
-  // target_angle[0].position = 0.0;
-  // target_angle[1].position = 0.0;
-  // target_angle[2].position = 0.0;
-  // target_angle[3].position = 0.0;
-  // target_angle[4].position = 0.0;
-  // target_angle[5].position = 0.0;
