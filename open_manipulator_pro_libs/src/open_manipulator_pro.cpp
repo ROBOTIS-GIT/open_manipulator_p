@@ -155,13 +155,12 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
                                 1.7605306e-05),                                   // inertial tensor
             math::vector3(0.028 + 8.3720668e-03, 0.0246, -4.2836895e-07)          // COM
             );
-          
+  
   /*****************************************************************************
   ** Initialize Kinematics 
   *****************************************************************************/
   kinematics_ = new kinematics::SolverUsingCRAndGeometry();
-  // kinematics_ = new kinematics::SolverCustomizedforOMChain();
-  // kinematics_ = new kinematics::SolverUsingCRAndSRPositionOnlyJacobian();
+
   addKinematics(kinematics_);
 
   if(using_actual_robot_state)

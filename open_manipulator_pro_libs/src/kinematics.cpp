@@ -1067,7 +1067,6 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
   std::vector<JointValue> target_angle_vector;
 
   // Solve forward kinematics and get the position and orientation of the end-effector
-  // solveForwardKinematics(&_manipulator);
 
   // Compute Joint 1
   Eigen::VectorXd position = Eigen::VectorXd::Zero(3);
