@@ -19,7 +19,7 @@
   <depend>std_msgs</depend>
   <depend>sensor_msgs</depend>
   <depend>robotis_manipulator</depend>
-  <depend>open_manipulator_pro_msgs</depend>
+  <depend>open_manipulator_msgs</depend>
   <depend>qtbase5-dev</depend>
   <depend>qt5-qmake</depend>
   <depend>libqt5-core</depend>

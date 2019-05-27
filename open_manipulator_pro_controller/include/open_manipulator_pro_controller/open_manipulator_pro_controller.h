@@ -42,13 +42,13 @@
 #include <trajectory_msgs/JointTrajectory.h>
 #include <trajectory_msgs/JointTrajectoryPoint.h>
 
-#include "open_manipulator_pro_msgs/SetJointPosition.h"
-#include "open_manipulator_pro_msgs/SetKinematicsPose.h"
-#include "open_manipulator_pro_msgs/SetDrawingTrajectory.h"
-#include "open_manipulator_pro_msgs/SetActuatorState.h"
-#include "open_manipulator_pro_msgs/GetJointPosition.h"
-#include "open_manipulator_pro_msgs/GetKinematicsPose.h"
-#include "open_manipulator_pro_msgs/OpenManipulatorState.h"
+#include "open_manipulator_msgs/SetJointPosition.h"
+#include "open_manipulator_msgs/SetKinematicsPose.h"
+#include "open_manipulator_msgs/SetDrawingTrajectory.h"
+#include "open_manipulator_msgs/SetActuatorState.h"
+#include "open_manipulator_msgs/GetJointPosition.h"
+#include "open_manipulator_msgs/GetKinematicsPose.h"
+#include "open_manipulator_msgs/OpenManipulatorState.h"
 
 #include "open_manipulator_pro_libs/open_manipulator_pro.h"
 
@@ -137,59 +137,59 @@ class OpenManipulatorController
 
   double getControlPeriod(void){return control_period_;}
 
-  bool goalJointSpacePathCallback(open_manipulator_pro_msgs::SetJointPosition::Request  &req,
-                                  open_manipulator_pro_msgs::SetJointPosition::Response &res);
+  bool goalJointSpacePathCallback(open_manipulator_msgs::SetJointPosition::Request  &req,
+                                  open_manipulator_msgs::SetJointPosition::Response &res);
 
-  bool goalJointSpacePathToKinematicsPoseCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request  &req,
-                                                  open_manipulator_pro_msgs::SetKinematicsPose::Response &res);
+  bool goalJointSpacePathToKinematicsPoseCallback(open_manipulator_msgs::SetKinematicsPose::Request  &req,
+                                                  open_manipulator_msgs::SetKinematicsPose::Response &res);
 
-  bool goalJointSpacePathToKinematicsPositionCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request  &req,
-                                                  open_manipulator_pro_msgs::SetKinematicsPose::Response &res);
+  bool goalJointSpacePathToKinematicsPositionCallback(open_manipulator_msgs::SetKinematicsPose::Request  &req,
+                                                  open_manipulator_msgs::SetKinematicsPose::Response &res);
 
-  bool goalJointSpacePathToKinematicsOrientationCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request  &req,
-                                                  open_manipulator_pro_msgs::SetKinematicsPose::Response &res);
+  bool goalJointSpacePathToKinematicsOrientationCallback(open_manipulator_msgs::SetKinematicsPose::Request  &req,
+                                                  open_manipulator_msgs::SetKinematicsPose::Response &res);
 
-  bool goalTaskSpacePathCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request  &req,
-                                 open_manipulator_pro_msgs::SetKinematicsPose::Response &res);
+  bool goalTaskSpacePathCallback(open_manipulator_msgs::SetKinematicsPose::Request  &req,
+                                 open_manipulator_msgs::SetKinematicsPose::Response &res);
 
-  bool goalTaskSpacePathPositionOnlyCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request  &req,
-                                             open_manipulator_pro_msgs::SetKinematicsPose::Response &res);
+  bool goalTaskSpacePathPositionOnlyCallback(open_manipulator_msgs::SetKinematicsPose::Request  &req,
+                                             open_manipulator_msgs::SetKinematicsPose::Response &res);
 
-  bool goalTaskSpacePathOrientationOnlyCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request  &req,
-                                                open_manipulator_pro_msgs::SetKinematicsPose::Response &res);
+  bool goalTaskSpacePathOrientationOnlyCallback(open_manipulator_msgs::SetKinematicsPose::Request  &req,
+                                                open_manipulator_msgs::SetKinematicsPose::Response &res);
 
-  bool goalJointSpacePathFromPresentCallback(open_manipulator_pro_msgs::SetJointPosition::Request  &req,
-                                             open_manipulator_pro_msgs::SetJointPosition::Response &res);
+  bool goalJointSpacePathFromPresentCallback(open_manipulator_msgs::SetJointPosition::Request  &req,
+                                             open_manipulator_msgs::SetJointPosition::Response &res);
 
-  bool goalTaskSpacePathFromPresentCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request  &req,
-                                            open_manipulator_pro_msgs::SetKinematicsPose::Response &res);
+  bool goalTaskSpacePathFromPresentCallback(open_manipulator_msgs::SetKinematicsPose::Request  &req,
+                                            open_manipulator_msgs::SetKinematicsPose::Response &res);
 
-  bool goalTaskSpacePathFromPresentPositionOnlyCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request  &req,
-                                                        open_manipulator_pro_msgs::SetKinematicsPose::Response &res);
+  bool goalTaskSpacePathFromPresentPositionOnlyCallback(open_manipulator_msgs::SetKinematicsPose::Request  &req,
+                                                        open_manipulator_msgs::SetKinematicsPose::Response &res);
 
-  bool goalTaskSpacePathFromPresentOrientationOnlyCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request  &req,
-                                                           open_manipulator_pro_msgs::SetKinematicsPose::Response &res);
+  bool goalTaskSpacePathFromPresentOrientationOnlyCallback(open_manipulator_msgs::SetKinematicsPose::Request  &req,
+                                                           open_manipulator_msgs::SetKinematicsPose::Response &res);
 
-  bool goalToolControlCallback(open_manipulator_pro_msgs::SetJointPosition::Request  &req,
-                               open_manipulator_pro_msgs::SetJointPosition::Response &res);
+  bool goalToolControlCallback(open_manipulator_msgs::SetJointPosition::Request  &req,
+                               open_manipulator_msgs::SetJointPosition::Response &res);
 
-  bool setActuatorStateCallback(open_manipulator_pro_msgs::SetActuatorState::Request  &req,
-                                open_manipulator_pro_msgs::SetActuatorState::Response &res);
+  bool setActuatorStateCallback(open_manipulator_msgs::SetActuatorState::Request  &req,
+                                open_manipulator_msgs::SetActuatorState::Response &res);
 
-  bool goalDrawingTrajectoryCallback(open_manipulator_pro_msgs::SetDrawingTrajectory::Request  &req,
-                                     open_manipulator_pro_msgs::SetDrawingTrajectory::Response &res);
+  bool goalDrawingTrajectoryCallback(open_manipulator_msgs::SetDrawingTrajectory::Request  &req,
+                                     open_manipulator_msgs::SetDrawingTrajectory::Response &res);
 
-  bool setJointPositionMsgCallback(open_manipulator_pro_msgs::SetJointPosition::Request &req,
-                                   open_manipulator_pro_msgs::SetJointPosition::Response &res);
+  bool setJointPositionMsgCallback(open_manipulator_msgs::SetJointPosition::Request &req,
+                                   open_manipulator_msgs::SetJointPosition::Response &res);
 
-  bool setKinematicsPoseMsgCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request &req,
-                                    open_manipulator_pro_msgs::SetKinematicsPose::Response &res);
+  bool setKinematicsPoseMsgCallback(open_manipulator_msgs::SetKinematicsPose::Request &req,
+                                    open_manipulator_msgs::SetKinematicsPose::Response &res);
 
-  bool getJointPositionMsgCallback(open_manipulator_pro_msgs::GetJointPosition::Request &req,
-                                   open_manipulator_pro_msgs::GetJointPosition::Response &res);
+  bool getJointPositionMsgCallback(open_manipulator_msgs::GetJointPosition::Request &req,
+                                   open_manipulator_msgs::GetJointPosition::Response &res);
 
-  bool getKinematicsPoseMsgCallback(open_manipulator_pro_msgs::GetKinematicsPose::Request &req,
-                                    open_manipulator_pro_msgs::GetKinematicsPose::Response &res);
+  bool getKinematicsPoseMsgCallback(open_manipulator_msgs::GetKinematicsPose::Request &req,
+                                    open_manipulator_msgs::GetKinematicsPose::Response &res);
 
   void startTimerThread();
   static void *timerThread(void *param);
@@ -202,8 +202,8 @@ class OpenManipulatorController
   void publishJointStates();
   void publishGazeboCommand();
 
-  bool calcPlannedPath(const std::string planning_group, open_manipulator_pro_msgs::JointPosition msg);
-  bool calcPlannedPath(const std::string planning_group, open_manipulator_pro_msgs::KinematicsPose msg);
+  bool calcPlannedPath(const std::string planning_group, open_manipulator_msgs::JointPosition msg);
+  bool calcPlannedPath(const std::string planning_group, open_manipulator_msgs::KinematicsPose msg);
 
 };
 }

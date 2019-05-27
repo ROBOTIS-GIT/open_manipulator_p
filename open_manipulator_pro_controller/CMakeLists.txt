@@ -16,7 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
     geometry_msgs
     moveit_msgs
     trajectory_msgs
-    open_manipulator_pro_msgs
+    open_manipulator_msgs
     robotis_manipulator
     open_manipulator_pro_libs
     moveit_core
@@ -43,7 +43,7 @@ find_package(Boost REQUIRED)
 ################################################################################
 catkin_package(
   INCLUDE_DIRS include
-  CATKIN_DEPENDS roscpp std_msgs sensor_msgs geometry_msgs moveit_msgs trajectory_msgs open_manipulator_pro_msgs robotis_manipulator open_manipulator_pro_libs moveit_core moveit_ros_planning  moveit_ros_planning_interface cmake_modules
+  CATKIN_DEPENDS roscpp std_msgs sensor_msgs geometry_msgs moveit_msgs trajectory_msgs open_manipulator_msgs robotis_manipulator open_manipulator_pro_libs moveit_core moveit_ros_planning  moveit_ros_planning_interface cmake_modules
   DEPENDS Boost
 )
 

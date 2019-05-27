@@ -41,9 +41,9 @@ OpenManipulatorTeleop::~OpenManipulatorTeleop()
 
 void OpenManipulatorTeleop::initClient()
 {
-  goal_task_space_path_from_present_position_only_client_ = node_handle_.serviceClient<open_manipulator_pro_msgs::SetKinematicsPose>("goal_task_space_path_from_present_position_only");
-  goal_joint_space_path_client_ = node_handle_.serviceClient<open_manipulator_pro_msgs::SetJointPosition>("goal_joint_space_path");
-  goal_tool_control_client_ = node_handle_.serviceClient<open_manipulator_pro_msgs::SetJointPosition>("goal_tool_control");
+  goal_task_space_path_from_present_position_only_client_ = node_handle_.serviceClient<open_manipulator_msgs::SetKinematicsPose>("goal_task_space_path_from_present_position_only");
+  goal_joint_space_path_client_ = node_handle_.serviceClient<open_manipulator_msgs::SetJointPosition>("goal_joint_space_path");
+  goal_tool_control_client_ = node_handle_.serviceClient<open_manipulator_msgs::SetJointPosition>("goal_tool_control");
 
 }
 void OpenManipulatorTeleop::initSubscriber()
@@ -70,7 +70,7 @@ void OpenManipulatorTeleop::jointStatesCallback(const sensor_msgs::JointState::C
 
 }
 
-void OpenManipulatorTeleop::kinematicsPoseCallback(const open_manipulator_pro_msgs::KinematicsPose::ConstPtr &msg)
+void OpenManipulatorTeleop::kinematicsPoseCallback(const open_manipulator_msgs::KinematicsPose::ConstPtr &msg)
 {
   std::vector<double> temp_position;
   temp_position.push_back(msg->pose.position.x);
@@ -104,7 +104,7 @@ std::vector<double> OpenManipulatorTeleop::getPresentKinematicsPose()
 
 bool OpenManipulatorTeleop::setJointSpacePath(std::vector<std::string> joint_name, std::vector<double> joint_angle, double path_time)
 {
-  open_manipulator_pro_msgs::SetJointPosition srv;
+  open_manipulator_msgs::SetJointPosition srv;
   srv.request.joint_position.joint_name = joint_name;
   srv.request.joint_position.position = joint_angle;
   srv.request.path_time = path_time;
@@ -118,7 +118,7 @@ bool OpenManipulatorTeleop::setJointSpacePath(std::vector<std::string> joint_nam
 
 bool OpenManipulatorTeleop::setToolControl(std::vector<double> joint_angle)
 {
-  open_manipulator_pro_msgs::SetJointPosition srv;
+  open_manipulator_msgs::SetJointPosition srv;
   srv.request.joint_position.joint_name.push_back(priv_node_handle_.param<std::string>("end_effector_name", "gripper"));
   srv.request.joint_position.position = joint_angle;
 
@@ -131,7 +131,7 @@ bool OpenManipulatorTeleop::setToolControl(std::vector<double> joint_angle)
 
 bool OpenManipulatorTeleop::setTaskSpacePathFromPresentPositionOnly(std::vector<double> kinematics_pose, double path_time)
 {
-  open_manipulator_pro_msgs::SetKinematicsPose srv;
+  open_manipulator_msgs::SetKinematicsPose srv;
   srv.request.planning_group = priv_node_handle_.param<std::string>("end_effector_name", "gripper");
   srv.request.kinematics_pose.pose.position.x = kinematics_pose.at(0);
   srv.request.kinematics_pose.pose.position.y = kinematics_pose.at(1);
