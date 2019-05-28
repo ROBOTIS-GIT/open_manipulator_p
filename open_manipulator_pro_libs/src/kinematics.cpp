@@ -1066,8 +1066,6 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
   JointValue target_angle[6];
   std::vector<JointValue> target_angle_vector;
 
-  // Solve forward kinematics and get the position and orientation of the end-effector
-
   // Compute Joint 1
   Eigen::VectorXd position = Eigen::VectorXd::Zero(3);
   Eigen::MatrixXd orientation = Eigen::MatrixXd::Zero(3,3);
@@ -1093,8 +1091,6 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
   position3_4 = position_3 - position3_3;
   double l1 = sqrt(0.264*0.264 + 0.030*0.030);
   double l2 = sqrt(0.030*0.030 + 0.258*0.258);
-  // double temp = (l2*l2 - l1*l1 + position3_4.norm()*position3_4.norm()) / (2*position3_4.norm());
-  // double phi = asin(temp/l2) + asin((position3_4.norm()-temp) / l1);
   double phi = acos((l1*l1 + l2*l2 - position3_4.norm()*position3_4.norm()) / (2*l1*l2));
   double alpha1 = atan2(0.030, 0.264);
   double alpha2 = atan2(0.258, 0.030);
@@ -1106,8 +1102,6 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
   Eigen::MatrixXd orientation2 = math::convertRPYToRotationMatrix(0,0,target_angle[0].position);
   position2 = orientation2.inverse() * position3_4;
   double beta1 = atan2(position2(2), position2(0));
-  // double temp = (l1*l1+l2*l2-position.norm()*position.norm()) / (2*l2);
-  // double beta2 = asin(temp/l1) + asin((l2-temp) / position.norm());
   double beta2 = acos((l1*l1 + position3_4.norm()*position3_4.norm() - l2*l2) / (2*l1*position3_4.norm()));
   if (position_3(0) > 0) target_angle[1].position = (PI/2-alpha1) - fabs(beta1) - beta2;
   else target_angle[1].position = (PI/2-alpha1) + fabs(beta1) - beta2;
