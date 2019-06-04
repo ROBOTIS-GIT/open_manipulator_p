@@ -1,4 +1,4 @@
-open_manipulator:
+open_manipulator_pro:
 # MoveIt-specific simulation settings
   moveit_sim_hw_interface:
     joint_model_group: controllers_initial_group_
@@ -23,14 +23,44 @@ open_manipulator:
     type: joint_state_controller/JointStateController
     publish_rate: 50
   controller_list:
-    - name: arm_controller
-      action_ns: follow_joint_trajectory
-      default: True
-      type: FollowJointTrajectory
-      joints:
-        - joint1
-        - joint2
-        - joint3
-        - joint4
-        - joint5
-        - joint6
+    []
+  arm_controller:
+    type: position_controllers/JointPositionController
+    joints:
+      - joint1
+      - joint2
+      - joint3
+      - joint4
+      - joint5
+      - joint6
+    gains:
+      joint1:
+        p: 100
+        d: 1
+        i: 1
+        i_clamp: 1
+      joint2:
+        p: 100
+        d: 1
+        i: 1
+        i_clamp: 1
+      joint3:
+        p: 100
+        d: 1
+        i: 1
+        i_clamp: 1
+      joint4:
+        p: 100
+        d: 1
+        i: 1
+        i_clamp: 1
+      joint5:
+        p: 100
+        d: 1
+        i: 1
+        i_clamp: 1
+      joint6:
+        p: 100
+        d: 1
+        i: 1
+        i_clamp: 1
