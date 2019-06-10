@@ -20,7 +20,7 @@
 
 using namespace dynamixel;
 using namespace robotis_manipulator;
-
+ 
 /*****************************************************************************
 ** Joint Dynamixel Control Functions
 *****************************************************************************/
