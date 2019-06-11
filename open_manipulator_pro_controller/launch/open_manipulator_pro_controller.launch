@@ -7,6 +7,7 @@
   <arg name="control_period"         default="0.010"/>
 
   <arg name="use_platform"           default="true"/>
+  <arg name="with_gripper"           default="false"/>
 
   <arg name="use_moveit"             default="false"/>
   <arg name="planning_group_name"    default="arm"/>
@@ -21,6 +22,7 @@
 
   <node name="$(arg use_robot_name)" pkg="open_manipulator_pro_controller" type="open_manipulator_pro_controller" output="screen" args="$(arg dynamixel_usb_port) $(arg dynamixel_baud_rate)">
       <param name="using_platform"       value="$(arg use_platform)"/>
+      <param name="with_gripper"         value="$(arg with_gripper)"/>
       <param name="using_moveit"         value="$(arg use_moveit)"/>
       <param name="planning_group_name"  value="$(arg planning_group_name)"/>
       <param name="control_period"       value="$(arg control_period)"/>
