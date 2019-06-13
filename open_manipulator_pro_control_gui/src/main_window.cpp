@@ -29,7 +29,7 @@
 ** Namespaces
 *****************************************************************************/
 
-namespace open_manipulator_control_gui {
+namespace open_manipulator_pro_control_gui {
 
 using namespace Qt;
 
@@ -47,7 +47,6 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
   QObject::connect(&qnode, SIGNAL(rosShutdown()), this, SLOT(close()));
 
   qnode.init();
-
 }
 
 MainWindow::~MainWindow() {}
@@ -114,8 +113,6 @@ void MainWindow::on_btn_timer_start_clicked(void)
   ui.btn_timer_start->setEnabled(false);
   ui.btn_actuator_disable->setEnabled(true);
   ui.btn_actuator_enable->setEnabled(true);
-  // ui.btn_gripper_close->setEnabled(true);
-  // ui.btn_gripper_open->setEnabled(true);
   ui.btn_home_pose->setEnabled(true);
   ui.btn_init_pose->setEnabled(true);
   ui.btn_read_joint_angle->setEnabled(true);
@@ -123,7 +120,13 @@ void MainWindow::on_btn_timer_start_clicked(void)
   ui.btn_send_joint_angle->setEnabled(true);
   ui.btn_send_kinematic_pose->setEnabled(true);
   ui.btn_send_drawing_trajectory->setEnabled(true);
-  ui.btn_set_gripper->setEnabled(true);
+
+  if (qnode.getWithGripperState())
+  {
+    ui.btn_gripper_close->setEnabled(true);
+    ui.btn_gripper_open->setEnabled(true);
+    ui.btn_set_gripper->setEnabled(true);
+  } 
 }
 
 void MainWindow::on_btn_actuator_enable_clicked(void)
@@ -193,7 +196,7 @@ void MainWindow::on_btn_home_pose_clicked(void)
 void MainWindow::on_btn_gripper_open_clicked(void)
 {
   std::vector<double> joint_angle;
-  joint_angle.push_back(0.01);
+  joint_angle.push_back(0.0);
 
   if(!qnode.setToolControl(joint_angle))
   {
@@ -207,7 +210,7 @@ void MainWindow::on_btn_gripper_open_clicked(void)
 void MainWindow::on_btn_gripper_close_clicked(void)
 {
   std::vector<double> joint_angle;
-  joint_angle.push_back(-0.01);
+  joint_angle.push_back(PI*4.0/18.0);
   if(!qnode.setToolControl(joint_angle))
   {
     writeLog("[ERR!!] Failed to send service");
@@ -380,5 +383,5 @@ void MainWindow::on_btn_send_drawing_trajectory_clicked(void)
   writeLog("Send drawing trajectory");
 }
 
-}  // namespace open_manipulator_control_gui
+}  // namespace open_manipulator_pro_control_gui
 

@@ -31,18 +31,19 @@
 ** Namespaces
 *****************************************************************************/
 
-namespace open_manipulator_control_gui {
+namespace open_manipulator_pro_control_gui {
 
 /*****************************************************************************
 ** Implementation
 *****************************************************************************/
 
-QNode::QNode(int argc, char** argv ) :
-	init_argc(argc),
-  init_argv(argv),
-  open_manipulator_actuator_enabled_(false),
-  open_manipulator_is_moving_(false)
-	{}
+QNode::QNode(int argc, char** argv ) 
+    :init_argc(argc),
+     init_argv(argv),
+     open_manipulator_actuator_enabled_(false),
+     open_manipulator_is_moving_(false),
+     with_gripper_(false)
+{}
 
 QNode::~QNode() {
     if(ros::isStarted()) {
@@ -53,12 +54,13 @@ QNode::~QNode() {
 }
 
 bool QNode::init() {
-	ros::init(init_argc,init_argv,"open_manipulator_control_gui");
+	ros::init(init_argc,init_argv,"open_manipulator_pro_control_gui");
 	if ( ! ros::master::check() ) {
 		return false;
 	}
 	ros::start(); // explicitly needed since our nodehandle is going out of scope.
   ros::NodeHandle n("");
+  ros::NodeHandle priv_n("~");
 
   // msg publisher
   open_manipulator_option_pub_ = n.advertise<std_msgs::String>("option", 10);
@@ -73,6 +75,9 @@ bool QNode::init() {
   goal_tool_control_client_ = n.serviceClient<open_manipulator_msgs::SetJointPosition>("goal_tool_control");
   set_actuator_state_client_ = n.serviceClient<open_manipulator_msgs::SetActuatorState>("set_actuator_state");
   goal_drawing_trajectory_client_ = n.serviceClient<open_manipulator_msgs::SetDrawingTrajectory>("goal_drawing_trajectory");
+
+  // ROS params
+  with_gripper_ = priv_n.param<bool>("with_gripper", false);
 
   start();
 	return true;
@@ -157,6 +162,10 @@ bool QNode::getOpenManipulatorMovingState()
 bool QNode::getOpenManipulatorActuatorState()
 {
   return open_manipulator_actuator_enabled_;
+}
+bool QNode::getWithGripperState()
+{
+  return with_gripper_;
 }
 
 void QNode::setOption(std::string opt)
@@ -246,4 +255,4 @@ bool QNode::setActuatorState(bool actuator_state)
 }
 
 
-}  // namespace open_manipulator_control_gui
+}  // namespace open_manipulator_pro_control_gui
