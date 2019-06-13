@@ -20,8 +20,10 @@
 
 OpenManipulatorTeleop::OpenManipulatorTeleop()
     :node_handle_(""),
-     priv_node_handle_("~")
+     priv_node_handle_("~"),
+     with_gripper_(false)
 {
+  with_gripper_ = priv_node_handle_.param<bool>("with_gripper", false);
   present_joint_angle_.resize(NUM_OF_JOINT);
   present_kinematic_position_.resize(3);
 
@@ -89,8 +91,11 @@ void OpenManipulatorTeleop::joyCallback(const sensor_msgs::Joy::ConstPtr &msg)
   else if (msg->buttons.at(5) == 1) setGoal("home");
   else if (msg->buttons.at(4) == 1) setGoal("init");
 
-  if (msg->buttons.at(2) == 1) setGoal("gripper close");
-  else if (msg->buttons.at(1) == 1) setGoal("gripper open");
+  if (with_gripper_)
+  {
+    if (msg->buttons.at(2) == 1) setGoal("gripper close");
+    else if (msg->buttons.at(1) == 1) setGoal("gripper open");
+  }
 }
 
 std::vector<double> OpenManipulatorTeleop::getPresentJointAngle()
@@ -192,14 +197,14 @@ void OpenManipulatorTeleop::setGoal(const char* str)
     printf("open gripper\n");
     std::vector<double> joint_angle;
 
-    joint_angle.push_back(0.01);
+    joint_angle.push_back(0.0);
     setToolControl(joint_angle);
   }
   else if(str == "gripper close")
   {
     printf("close gripper\n");
     std::vector<double> joint_angle;
-    joint_angle.push_back(-0.01);
+    joint_angle.push_back(PI*4.0/18.0);
     setToolControl(joint_angle);
   }
 
