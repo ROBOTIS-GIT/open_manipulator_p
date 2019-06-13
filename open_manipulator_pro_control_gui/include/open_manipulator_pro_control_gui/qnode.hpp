@@ -49,7 +49,7 @@
 #include "open_manipulator_msgs/SetDrawingTrajectory.h"
 #include "open_manipulator_msgs/SetActuatorState.h"
 
-#define NUM_OF_JOINT_AND_TOOL 6
+#define NUM_OF_JOINT_AND_TOOL 7
 
 /*****************************************************************************
 ** Namespaces

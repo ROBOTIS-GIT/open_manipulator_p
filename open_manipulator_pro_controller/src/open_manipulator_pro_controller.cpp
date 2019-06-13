@@ -43,7 +43,7 @@ OpenManipulatorController::OpenManipulatorController(std::string usb_port, std::
   open_manipulator_.initOpenManipulator(using_platform_, usb_port, baud_rate, control_period_, with_gripper_);
 
   if (using_platform_ == true)        log::info("Succeeded to init " + priv_node_handle_.getNamespace());
-  else if (using_platform_ == false)  log::info("Ready to simulate " +  priv_node_handle_.getNamespace() + " on Gazebo");
+  else if (using_platform_ == false)  log::info("Ready to simulate " + priv_node_handle_.getNamespace() + " on Gazebo");
 
   if (using_moveit_ == true)
   {

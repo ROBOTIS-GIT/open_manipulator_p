@@ -20,8 +20,10 @@
 
 OpenManipulatorTeleop::OpenManipulatorTeleop()
     :node_handle_(""),
-     priv_node_handle_("~")
+     priv_node_handle_("~"),
+     with_gripper_(false)
 {
+  with_gripper_ = priv_node_handle_.param<bool>("with_gripper", false);
   present_joint_angle_.resize(NUM_OF_JOINT);
   present_kinematic_position_.resize(3);
 
@@ -47,6 +49,7 @@ void OpenManipulatorTeleop::initClient()
   goal_joint_space_path_client_ = node_handle_.serviceClient<open_manipulator_msgs::SetJointPosition>("goal_joint_space_path");
   goal_tool_control_client_ = node_handle_.serviceClient<open_manipulator_msgs::SetJointPosition>("goal_tool_control");
 }
+
 void OpenManipulatorTeleop::initSubscriber()
 {
   joint_states_sub_ = node_handle_.subscribe("joint_states", 10, &OpenManipulatorTeleop::jointStatesCallback, this);
@@ -170,10 +173,13 @@ void OpenManipulatorTeleop::printText()
   printf("k : decrease joint 5 angle\n");
   printf("o : increase joint 6 angle\n");
   printf("l : decrease joint 6 angle\n");
-  // printf("\n");
-  // printf("v : gripper open\n");
-  // printf("b : gripper close\n");
   printf("       \n");
+  if (with_gripper_)
+  {
+    printf("\n");
+    printf("v : gripper open\n");
+    printf("b : gripper close\n");    
+  }
   printf("1 : init pose\n");
   printf("2 : home pose\n");
   printf("       \n");
@@ -383,21 +389,25 @@ void OpenManipulatorTeleop::setGoal(char ch)
     joint_name.push_back("joint6"); goalJoint.at(5) = -JOINT_DELTA;
     setJointSpacePathFromPresent(joint_name, goalJoint, PATH_TIME);
   }
-
   else if(ch == 'v' || ch == 'V')
   {
-    printf("input : v \topen gripper\n");
-    std::vector<double> joint_angle;
-
-    joint_angle.push_back(0.01);
-    setToolControl(joint_angle);
+    if (with_gripper_)
+    {
+      printf("input : v \topen gripper\n");
+      std::vector<double> joint_angle;
+      joint_angle.push_back(0.0);
+      setToolControl(joint_angle);
+    }
   }
-  else if(ch == 'B' || ch == 'B')
+  else if(ch == 'b' || ch == 'B')
   {
-    printf("input : b \tclose gripper\n");
-    std::vector<double> joint_angle;
-    joint_angle.push_back(-0.01);
-    setToolControl(joint_angle);
+    if (with_gripper_)
+    {
+      printf("input : b \tclose gripper\n");
+      std::vector<double> joint_angle;
+      joint_angle.push_back(PI*4.0/18.0);
+      setToolControl(joint_angle);
+    }
   }
 
   else if(ch == '2')

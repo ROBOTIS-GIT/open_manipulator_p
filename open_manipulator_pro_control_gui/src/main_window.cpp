@@ -64,7 +64,7 @@ void MainWindow::timerCallback()
   ui.txt_j4->setText(QString::number(joint_angle.at(3),'f', 3));
   ui.txt_j5->setText(QString::number(joint_angle.at(4),'f', 3));
   ui.txt_j6->setText(QString::number(joint_angle.at(5),'f', 3));
-  // ui.txt_grip->setText(QString::number(joint_angle.at(4),'f', 3));
+  // ui.txt_grip->setText(QString::number(joint_angle.at(6),'f', 3));
 
   std::vector<double> position = qnode.getPresentKinematicsPosition();
   Eigen::Vector3d orientation_rpy = qnode.getPresentKinematicsOrientationRPY();
