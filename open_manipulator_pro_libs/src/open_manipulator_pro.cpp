@@ -139,25 +139,24 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
             math::vector3(4.4206755e-02, 3.6839985e-07, 8.9142216e-03)            // COM
             );
 
-  if (with_gripper) 
-  {
-    addTool("gripper",  // my name
-            "joint6",   // parent name
-            math::vector3(0.0, 0.0, 0.0),                    // relative position
-            // math::vector3(0.150, 0.0, 0.0),                  // relative position
-            math::convertRPYToRotationMatrix(0.0, 0.0, 0.0), // relative orientation
-              -1,        // actuator id
-            //  17,      // actuator id
-              0.700,     // max gripper limit (0.01 m)
-              -0.001,    // min gripper limit (-0.01 m)
-              -0.015,    // Change unit from `meter` to `radian`
-              3.2218127e-02 * 2,                                                    // mass
-              math::inertiaMatrix(9.5568826e-06, 2.8424644e-06, -3.2829197e-10,
-                                  2.2552871e-05, -3.1463634e-10,
-                                  1.7605306e-05),                                   // inertial tensor
-              math::vector3(0.028 + 8.3720668e-03, 0.0246, -4.2836895e-07)          // COM
-              );
-  }
+  int gripper_id = -1;
+  if (with_gripper) gripper_id = 7;
+
+  addTool("gripper",  // my name
+          "joint6",   // parent name
+          math::vector3(0.0, 0.0, 0.0),                    // relative position
+          // math::vector3(0.150, 0.0, 0.0),                  // relative position
+          math::convertRPYToRotationMatrix(0.0, 0.0, 0.0), // relative orientation
+          gripper_id,  // actuator id
+            0.700,     // max gripper limit (0.01 m)
+            -0.001,    // min gripper limit (-0.01 m)
+            -0.015,    // Change unit from `meter` to `radian`
+            3.2218127e-02 * 2,                                                    // mass
+            math::inertiaMatrix(9.5568826e-06, 2.8424644e-06, -3.2829197e-10,
+                                2.2552871e-05, -3.1463634e-10,
+                                1.7605306e-05),                                   // inertial tensor
+            math::vector3(0.028 + 8.3720668e-03, 0.0246, -4.2836895e-07)          // COM
+            );
 
   /*****************************************************************************
   ** Initialize Kinematics 
@@ -166,6 +165,10 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
 
   addKinematics(kinematics_);
 
+  // Set kinematics arguments
+  void *p_with_gripper = &with_gripper;
+  setKinematicsOption(p_with_gripper);
+
   if(using_actual_robot_state)
   {
     /*****************************************************************************
@@ -173,7 +176,7 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
     *****************************************************************************/
     actuator_ = new dynamixel::JointDynamixel();
     // actuator_ = new dynamixel::JointDynamixelProfileControl(control_loop_time);
-    
+
     // Set communication arguments
     STRING dxl_comm_arg[2] = {usb_port, baud_rate};
     void *p_dxl_comm_arg = &dxl_comm_arg;
@@ -201,7 +204,7 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
     {
       tool_ = new dynamixel::GripperDynamixel();
 
-      uint8_t gripperDxlId = 17;
+      uint8_t gripperDxlId = 7;
       addToolActuator(TOOL_DYNAMIXEL, tool_, gripperDxlId, p_dxl_comm_arg);
 
       // Set gripper actuator control mode

@@ -998,7 +998,10 @@ bool SolverCustomizedforOMChain::chainCustomInverseKinematics(Manipulator *manip
 /*****************************************************************************
 ** Kinematics Solver Using Geometry Approach
 *****************************************************************************/
-void SolverUsingCRAndGeometry::setOption(const void *arg){}
+void SolverUsingCRAndGeometry::setOption(const void *arg)
+{
+  with_gripper_ = arg;
+}
 
 Eigen::MatrixXd SolverUsingCRAndGeometry::jacobian(Manipulator *manipulator, Name tool_name)
 {
@@ -1072,6 +1075,10 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
   position = target_pose.kinematic.position;
   orientation = target_pose.kinematic.orientation;
   double d6 = 0.123;
+  if (with_gripper_)
+  {
+    d6 += 0.1223;
+  }
   Eigen::Vector3d position_2 = Eigen::VectorXd::Zero(3);
   position_2 << orientation(0,0), orientation(1,0), orientation(2,0);
   Eigen::Vector3d position_3 = Eigen::VectorXd::Zero(3);
@@ -1124,7 +1131,8 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
   else if (target_angle[3].position < -PI/2) target_angle[3].position = target_angle[3].position + PI;
   if (target_angle[5].position > PI/2) target_angle[5].position = target_angle[5].position - PI;
   else if (target_angle[5].position < -PI/2) target_angle[5].position = target_angle[5].position + PI;
- 
+  
+
   // log::println("------------------------------------");
   // log::println("End-effector Pose : ");
   // log::println("position1: ", target_angle[0].position);

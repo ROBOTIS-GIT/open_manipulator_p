@@ -832,12 +832,12 @@ bool GripperDynamixel::initialize(uint8_t actuator_id, STRING dxl_device_name, S
     strcat(str, dynamixel_workbench_->getModelName(dynamixel_.id.at(0)));
     log::println(str);
 
-    result = dynamixel_workbench_->setVelocityBasedProfile(dynamixel_.id.at(0), &log);
-    if(result == false)
-    {
-      log::error(log);
-      log::error("Please check your Dynamixel firmware version (v38~)");
-    }
+    // result = dynamixel_workbench_->setVelocityBasedProfile(dynamixel_.id.at(0), &log);
+    // if(result == false)
+    // {
+    //   log::error(log);
+    //   log::error("Please check your Dynamixel firmware version (v38~)");
+    // }
 
     result = dynamixel_workbench_->writeRegister(dynamixel_.id.at(0), return_delay_time_char, 0, &log);
     if (result == false)
