@@ -857,7 +857,7 @@ bool GripperDynamixel::setOperatingMode(STRING dynamixel_mode)
 
   const uint32_t velocity = 0;
   const uint32_t acceleration = 0;
-  const uint32_t current = 200;
+  const uint32_t current = 300;
 
   if (dynamixel_mode == "position_mode")
   {

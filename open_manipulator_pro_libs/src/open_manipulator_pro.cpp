@@ -150,7 +150,7 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
           gripper_id,  // actuator id
             0.700,     // max gripper limit (0.01 m)
             -0.001,    // min gripper limit (-0.01 m)
-            -0.015,    // Change unit from `meter` to `radian`
+            1.0,    // Change unit from `meter` to `radian`
             3.2218127e-02 * 2,                                                    // mass
             math::inertiaMatrix(9.5568826e-06, 2.8424644e-06, -3.2829197e-10,
                                 2.2552871e-05, -3.1463634e-10,
@@ -213,15 +213,15 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
       setToolActuatorMode(TOOL_DYNAMIXEL, p_gripper_dxl_mode_arg);
 
       // Set gripper actuator parameter
-      STRING gripper_dxl_opt_arg[2];
-      void *p_gripper_dxl_opt_arg = &gripper_dxl_opt_arg;
-      gripper_dxl_opt_arg[0] = "Profile_Acceleration";
-      gripper_dxl_opt_arg[1] = "20";
-      setToolActuatorMode(TOOL_DYNAMIXEL, p_gripper_dxl_opt_arg);
+      // STRING gripper_dxl_opt_arg[2];
+      // void *p_gripper_dxl_opt_arg = &gripper_dxl_opt_arg;
+      // gripper_dxl_opt_arg[0] = "Profile_Acceleration";
+      // gripper_dxl_opt_arg[1] = "20";
+      // setToolActuatorMode(TOOL_DYNAMIXEL, p_gripper_dxl_opt_arg);
 
-      gripper_dxl_opt_arg[0] = "Profile_Velocity";
-      gripper_dxl_opt_arg[1] = "200";
-      setToolActuatorMode(TOOL_DYNAMIXEL, p_gripper_dxl_opt_arg);
+      // gripper_dxl_opt_arg[0] = "Profile_Velocity";
+      // gripper_dxl_opt_arg[1] = "20";
+      // setToolActuatorMode(TOOL_DYNAMIXEL, p_gripper_dxl_opt_arg);
     }
 
     // Enable All Actuators 
