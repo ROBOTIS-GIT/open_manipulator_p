@@ -810,7 +810,7 @@ void OpenManipulatorController::process(double time)
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "open_manipulator_controller");
+  ros::init(argc, argv, "open_manipulator_pro_controller");
   ros::NodeHandle node_handle("");
 
   std::string usb_port = "/dev/ttyUSB0";
