@@ -144,7 +144,7 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
 
   addTool("gripper",  // my name
           "joint6",   // parent name
-          math::vector3(0.0, 0.0, 0.0),                    // relative position
+          math::vector3(0.1223, 0.0, 0.0),                    // relative position
           // math::vector3(0.150, 0.0, 0.0),                  // relative position
           math::convertRPYToRotationMatrix(0.0, 0.0, 0.0), // relative orientation
           gripper_id,  // actuator id
