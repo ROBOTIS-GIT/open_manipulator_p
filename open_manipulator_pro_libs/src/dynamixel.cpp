@@ -20,7 +20,7 @@
 
 using namespace dynamixel;
 using namespace robotis_manipulator;
-
+ 
 /*****************************************************************************
 ** Joint Dynamixel Control Functions
 *****************************************************************************/
@@ -158,12 +158,13 @@ bool JointDynamixel::initialize(std::vector<uint8_t> actuator_id, STRING dxl_dev
       sprintf(str, "Joint Dynamixel ID : %d, Model Name : %s", id, dynamixel_workbench_->getModelName(id));
       log::println(str);
 
-      result = dynamixel_workbench_->setVelocityBasedProfile(id, &log);
-      if(result == false)
-      {
-        log::error(log);
-        log::error("Please check your Dynamixel firmware version (v38~)");
-      }
+      //// PRO Plus DYLs do not use Velocity based profile.
+      // result = dynamixel_workbench_->setVelocityBasedProfile(id, &log);
+      // if(result == false)
+      // {
+      //   log::error(log);
+      //   log::error("Please check your Dynamixel firmware version (v38~)");
+      // }
 
       result = dynamixel_workbench_->writeRegister(id, return_delay_time_char, 0, &log);
       if (result == false)

@@ -67,12 +67,12 @@ bool QNode::init() {
   open_manipulator_joint_states_sub_ = n.subscribe("joint_states", 10, &QNode::jointStatesCallback, this);
   open_manipulator_kinematics_pose_sub_ = n.subscribe("kinematics_pose", 10, &QNode::kinematicsPoseCallback, this);
   // service client
-  goal_joint_space_path_client_ = n.serviceClient<open_manipulator_pro_msgs::SetJointPosition>("goal_joint_space_path");
-  goal_task_space_path_position_only_client_ = n.serviceClient<open_manipulator_pro_msgs::SetKinematicsPose>("goal_task_space_path_position_only");
-  goal_task_space_path_client_= n.serviceClient<open_manipulator_pro_msgs::SetKinematicsPose>("goal_task_space_path");
-  goal_tool_control_client_ = n.serviceClient<open_manipulator_pro_msgs::SetJointPosition>("goal_tool_control");
-  set_actuator_state_client_ = n.serviceClient<open_manipulator_pro_msgs::SetActuatorState>("set_actuator_state");
-  goal_drawing_trajectory_client_ = n.serviceClient<open_manipulator_pro_msgs::SetDrawingTrajectory>("goal_drawing_trajectory");
+  goal_joint_space_path_client_ = n.serviceClient<open_manipulator_msgs::SetJointPosition>("goal_joint_space_path");
+  goal_task_space_path_position_only_client_ = n.serviceClient<open_manipulator_msgs::SetKinematicsPose>("goal_task_space_path_position_only");
+  goal_task_space_path_client_= n.serviceClient<open_manipulator_msgs::SetKinematicsPose>("goal_task_space_path");
+  goal_tool_control_client_ = n.serviceClient<open_manipulator_msgs::SetJointPosition>("goal_tool_control");
+  set_actuator_state_client_ = n.serviceClient<open_manipulator_msgs::SetActuatorState>("set_actuator_state");
+  goal_drawing_trajectory_client_ = n.serviceClient<open_manipulator_msgs::SetDrawingTrajectory>("goal_drawing_trajectory");
 
   start();
 	return true;
@@ -88,7 +88,7 @@ void QNode::run() {
 	Q_EMIT rosShutdown();
 }
 
-void QNode::manipulatorStatesCallback(const open_manipulator_pro_msgs::OpenManipulatorState::ConstPtr &msg)
+void QNode::manipulatorStatesCallback(const open_manipulator_msgs::OpenManipulatorState::ConstPtr &msg)
 {
   if(msg->open_manipulator_moving_state == msg->IS_MOVING)
     open_manipulator_is_moving_ = true;
@@ -117,7 +117,7 @@ void QNode::jointStatesCallback(const sensor_msgs::JointState::ConstPtr &msg)
   present_joint_angle_ = temp_angle;
 }
 
-void QNode::kinematicsPoseCallback(const open_manipulator_pro_msgs::KinematicsPose::ConstPtr &msg)
+void QNode::kinematicsPoseCallback(const open_manipulator_msgs::KinematicsPose::ConstPtr &msg)
 {
   std::vector<double> temp_position;
   temp_position.push_back(msg->pose.position.x);
@@ -168,7 +168,7 @@ void QNode::setOption(std::string opt)
 
 bool QNode::setJointSpacePath(std::vector<std::string> joint_name, std::vector<double> joint_angle, double path_time)
 {
-  open_manipulator_pro_msgs::SetJointPosition srv;
+  open_manipulator_msgs::SetJointPosition srv;
   srv.request.joint_position.joint_name = joint_name;
   srv.request.joint_position.position = joint_angle;
   srv.request.path_time = path_time;
@@ -182,7 +182,7 @@ bool QNode::setJointSpacePath(std::vector<std::string> joint_name, std::vector<d
 
 bool QNode::setTaskSpacePath(std::vector<double> kinematics_pose, double path_time)
 {
-  open_manipulator_pro_msgs::SetKinematicsPose srv;
+  open_manipulator_msgs::SetKinematicsPose srv;
 
   srv.request.end_effector_name = "gripper";
 
@@ -206,7 +206,7 @@ bool QNode::setTaskSpacePath(std::vector<double> kinematics_pose, double path_ti
 
 bool QNode::setDrawingTrajectory(std::string name, std::vector<double> arg, double path_time)
 {
-  open_manipulator_pro_msgs::SetDrawingTrajectory srv;
+  open_manipulator_msgs::SetDrawingTrajectory srv;
   srv.request.end_effector_name = "gripper";
   srv.request.drawing_trajectory_name = name;
   srv.request.path_time = path_time;
@@ -222,7 +222,7 @@ bool QNode::setDrawingTrajectory(std::string name, std::vector<double> arg, doub
 
 bool QNode::setToolControl(std::vector<double> joint_angle)
 {
-  open_manipulator_pro_msgs::SetJointPosition srv;
+  open_manipulator_msgs::SetJointPosition srv;
   srv.request.joint_position.joint_name.push_back("gripper");
   srv.request.joint_position.position = joint_angle;
 
@@ -235,7 +235,7 @@ bool QNode::setToolControl(std::vector<double> joint_angle)
 
 bool QNode::setActuatorState(bool actuator_state)
 {
-  open_manipulator_pro_msgs::SetActuatorState srv;
+  open_manipulator_msgs::SetActuatorState srv;
   srv.request.set_actuator_state = actuator_state;
 
   if(set_actuator_state_client_.call(srv))

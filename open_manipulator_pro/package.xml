@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>open_manipulator_pro</name>
-  <version>2.0.1</version>
+  <version>0.0.0</version>
   <description>
-    ROS-enabled OpenManipulator Pro is a full open source platform consisting of OpenSoftware​, OpenHardware and OpenCR(Embedded board)​.
-    The OpenManipulator is allowed users to control it more easily by linking with the MoveIt! package.
-    Even if you do not have a real robot, you can control the robot in the Gazebo simulator​.
+    ROS-enabled OpenManipulator Pro is a full open source platform​.
+    OpenManipulator PRO allows users to control it more easily with MoveIt!.
+    If you do not have a physical robot, you can still test your source code on the Gazebo simulator.
   </description>
   <license>Apache 2.0</license>
   <author email="hjkim@robotis.com">Hye-Jong KIM</author>
@@ -13,9 +13,9 @@
   <author email="yhna@robotis.com">Yong-Ho Na</author>
   <maintainer email="hjkim@robotis.com">Hye-Jong KIM</maintainer>
   <url type="website">http://wiki.ros.org/open_manipulator</url>
-  <url type="emanual">http://emanual.robotis.com/docs/en/platform/openmanipulator</url>
-  <url type="repository">https://github.com/ROBOTIS-GIT/open_manipulator</url>
-  <url type="bugtracker">https://github.com/ROBOTIS-GIT/open_manipulator/issues</url>
+  <url type="emanual">http://emanual.robotis.com/docs/en/platform/openmanipulator_pro/overview/</url>
+  <url type="repository">https://github.com/ROBOTIS-GIT/open_manipulator_pro</url>
+  <url type="bugtracker">https://github.com/ROBOTIS-GIT/open_manipulator_pro/issues</url>
   <buildtool_depend>catkin</buildtool_depend>
   <exec_depend>open_manipulator_pro_control_gui</exec_depend>
   <exec_depend>open_manipulator_pro_controller</exec_depend>

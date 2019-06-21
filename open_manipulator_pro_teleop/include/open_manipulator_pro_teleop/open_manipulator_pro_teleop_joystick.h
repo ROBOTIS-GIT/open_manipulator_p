@@ -24,9 +24,10 @@
 #include <sensor_msgs/Joy.h>
 
 #include <termios.h>
-#include "open_manipulator_pro_msgs/SetJointPosition.h"
-#include "open_manipulator_pro_msgs/SetKinematicsPose.h"
+#include "open_manipulator_msgs/SetJointPosition.h"
+#include "open_manipulator_msgs/SetKinematicsPose.h"
 
+#define PI 3.141592
 #define NUM_OF_JOINT 6
 #define DELTA 0.01
 #define JOINT_DELTA 0.05
@@ -59,7 +60,7 @@ class OpenManipulatorTeleop
   void initSubscriber();
 
   void jointStatesCallback(const sensor_msgs::JointState::ConstPtr &msg);
-  void kinematicsPoseCallback(const open_manipulator_pro_msgs::KinematicsPose::ConstPtr &msg);
+  void kinematicsPoseCallback(const open_manipulator_msgs::KinematicsPose::ConstPtr &msg);
   void joyCallback(const sensor_msgs::Joy::ConstPtr &msg);
 
   std::vector<double> getPresentJointAngle();

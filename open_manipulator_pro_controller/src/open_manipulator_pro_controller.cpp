@@ -136,10 +136,10 @@ void OpenManipulatorController::initPublisher()
   for (auto const& name:opm_tools_name)
   {
     ros::Publisher pb;
-    pb = priv_node_handle_.advertise<open_manipulator_pro_msgs::KinematicsPose>(name + "/kinematics_pose", 10);
+    pb = priv_node_handle_.advertise<open_manipulator_msgs::KinematicsPose>(name + "/kinematics_pose", 10);
     open_manipulator_kinematics_pose_pub_.push_back(pb);
   }
-  open_manipulator_states_pub_ = priv_node_handle_.advertise<open_manipulator_pro_msgs::OpenManipulatorState>("states", 10);
+  open_manipulator_states_pub_ = priv_node_handle_.advertise<open_manipulator_msgs::OpenManipulatorState>("states", 10);
 
   if(using_platform_ == true)
   {
@@ -210,7 +210,7 @@ void OpenManipulatorController::initServer()
 
 void OpenManipulatorController::openManipulatorOptionCallback(const std_msgs::String::ConstPtr &msg)
 {
-  if(msg->data == "print_open_manipulator_setting")
+  if(msg->data == "print_open_manipulator_pro_setting")
     open_manipulator_.printManipulatorSetting();
 }
 
@@ -240,8 +240,8 @@ void OpenManipulatorController::executeTrajGoalCallback(const moveit_msgs::Execu
   moveit_plan_state_ = true;
 }
 
-bool OpenManipulatorController::goalJointSpacePathCallback(open_manipulator_pro_msgs::SetJointPosition::Request  &req,
-                                                           open_manipulator_pro_msgs::SetJointPosition::Response &res)
+bool OpenManipulatorController::goalJointSpacePathCallback(open_manipulator_msgs::SetJointPosition::Request  &req,
+                                                           open_manipulator_msgs::SetJointPosition::Response &res)
 {
   std::vector <double> target_angle;
 
@@ -254,8 +254,8 @@ bool OpenManipulatorController::goalJointSpacePathCallback(open_manipulator_pro_
   return true;
 }
 
-bool OpenManipulatorController::goalJointSpacePathToKinematicsPoseCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request  &req,
-                                                                           open_manipulator_pro_msgs::SetKinematicsPose::Response &res)
+bool OpenManipulatorController::goalJointSpacePathToKinematicsPoseCallback(open_manipulator_msgs::SetKinematicsPose::Request  &req,
+                                                                           open_manipulator_msgs::SetKinematicsPose::Response &res)
 {
   KinematicPose target_pose;
   target_pose.position[0] = req.kinematics_pose.pose.position.x;
@@ -275,8 +275,8 @@ bool OpenManipulatorController::goalJointSpacePathToKinematicsPoseCallback(open_
   return true;
 }
 
-bool OpenManipulatorController::goalJointSpacePathToKinematicsPositionCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request  &req,
-                                                                               open_manipulator_pro_msgs::SetKinematicsPose::Response &res)
+bool OpenManipulatorController::goalJointSpacePathToKinematicsPositionCallback(open_manipulator_msgs::SetKinematicsPose::Request  &req,
+                                                                               open_manipulator_msgs::SetKinematicsPose::Response &res)
 {
   KinematicPose target_pose;
   target_pose.position[0] = req.kinematics_pose.pose.position.x;
@@ -289,8 +289,8 @@ bool OpenManipulatorController::goalJointSpacePathToKinematicsPositionCallback(o
   return true;
 }
 
-bool OpenManipulatorController::goalJointSpacePathToKinematicsOrientationCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request  &req,
-                                                                                  open_manipulator_pro_msgs::SetKinematicsPose::Response &res)
+bool OpenManipulatorController::goalJointSpacePathToKinematicsOrientationCallback(open_manipulator_msgs::SetKinematicsPose::Request  &req,
+                                                                                  open_manipulator_msgs::SetKinematicsPose::Response &res)
 {
   KinematicPose target_pose;
 
@@ -307,8 +307,8 @@ bool OpenManipulatorController::goalJointSpacePathToKinematicsOrientationCallbac
   return true;
 }
 
-bool OpenManipulatorController::goalTaskSpacePathCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request  &req,
-                                                          open_manipulator_pro_msgs::SetKinematicsPose::Response &res)
+bool OpenManipulatorController::goalTaskSpacePathCallback(open_manipulator_msgs::SetKinematicsPose::Request  &req,
+                                                          open_manipulator_msgs::SetKinematicsPose::Response &res)
 {
   KinematicPose target_pose;
   target_pose.position[0] = req.kinematics_pose.pose.position.x;
@@ -327,8 +327,8 @@ bool OpenManipulatorController::goalTaskSpacePathCallback(open_manipulator_pro_m
   return true;
 }
 
-bool OpenManipulatorController::goalTaskSpacePathPositionOnlyCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request  &req,
-                                                                      open_manipulator_pro_msgs::SetKinematicsPose::Response &res)
+bool OpenManipulatorController::goalTaskSpacePathPositionOnlyCallback(open_manipulator_msgs::SetKinematicsPose::Request  &req,
+                                                                      open_manipulator_msgs::SetKinematicsPose::Response &res)
 {
   Eigen::Vector3d position;
   position[0] = req.kinematics_pose.pose.position.x;
@@ -341,8 +341,8 @@ bool OpenManipulatorController::goalTaskSpacePathPositionOnlyCallback(open_manip
   return true;
 }
 
-bool OpenManipulatorController::goalTaskSpacePathOrientationOnlyCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request  &req,
-                                                                         open_manipulator_pro_msgs::SetKinematicsPose::Response &res)
+bool OpenManipulatorController::goalTaskSpacePathOrientationOnlyCallback(open_manipulator_msgs::SetKinematicsPose::Request  &req,
+                                                                         open_manipulator_msgs::SetKinematicsPose::Response &res)
 {
   Eigen::Quaterniond q(req.kinematics_pose.pose.orientation.w,
                        req.kinematics_pose.pose.orientation.x,
@@ -357,8 +357,8 @@ bool OpenManipulatorController::goalTaskSpacePathOrientationOnlyCallback(open_ma
   return true;
 }
 
-bool OpenManipulatorController::goalJointSpacePathFromPresentCallback(open_manipulator_pro_msgs::SetJointPosition::Request  &req,
-                                                                      open_manipulator_pro_msgs::SetJointPosition::Response &res)
+bool OpenManipulatorController::goalJointSpacePathFromPresentCallback(open_manipulator_msgs::SetJointPosition::Request  &req,
+                                                                      open_manipulator_msgs::SetJointPosition::Response &res)
 {
   std::vector <double> target_angle;
 
@@ -371,8 +371,8 @@ bool OpenManipulatorController::goalJointSpacePathFromPresentCallback(open_manip
   return true;
 }
 
-bool OpenManipulatorController::goalTaskSpacePathFromPresentCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request  &req,
-                                                                     open_manipulator_pro_msgs::SetKinematicsPose::Response &res)
+bool OpenManipulatorController::goalTaskSpacePathFromPresentCallback(open_manipulator_msgs::SetKinematicsPose::Request  &req,
+                                                                     open_manipulator_msgs::SetKinematicsPose::Response &res)
 {
   KinematicPose target_pose;
   target_pose.position[0] = req.kinematics_pose.pose.position.x;
@@ -392,8 +392,8 @@ bool OpenManipulatorController::goalTaskSpacePathFromPresentCallback(open_manipu
   return true;
 }
 
-bool OpenManipulatorController::goalTaskSpacePathFromPresentPositionOnlyCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request  &req,
-                                                                                 open_manipulator_pro_msgs::SetKinematicsPose::Response &res)
+bool OpenManipulatorController::goalTaskSpacePathFromPresentPositionOnlyCallback(open_manipulator_msgs::SetKinematicsPose::Request  &req,
+                                                                                 open_manipulator_msgs::SetKinematicsPose::Response &res)
 {
   Eigen::Vector3d position;
   position[0] = req.kinematics_pose.pose.position.x;
@@ -406,8 +406,8 @@ bool OpenManipulatorController::goalTaskSpacePathFromPresentPositionOnlyCallback
   return true;
 }
 
-bool OpenManipulatorController::goalTaskSpacePathFromPresentOrientationOnlyCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request  &req,
-                                                                                    open_manipulator_pro_msgs::SetKinematicsPose::Response &res)
+bool OpenManipulatorController::goalTaskSpacePathFromPresentOrientationOnlyCallback(open_manipulator_msgs::SetKinematicsPose::Request  &req,
+                                                                                    open_manipulator_msgs::SetKinematicsPose::Response &res)
 {
   Eigen::Quaterniond q(req.kinematics_pose.pose.orientation.w,
                         req.kinematics_pose.pose.orientation.x,
@@ -422,8 +422,8 @@ bool OpenManipulatorController::goalTaskSpacePathFromPresentOrientationOnlyCallb
   return true;
 }
 
-bool OpenManipulatorController::goalToolControlCallback(open_manipulator_pro_msgs::SetJointPosition::Request  &req,
-                                                        open_manipulator_pro_msgs::SetJointPosition::Response &res)
+bool OpenManipulatorController::goalToolControlCallback(open_manipulator_msgs::SetJointPosition::Request  &req,
+                                                        open_manipulator_msgs::SetJointPosition::Response &res)
 {
   for(int i = 0; i < req.joint_position.joint_name.size(); i ++)
     open_manipulator_.makeToolTrajectory(req.joint_position.joint_name.at(i), req.joint_position.position.at(i));
@@ -432,8 +432,8 @@ bool OpenManipulatorController::goalToolControlCallback(open_manipulator_pro_msg
   return true;
 }
 
-bool OpenManipulatorController::setActuatorStateCallback(open_manipulator_pro_msgs::SetActuatorState::Request  &req,
-                                                         open_manipulator_pro_msgs::SetActuatorState::Response &res)
+bool OpenManipulatorController::setActuatorStateCallback(open_manipulator_msgs::SetActuatorState::Request  &req,
+                                                         open_manipulator_msgs::SetActuatorState::Response &res)
 {
   if(req.set_actuator_state == true) // enable actuators
   {
@@ -456,8 +456,8 @@ bool OpenManipulatorController::setActuatorStateCallback(open_manipulator_pro_ms
   return true;
 }
 
-bool OpenManipulatorController::goalDrawingTrajectoryCallback(open_manipulator_pro_msgs::SetDrawingTrajectory::Request  &req,
-                                                              open_manipulator_pro_msgs::SetDrawingTrajectory::Response &res)
+bool OpenManipulatorController::goalDrawingTrajectoryCallback(open_manipulator_msgs::SetDrawingTrajectory::Request  &req,
+                                                              open_manipulator_msgs::SetDrawingTrajectory::Response &res)
 {
   try
   {
@@ -511,8 +511,8 @@ bool OpenManipulatorController::goalDrawingTrajectoryCallback(open_manipulator_p
   return true;
 }
 
-bool OpenManipulatorController::getJointPositionMsgCallback(open_manipulator_pro_msgs::GetJointPosition::Request &req,
-                                                            open_manipulator_pro_msgs::GetJointPosition::Response &res)
+bool OpenManipulatorController::getJointPositionMsgCallback(open_manipulator_msgs::GetJointPosition::Request &req,
+                                                            open_manipulator_msgs::GetJointPosition::Response &res)
 {
   ros::AsyncSpinner spinner(1);
   spinner.start();
@@ -530,8 +530,8 @@ bool OpenManipulatorController::getJointPositionMsgCallback(open_manipulator_pro
   return true;
 }
 
-bool OpenManipulatorController::getKinematicsPoseMsgCallback(open_manipulator_pro_msgs::GetKinematicsPose::Request &req,
-                                                             open_manipulator_pro_msgs::GetKinematicsPose::Response &res)
+bool OpenManipulatorController::getKinematicsPoseMsgCallback(open_manipulator_msgs::GetKinematicsPose::Request &req,
+                                                             open_manipulator_msgs::GetKinematicsPose::Response &res)
 {
   ros::AsyncSpinner spinner(1);
   spinner.start();
@@ -545,25 +545,25 @@ bool OpenManipulatorController::getKinematicsPoseMsgCallback(open_manipulator_pr
   return true;
 }
 
-bool OpenManipulatorController::setJointPositionMsgCallback(open_manipulator_pro_msgs::SetJointPosition::Request &req,
-                                                            open_manipulator_pro_msgs::SetJointPosition::Response &res)
+bool OpenManipulatorController::setJointPositionMsgCallback(open_manipulator_msgs::SetJointPosition::Request &req,
+                                                            open_manipulator_msgs::SetJointPosition::Response &res)
 {
-  open_manipulator_pro_msgs::JointPosition msg = req.joint_position;
+  open_manipulator_msgs::JointPosition msg = req.joint_position;
   res.is_planned = calcPlannedPath(req.planning_group, msg);
 
   return true;
 }
 
-bool OpenManipulatorController::setKinematicsPoseMsgCallback(open_manipulator_pro_msgs::SetKinematicsPose::Request &req,
-                                                             open_manipulator_pro_msgs::SetKinematicsPose::Response &res)
+bool OpenManipulatorController::setKinematicsPoseMsgCallback(open_manipulator_msgs::SetKinematicsPose::Request &req,
+                                                             open_manipulator_msgs::SetKinematicsPose::Response &res)
 {
-  open_manipulator_pro_msgs::KinematicsPose msg = req.kinematics_pose;
+  open_manipulator_msgs::KinematicsPose msg = req.kinematics_pose;
   res.is_planned = calcPlannedPath(req.planning_group, msg);
 
   return true;
 }
 
-bool OpenManipulatorController::calcPlannedPath(const std::string planning_group, open_manipulator_pro_msgs::KinematicsPose msg)
+bool OpenManipulatorController::calcPlannedPath(const std::string planning_group, open_manipulator_msgs::KinematicsPose msg)
 {
   ros::AsyncSpinner spinner(1);
   spinner.start();
@@ -604,7 +604,7 @@ bool OpenManipulatorController::calcPlannedPath(const std::string planning_group
   return is_planned;
 }
 
-bool OpenManipulatorController::calcPlannedPath(const std::string planning_group, open_manipulator_pro_msgs::JointPosition msg)
+bool OpenManipulatorController::calcPlannedPath(const std::string planning_group, open_manipulator_msgs::JointPosition msg)
 {
   ros::AsyncSpinner spinner(1);
   spinner.start();
@@ -656,7 +656,7 @@ bool OpenManipulatorController::calcPlannedPath(const std::string planning_group
 
 void OpenManipulatorController::publishOpenManipulatorStates()
 {
-  open_manipulator_pro_msgs::OpenManipulatorState msg;
+  open_manipulator_msgs::OpenManipulatorState msg;
   if(open_manipulator_.getMovingState())
     msg.open_manipulator_moving_state = msg.IS_MOVING;
   else
@@ -672,7 +672,7 @@ void OpenManipulatorController::publishOpenManipulatorStates()
 
 void OpenManipulatorController::publishKinematicsPose()
 {
-  open_manipulator_pro_msgs::KinematicsPose msg;
+  open_manipulator_msgs::KinematicsPose msg;
   auto opm_tools_name = open_manipulator_.getManipulator()->getAllToolComponentName();
 
   uint8_t index = 0;

@@ -15,7 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   sensor_msgs
   robotis_manipulator
-  open_manipulator_pro_msgs
+  open_manipulator_msgs
   cmake_modules
 )
 find_package(Eigen3 REQUIRED)
@@ -67,7 +67,7 @@ endif()
 ################################################################################
 catkin_package(
   INCLUDE_DIRS include
-  CATKIN_DEPENDS roscpp std_msgs sensor_msgs robotis_manipulator open_manipulator_pro_msgs
+  CATKIN_DEPENDS roscpp std_msgs sensor_msgs robotis_manipulator open_manipulator_msgs
   DEPENDS EIGEN3
 )
 

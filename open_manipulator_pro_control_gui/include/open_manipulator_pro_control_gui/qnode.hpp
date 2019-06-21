@@ -43,11 +43,11 @@
 
 #include "robotis_manipulator/robotis_manipulator.h"
 
-#include "open_manipulator_pro_msgs/OpenManipulatorState.h"
-#include "open_manipulator_pro_msgs/SetJointPosition.h"
-#include "open_manipulator_pro_msgs/SetKinematicsPose.h"
-#include "open_manipulator_pro_msgs/SetDrawingTrajectory.h"
-#include "open_manipulator_pro_msgs/SetActuatorState.h"
+#include "open_manipulator_msgs/OpenManipulatorState.h"
+#include "open_manipulator_msgs/SetJointPosition.h"
+#include "open_manipulator_msgs/SetKinematicsPose.h"
+#include "open_manipulator_msgs/SetDrawingTrajectory.h"
+#include "open_manipulator_msgs/SetActuatorState.h"
 
 #define NUM_OF_JOINT_AND_TOOL 6
 
@@ -83,9 +83,9 @@ public:
 	QStringListModel* loggingModel() { return &logging_model; }
 	void log( const LogLevel &level, const std::string &msg);
 
-  void manipulatorStatesCallback(const open_manipulator_pro_msgs::OpenManipulatorState::ConstPtr &msg);
+  void manipulatorStatesCallback(const open_manipulator_msgs::OpenManipulatorState::ConstPtr &msg);
   void jointStatesCallback(const sensor_msgs::JointState::ConstPtr &msg);
-  void kinematicsPoseCallback(const open_manipulator_pro_msgs::KinematicsPose::ConstPtr &msg);
+  void kinematicsPoseCallback(const open_manipulator_msgs::KinematicsPose::ConstPtr &msg);
 
   std::vector<double> getPresentJointAngle();
   std::vector<double> getPresentKinematicsPosition();
@@ -126,7 +126,7 @@ private:
   std::vector<double> present_kinematics_position_;
   Eigen::Quaterniond present_kinematics_orientation_;
   Eigen::Vector3d present_kinematics_orientation_rpy_;
-  open_manipulator_pro_msgs::KinematicsPose kinematics_pose_;
+  open_manipulator_msgs::KinematicsPose kinematics_pose_;
 
   bool open_manipulator_is_moving_;
   bool open_manipulator_actuator_enabled_;

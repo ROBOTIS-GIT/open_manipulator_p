@@ -1066,9 +1066,6 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
   JointValue target_angle[6];
   std::vector<JointValue> target_angle_vector;
 
-  // Solve forward kinematics and get the position and orientation of the end-effector
-  // solveForwardKinematics(&_manipulator);
-
   // Compute Joint 1
   Eigen::VectorXd position = Eigen::VectorXd::Zero(3);
   Eigen::MatrixXd orientation = Eigen::MatrixXd::Zero(3,3);
@@ -1094,8 +1091,6 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
   position3_4 = position_3 - position3_3;
   double l1 = sqrt(0.264*0.264 + 0.030*0.030);
   double l2 = sqrt(0.030*0.030 + 0.258*0.258);
-  // double temp = (l2*l2 - l1*l1 + position3_4.norm()*position3_4.norm()) / (2*position3_4.norm());
-  // double phi = asin(temp/l2) + asin((position3_4.norm()-temp) / l1);
   double phi = acos((l1*l1 + l2*l2 - position3_4.norm()*position3_4.norm()) / (2*l1*l2));
   double alpha1 = atan2(0.030, 0.264);
   double alpha2 = atan2(0.258, 0.030);
@@ -1107,8 +1102,6 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
   Eigen::MatrixXd orientation2 = math::convertRPYToRotationMatrix(0,0,target_angle[0].position);
   position2 = orientation2.inverse() * position3_4;
   double beta1 = atan2(position2(2), position2(0));
-  // double temp = (l1*l1+l2*l2-position.norm()*position.norm()) / (2*l2);
-  // double beta2 = asin(temp/l1) + asin((l2-temp) / position.norm());
   double beta2 = acos((l1*l1 + position3_4.norm()*position3_4.norm() - l2*l2) / (2*l1*position3_4.norm()));
   if (position_3(0) > 0) target_angle[1].position = (PI/2-alpha1) - fabs(beta1) - beta2;
   else target_angle[1].position = (PI/2-alpha1) + fabs(beta1) - beta2;
@@ -1119,25 +1112,28 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
                                  * math::convertRPYToRotationMatrix(0,target_angle[1].position,0)
                                  * math::convertRPYToRotationMatrix(0,target_angle[2].position,0);
   position5 << orientation5(0,0), orientation5(1,0), orientation5(2,0);
-  target_angle[4].position = acos(position5.dot(position_2));
+  if (position5(2) > position_2(2)) target_angle[4].position = acos(position5.dot(position_2));
+  else target_angle[4].position = -acos(position5.dot(position_2));
 
   // Compute Joint 4, 6
   Eigen::MatrixXd orientation4 = Eigen::MatrixXd::Zero(3,3);
   orientation4 = orientation5.inverse() * orientation;
   target_angle[3].position = atan2(orientation4(1,0), -orientation4(2,0));
   target_angle[5].position = atan2(orientation4(0,1), orientation4(0,2));
-  if (fabs(target_angle[3].position) > 3.14) target_angle[3].position = math::sign(target_angle[3].position) * (fabs(target_angle[3].position)-3.14);
-  if (fabs(target_angle[5].position) > 3.14) target_angle[5].position = math::sign(target_angle[5].position) * (fabs(target_angle[5].position)-3.14);
+  if (target_angle[3].position > PI/2) target_angle[3].position = target_angle[3].position - PI;
+  else if (target_angle[3].position < -PI/2) target_angle[3].position = target_angle[3].position + PI;
+  if (target_angle[5].position > PI/2) target_angle[5].position = target_angle[5].position - PI;
+  else if (target_angle[5].position < -PI/2) target_angle[5].position = target_angle[5].position + PI;
  
-  log::println("------------------------------------");
-  log::println("End-effector Pose : ");
-  log::println("position1: ", target_angle[0].position);
-  log::println("position2: ", target_angle[1].position);
-  log::println("position3: ", target_angle[2].position);
-  log::println("position5: ", target_angle[4].position);
-  log::println("position4: ", target_angle[3].position);
-  log::println("position6: ", target_angle[5].position);
-  log::println("------------------------------------");
+  // log::println("------------------------------------");
+  // log::println("End-effector Pose : ");
+  // log::println("position1: ", target_angle[0].position);
+  // log::println("position2: ", target_angle[1].position);
+  // log::println("position3: ", target_angle[2].position);
+  // log::println("position5: ", target_angle[4].position);
+  // log::println("position4: ", target_angle[3].position);
+  // log::println("position6: ", target_angle[5].position);
+  // log::println("------------------------------------");
 
   target_angle_vector.push_back(target_angle[0]);
   target_angle_vector.push_back(target_angle[1]);
@@ -1150,36 +1146,3 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
 
   return true;
 }
-
-
-  // log::println("------------------------------------");
-  // log::println("End-effector Pose : ");
-  // log::print_vector(position);
-  // log::print_matrix(orientation);
-  // Eigen::Vector3d cc = Eigen::VectorXd::Zero(3);
-  // cc = math::convertRotationMatrixToRPYVector(orientation);
-  // log::print_vector(cc);
-  // log::println("position1: ", target_angle[0].position);
-  // log::println("position3: ", target_angle[2].position);
-
-  // log::println("------------------------------------");
-  // log::println("End-effector Pose : ");
-  // log::print_vector(position_2);
-  // log::print_vector(position3_3);
-  // log::print_vector(position3_4);
-  // log::println("x: ",position2(0));
-  // log::println("z: ",position2(2));
-  // log::println("beta1: ", alpha1);
-  // log::println("beta1: ", beta1);
-  // log::println("beta1: ", beta2);
-  // log::println("position1: ", target_angle[0].position);
-  // log::println("position2: ", (PI/2-alpha1) - beta1 - beta2);
-  // log::println("position2: ", target_angle[1].position);
-  // log::println("position3: ", target_angle[2].position);
-
-  // target_angle[0].position = 0.0;
-  // target_angle[1].position = 0.0;
-  // target_angle[2].position = 0.0;
-  // target_angle[3].position = 0.0;
-  // target_angle[4].position = 0.0;
-  // target_angle[5].position = 0.0;

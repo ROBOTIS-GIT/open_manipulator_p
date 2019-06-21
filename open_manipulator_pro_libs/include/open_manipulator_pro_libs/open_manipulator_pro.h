@@ -38,7 +38,7 @@
 
 class OpenManipulator : public robotis_manipulator::RobotisManipulator
 {
-  
+
 private:
   robotis_manipulator::Kinematics *kinematics_;
   robotis_manipulator::JointActuator *actuator_;
