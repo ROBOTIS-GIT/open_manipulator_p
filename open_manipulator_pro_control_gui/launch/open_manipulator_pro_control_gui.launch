@@ -1,0 +1,10 @@
+<launch>
+  <arg name="robot_name"   default="open_manipulator_pro"/>
+  <arg name="end_effector" default="gripper"/>
+
+  <group ns="$(arg robot_name)">
+    <node name="control_gui" pkg="open_manipulator_pro_control_gui" type="open_manipulator_pro_control_gui" output="screen">
+      <remap from="kinematics_pose" to="$(arg end_effector)/kinematics_pose"/>
+    </node>
+  </group>
+</launch>
