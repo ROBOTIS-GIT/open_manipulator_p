@@ -117,7 +117,7 @@ void QNode::jointStatesCallback(const sensor_msgs::JointState::ConstPtr &msg)
     else if(!msg->name.at(i).compare("joint4"))  temp_angle.at(3) = (msg->position.at(i));
     else if(!msg->name.at(i).compare("joint5"))  temp_angle.at(4) = (msg->position.at(i));
     else if(!msg->name.at(i).compare("joint6"))  temp_angle.at(5) = (msg->position.at(i));
-    else if(!msg->name.at(i).compare("gripper")) temp_angle.at(4) = (msg->position.at(i));
+    else if(!msg->name.at(i).compare("gripper")) temp_angle.at(6) = (msg->position.at(i));
   }
   present_joint_angle_ = temp_angle;
 }

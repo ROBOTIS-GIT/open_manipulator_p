@@ -54,7 +54,11 @@ MainWindow::~MainWindow() {}
 void MainWindow::timerCallback()
 {
   std::vector<double> joint_angle = qnode.getPresentJointAngle();
-  if(joint_angle.size() != 6)
+
+  int joint_size = 6;
+  if (qnode.getWithGripperState()) joint_size = 7;
+
+  if(joint_angle.size() != joint_size)
     return;
 
   ui.txt_j1->setText(QString::number(joint_angle.at(0),'f', 3));
@@ -63,7 +67,7 @@ void MainWindow::timerCallback()
   ui.txt_j4->setText(QString::number(joint_angle.at(3),'f', 3));
   ui.txt_j5->setText(QString::number(joint_angle.at(4),'f', 3));
   ui.txt_j6->setText(QString::number(joint_angle.at(5),'f', 3));
-  // ui.txt_grip->setText(QString::number(joint_angle.at(6),'f', 3));
+  if (qnode.getWithGripperState()) ui.txt_grip->setText(QString::number(joint_angle.at(6),'f', 3));
 
   std::vector<double> position = qnode.getPresentKinematicsPosition();
   Eigen::Vector3d orientation_rpy = qnode.getPresentKinematicsOrientationRPY();
