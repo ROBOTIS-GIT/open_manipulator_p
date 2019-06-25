@@ -148,15 +148,15 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
           // math::vector3(0.150, 0.0, 0.0),                  // relative position
           math::convertRPYToRotationMatrix(0.0, 0.0, 0.0), // relative orientation
           gripper_id,  // actuator id
-            0.700,     // max gripper limit (0.01 m)
-            -0.001,    // min gripper limit (-0.01 m)
-            1.0,    // Change unit from `meter` to `radian`
-            3.2218127e-02 * 2,                                                    // mass
-            math::inertiaMatrix(9.5568826e-06, 2.8424644e-06, -3.2829197e-10,
-                                2.2552871e-05, -3.1463634e-10,
-                                1.7605306e-05),                                   // inertial tensor
-            math::vector3(0.028 + 8.3720668e-03, 0.0246, -4.2836895e-07)          // COM
-            );
+          0.1091,     // max gripper limit (0.01 m)
+          -0.001,    // min gripper limit (-0.01 m)
+          1.0,    // Change unit from `meter` to `radian`
+          3.2218127e-02 * 2,                                                    // mass
+          math::inertiaMatrix(9.5568826e-06, 2.8424644e-06, -3.2829197e-10,
+                              2.2552871e-05, -3.1463634e-10,
+                              1.7605306e-05),                                   // inertial tensor
+          math::vector3(0.028 + 8.3720668e-03, 0.0246, -4.2836895e-07)          // COM
+          );
 
   /*****************************************************************************
   ** Initialize Kinematics 

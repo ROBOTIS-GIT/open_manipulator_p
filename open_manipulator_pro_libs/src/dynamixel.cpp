@@ -782,13 +782,19 @@ void GripperDynamixel::disable()
 
 bool GripperDynamixel::sendToolActuatorValue(robotis_manipulator::ActuatorValue value)
 {
-  return GripperDynamixel::writeGoalPosition(value.position);
+  // unit: distance -> radian 
+  float rad_value = 1.135 - value.position / 0.109 * 1.135;
+
+  return GripperDynamixel::writeGoalPosition(rad_value);
 }
 
 robotis_manipulator::ActuatorValue GripperDynamixel::receiveToolActuatorValue()
 {
+  // unit: radian -> distance 
+  float dist_value = (1.135 - GripperDynamixel::receiveDynamixelValue()) / 1.135 * 0.109;
+
   robotis_manipulator::ActuatorValue result;
-  result.position = GripperDynamixel::receiveDynamixelValue();
+  result.position = dist_value;
   result.velocity = 0.0;
   result.acceleration = 0.0;
   result.effort = 0.0;
