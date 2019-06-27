@@ -76,17 +76,17 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          grip_1_link:
+          gripper_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          grip_link:
+          gripper_main_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          grip_main_link:
+          gripper_sub_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -175,17 +175,17 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          grip_1_link:
+          gripper_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          grip_link:
+          gripper_main_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          grip_main_link:
+          gripper_sub_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -245,25 +245,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 1.18958199
+      Distance: 1.07764482
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.113567002
-        Y: 0.105920002
-        Z: 2.23518001e-07
+        X: 0.134267926
+        Y: 0.108918235
+        Z: 2.83122631e-07
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.524796963
+      Pitch: 0.534796953
       Target Frame: world
       Value: XYOrbit (rviz)
-      Yaw: 5.93995285
+      Yaw: 5.8149519
     Saved: ~
 Window Geometry:
   Displays:
@@ -281,5 +281,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1828
-  X: 92
+  X: 2331
   Y: 24

@@ -16,8 +16,8 @@ open_manipulator_pro:
       - joint4
       - joint5
       - joint6
-      - grip
-      - grip_1
+      - gripper
+      - gripper_sub
     sim_control_mode: 1  # 0: position, 1: velocity
 # Publish all joint states
 # Creates the /joint_states topic necessary in ROS
@@ -25,14 +25,4 @@ open_manipulator_pro:
     type: joint_state_controller/JointStateController
     publish_rate: 50
   controller_list:
-    - name: arm_controller
-      action_ns: follow_joint_trajectory
-      default: True
-      type: FollowJointTrajectory
-      joints:
-        - joint1
-        - joint2
-        - joint3
-        - joint4
-        - joint5
-        - joint6
+    []

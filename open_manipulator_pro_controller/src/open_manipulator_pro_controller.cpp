@@ -730,6 +730,10 @@ void OpenManipulatorController::publishGazeboCommand()
 {
   JointWaypoint joint_value = open_manipulator_.getAllActiveJointValue();
   JointWaypoint tool_value = open_manipulator_.getAllToolValue();
+  
+  // angle (rad) -> distance (m)
+  // tool_value.at(0).position = (1.135 - tool_value.at(0).position) / 1.135 * 0.109;
+  tool_value.at(0).position = 1.135 - tool_value.at(0).position;
 
   for(uint8_t i = 0; i < joint_value.size(); i ++)
   {
@@ -805,7 +809,7 @@ void OpenManipulatorController::moveitTimer(double present_time)
 void OpenManipulatorController::process(double time)
 {
   moveitTimer(time);
-  open_manipulator_.processOpenManipulator(time, with_gripper_);
+  open_manipulator_.processOpenManipulator(time, using_platform_, with_gripper_);
 }
 
 int main(int argc, char **argv)

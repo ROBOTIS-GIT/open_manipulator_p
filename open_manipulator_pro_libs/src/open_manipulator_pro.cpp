@@ -148,7 +148,7 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
           // math::vector3(0.150, 0.0, 0.0),                  // relative position
           math::convertRPYToRotationMatrix(0.0, 0.0, 0.0), // relative orientation
           gripper_id,  // actuator id
-          0.1091,     // max gripper limit (0.01 m)
+          1.1351,     // max gripper limit (0.01 m)
           -0.001,    // min gripper limit (-0.01 m)
           1.0,    // Change unit from `meter` to `radian`
           3.2218127e-02 * 2,                                                    // mass
@@ -247,17 +247,55 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
   addCustomTrajectory(CUSTOM_TRAJECTORY_HEART, custom_trajectory_[3]);
 }
 
-void OpenManipulator::processOpenManipulator(double present_time, bool with_gripper)
+void OpenManipulator::processOpenManipulator(double present_time, bool using_actual_robot_state, bool with_gripper)
 {
   JointWaypoint goal_joint_value = getJointGoalValueFromTrajectory(present_time);
   JointWaypoint goal_tool_value;
-  if (with_gripper) goal_tool_value = getToolGoalValue();
+  if (with_gripper) goal_tool_value = distanceToAngle(getToolGoalValue());
 
   receiveAllJointActuatorValue();
-  if (with_gripper) receiveAllToolActuatorValue();
+  if (with_gripper) 
+  {
+    std::vector<Name> tool_component_name;
+    tool_component_name = getManipulator()-> getAllToolComponentName();
 
+    if (using_actual_robot_state)
+    {
+      getManipulator()->setJointValue(tool_component_name.at(0), 
+                                      angleToDistance(receiveAllToolActuatorValue()).at(0));
+    }
+  }
+  
   if(goal_joint_value.size() != 0) sendAllJointActuatorValue(goal_joint_value);
   if (with_gripper) {if(goal_tool_value.size() != 0) {sendAllToolActuatorValue(goal_tool_value);}}
 
   solveForwardKinematics();
+}
+
+JointWaypoint OpenManipulator::distanceToAngle(JointWaypoint distance)
+{
+  // distance (m) -> angle (rad) 
+  double angle = 1.135 - distance.at(0).position; // / 0.109 * 1.135;
+
+  JointValue result;
+  result.position = angle;
+
+  JointWaypoint result_vector;
+  result_vector.push_back(result);
+
+  return result_vector;
+}
+
+JointWaypoint OpenManipulator::angleToDistance(JointWaypoint angle)
+{
+  // angle (rad) -> distance (m) 
+  double distance = (1.135 - angle.at(0).position); /// 1.135 * 0.109;
+
+  JointValue result;
+  result.position = distance;
+
+  JointWaypoint result_vector;
+  result_vector.push_back(result);
+
+  return result_vector;
 }

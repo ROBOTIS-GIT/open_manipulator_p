@@ -298,14 +298,14 @@
 
   <!-- gripper joint -->
   <joint name="gripper" type="revolute">
-    <axis xyz="0 0 1" />		
-    <!-- <origin xyz="0.0552 -0.0370 0" rpy="0 0 ${4.0*pi/18.0}"/> -->
-    <origin xyz="0.0552 -0.0370 0" rpy="0 0 0"/>
+    <axis xyz="0 0 -1" />		
+    <origin xyz="0.0552 -0.0460 0" rpy="0 0 ${45.0*pi/180.0}"/>
+    <!-- <origin xyz="0.0552 -0.0370 0" rpy="0 0 0"/> -->
     <parent link="gripper_main_link"/>
     <child link="gripper_link"/>
-    <limit velocity="6.5" effort="1000" lower="0.0" upper="${65.0*pi/180.0}" />
+    <limit velocity="6.5" effort="1000" lower="0.0" upper="${740.0/2048.0*pi}" />
     <dynamics damping="0.1" friction="0.0" />
-  </joint> 
+  </joint>
 
   <!-- Transmission gripper -->
   <xacro:SimpleTransmission n="_gripper" joint="gripper" />
@@ -337,12 +337,12 @@
 
   <!-- gripper joint 1 -->
   <joint name="gripper_sub" type="revolute">
-    <axis xyz="0 0 -1" />		
-    <!-- <origin xyz="0.0552 0.0370 0" rpy="0 0 ${-4.0*pi/18.0}"/> -->
-    <origin xyz="0.0552 0.0370 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1" />		
+    <origin xyz="0.0552 0.0460 0" rpy="0 0 ${-45.0*pi/180.0}"/>
+    <!-- <origin xyz="0.0552 0.0370 0" rpy="0 0 0"/> -->
     <parent link="gripper_main_link"/>
     <child link="gripper_sub_link"/>
-    <limit velocity="6.5" effort="1000" lower="0.0" upper="${65.0*pi/180.0}" />
+    <limit velocity="6.5" effort="1000" lower="0.0" upper="${740.0/2048.0*pi}" />
     <dynamics damping="0.1" friction="0.0" />
   </joint> 
 
@@ -381,7 +381,6 @@
     <origin xyz="0.14 0.0 0.0" rpy="0 0 0" />
   </joint>
 
-
   <!-- End Effector -->
   <link name="end_effector">
     <visual>
@@ -398,6 +397,4 @@
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
     </inertial>
   </link>
-
 </robot>
-

@@ -1614,7 +1614,7 @@
      <double>0.000000000000000</double>
     </property>
     <property name="maximum">
-     <double>0.109000000000000</double>
+     <double>1.135000000000000</double>
     </property>
     <property name="singleStep">
      <double>0.002000000000000</double>
@@ -1700,7 +1700,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>m</string>
+     <string>rad</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_40">
@@ -1713,7 +1713,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>m</string>
+     <string>rad</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_actuator_enable">
