@@ -249,9 +249,23 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
 
 void OpenManipulator::processOpenManipulator(double present_time, bool using_actual_robot_state, bool with_gripper)
 {
+ 
   JointWaypoint goal_joint_value = getJointGoalValueFromTrajectory(present_time);
   JointWaypoint goal_tool_value;
-  if (with_gripper) goal_tool_value = distanceToAngle(getToolGoalValue());
+  
+  static double init_tool_value = getToolGoalValue().at(0).position;
+  static bool onoff = false;
+  if (with_gripper) 
+  {    
+    // switch to on if the value changed different from the init value
+    if (init_tool_value != getToolGoalValue().at(0).position)
+      onoff = true;
+
+    if (!onoff)
+      goal_tool_value = getToolGoalValue();
+    else
+      goal_tool_value = distanceToAngle(getToolGoalValue());
+  }
 
   receiveAllJointActuatorValue();
   if (with_gripper) 
@@ -261,8 +275,8 @@ void OpenManipulator::processOpenManipulator(double present_time, bool using_act
 
     if (using_actual_robot_state)
     {
-      getManipulator()->setJointValue(tool_component_name.at(0), 
-                                      angleToDistance(receiveAllToolActuatorValue()).at(0));
+        getManipulator()->setJointValue(tool_component_name.at(0), 
+                                        angleToDistance(receiveAllToolActuatorValue()).at(0));
     }
   }
   
