@@ -27,6 +27,7 @@ OpenManipulatorController::OpenManipulatorController(std::string usb_port, std::
      timer_thread_state_(false),
      moveit_plan_state_(false),
      using_platform_(false),
+     with_gripper_(false),
      using_moveit_(false),
      moveit_plan_only_(true),
      control_period_(0.010),
@@ -35,13 +36,14 @@ OpenManipulatorController::OpenManipulatorController(std::string usb_port, std::
   control_period_       = priv_node_handle_.param<double>("control_period", 0.010);
   moveit_sampling_time_ = priv_node_handle_.param<double>("moveit_sample_duration", 0.050);
   using_platform_       = priv_node_handle_.param<bool>("using_platform", false);
+  with_gripper_         = priv_node_handle_.param<bool>("with_gripper", false);
   using_moveit_         = priv_node_handle_.param<bool>("using_moveit", false);
   std::string planning_group_name = priv_node_handle_.param<std::string>("planning_group_name", "arm");
 
-  open_manipulator_.initOpenManipulator(using_platform_, usb_port, baud_rate, control_period_);
+  open_manipulator_.initOpenManipulator(using_platform_, usb_port, baud_rate, control_period_, with_gripper_);
 
   if (using_platform_ == true)        log::info("Succeeded to init " + priv_node_handle_.getNamespace());
-  else if (using_platform_ == false)  log::info("Ready to simulate " +  priv_node_handle_.getNamespace() + " on Gazebo");
+  else if (using_platform_ == false)  log::info("Ready to simulate " + priv_node_handle_.getNamespace() + " on Gazebo");
 
   if (using_moveit_ == true)
   {
@@ -728,6 +730,10 @@ void OpenManipulatorController::publishGazeboCommand()
 {
   JointWaypoint joint_value = open_manipulator_.getAllActiveJointValue();
   JointWaypoint tool_value = open_manipulator_.getAllToolValue();
+  
+  // angle (rad) -> distance (m)
+  // tool_value.at(0).position = (1.135 - tool_value.at(0).position) / 1.135 * 0.109;
+  tool_value.at(0).position = 1.135 - tool_value.at(0).position;
 
   for(uint8_t i = 0; i < joint_value.size(); i ++)
   {
@@ -803,12 +809,12 @@ void OpenManipulatorController::moveitTimer(double present_time)
 void OpenManipulatorController::process(double time)
 {
   moveitTimer(time);
-  open_manipulator_.processOpenManipulator(time);
+  open_manipulator_.processOpenManipulator(time, using_platform_, with_gripper_);
 }
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "open_manipulator_controller");
+  ros::init(argc, argv, "open_manipulator_pro_controller");
   ros::NodeHandle node_handle("");
 
   std::string usb_port = "/dev/ttyUSB0";

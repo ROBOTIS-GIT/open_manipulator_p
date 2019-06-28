@@ -67,17 +67,17 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        grip_1_link:
+        gripper_1_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        grip_link:
+        gripper_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        grip_main_link:
+        gripper_main_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false

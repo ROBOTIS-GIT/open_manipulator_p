@@ -39,6 +39,7 @@ namespace kinematics
 class SolverUsingCRAndJacobian : public robotis_manipulator::Kinematics
 {
 private:
+  
   void forwardSolverUsingChainRule(Manipulator *manipulator, Name component_name);
   bool inverseSolverUsingJacobian(Manipulator *manipulator, Name tool_name, Pose target_pose, std::vector<JointValue>* goal_joint_value);
 
@@ -119,6 +120,8 @@ public:
 class SolverUsingCRAndGeometry : public robotis_manipulator::Kinematics
 {
 private:
+  bool with_gripper_ = false;
+
   void forwardSolverUsingChainRule(Manipulator *manipulator, Name component_name);
   bool inverseSolverUsingGeometry(Manipulator *manipulator, Name tool_name, Pose target_pose, std::vector<JointValue>* goal_joint_value);
 

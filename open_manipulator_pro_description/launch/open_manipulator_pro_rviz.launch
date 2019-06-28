@@ -13,7 +13,7 @@
            command="$(find xacro)/xacro --inorder '$(find open_manipulator_pro_description)/urdf/open_manipulator_pro.urdf.xacro'"/>
   </group>
 
-  <!-- Send joint values -->
+  <!-- Send joint values --> 
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
     <param name="/use_gui" value="$(arg use_gui)"/>
     <rosparam param="source_list" subst_value="true">["$(arg robot_name)/joint_states"]</rosparam>

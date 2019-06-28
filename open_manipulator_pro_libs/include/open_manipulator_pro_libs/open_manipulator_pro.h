@@ -49,8 +49,10 @@ public:
   OpenManipulator();
   virtual ~OpenManipulator();
 
-  void initOpenManipulator(bool using_actual_robot_state, STRING usb_port = "/dev/ttyUSB0", STRING baud_rate = "1000000", float control_loop_time = 0.010);
-  void processOpenManipulator(double present_time);
+  void initOpenManipulator(bool using_actual_robot_state, STRING usb_port = "/dev/ttyUSB0", STRING baud_rate = "1000000", float control_loop_time = 0.010, bool with_gripper = false);
+  void processOpenManipulator(double present_time, bool using_actual_robot_state, bool with_gripper = false);
+  JointWaypoint distanceToAngle(JointWaypoint distance);
+  JointWaypoint angleToDistance(JointWaypoint angle);
 };
 
 #endif // OPEN_MANIPULTOR_H_
