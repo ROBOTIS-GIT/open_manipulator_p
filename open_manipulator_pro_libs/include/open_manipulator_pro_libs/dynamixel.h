@@ -55,7 +55,7 @@ namespace dynamixel
 #define LENGTH_PROFILE_VELOCITY_2 4
 #define LENGTH_GOAL_POSITION_2 4
 
-// DO not support anymore??
+// DO not support anymore
 // Protocol 1.0
 // #define ADDR_PRESENT_CURRENT_1 = 40;
 // #define ADDR_PRESENT_VELOCITY_1 = 38;

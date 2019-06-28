@@ -16,8 +16,8 @@
 
 /* Authors: Darby Lim, Hye-Jong KIM, Ryan Shim, Yong-Ho Na */
 
-#ifndef open_manipulator_control_gui_MAIN_WINDOW_H
-#define open_manipulator_control_gui_MAIN_WINDOW_H
+#ifndef OPEN_MANIPULATOR_PRO_CONTROL_GUI_MAIN_WINDOW_H
+#define OPEN_MANIPULATOR_PRO_CONTROL_GUI_MAIN_WINDOW_H
 
 /*****************************************************************************
 ** Includes
@@ -33,7 +33,7 @@
 ** Namespace
 *****************************************************************************/
 
-namespace open_manipulator_control_gui {
+namespace open_manipulator_pro_control_gui {
 
 /*****************************************************************************
 ** Interface [MainWindow]
@@ -75,6 +75,6 @@ private:
   QTimer *timer;
 };
 
-}  // namespace open_manipulator_control_gui
+}  // namespace open_manipulator_pro_control_gui
 
-#endif // open_manipulator_control_gui_MAIN_WINDOW_H
+#endif // OPEN_MANIPULATOR_PRO_CONTROL_GUI_MAIN_WINDOW_H

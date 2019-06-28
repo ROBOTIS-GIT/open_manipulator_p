@@ -20,8 +20,8 @@
 ** Ifdefs
 *****************************************************************************/
 
-#ifndef open_manipulator_control_gui_QNODE_HPP_
-#define open_manipulator_control_gui_QNODE_HPP_
+#ifndef OPEN_MANIPULATOR_PRO_CONTROL_GUI_QNODE_HPP_
+#define OPEN_MANIPULATOR_PRO_CONTROL_GUI_QNODE_HPP_
 
 /*****************************************************************************
 ** Includes
@@ -49,13 +49,13 @@
 #include "open_manipulator_msgs/SetDrawingTrajectory.h"
 #include "open_manipulator_msgs/SetActuatorState.h"
 
-#define NUM_OF_JOINT_AND_TOOL 6
+#define NUM_OF_JOINT_AND_TOOL 7
 
 /*****************************************************************************
 ** Namespaces
 *****************************************************************************/
 
-namespace open_manipulator_control_gui {
+namespace open_manipulator_pro_control_gui {
 
 /*****************************************************************************
 ** Class
@@ -93,6 +93,7 @@ public:
   Eigen::Vector3d getPresentKinematicsOrientationRPY();
   bool getOpenManipulatorMovingState();
   bool getOpenManipulatorActuatorState();
+  bool getWithGripperState();
 
   void setOption(std::string opt);
   bool setJointSpacePath(std::vector<std::string> joint_name, std::vector<double> joint_angle, double path_time);
@@ -109,12 +110,18 @@ private:
 	char** init_argv;
   QStringListModel logging_model;
 
+  // ROS Parameters
+  bool with_gripper_;
+
+  // ROS Publishers
   ros::Publisher open_manipulator_option_pub_;
 
+  // ROS Subscribers
   ros::Subscriber open_manipulator_states_sub_;
   ros::Subscriber open_manipulator_joint_states_sub_;
   ros::Subscriber open_manipulator_kinematics_pose_sub_;
 
+  // ROS Service Clients
   ros::ServiceClient goal_joint_space_path_client_;
   ros::ServiceClient goal_task_space_path_position_only_client_;
   ros::ServiceClient goal_task_space_path_client_;
@@ -132,6 +139,6 @@ private:
   bool open_manipulator_actuator_enabled_;
 };
 
-}  // namespace open_manipulator_control_gui
+}  // namespace open_manipulator_pro_control_gui
 
-#endif /* open_manipulator_control_gui_QNODE_HPP_ */
+#endif /* OPEN_MANIPULATOR_PRO_CONTROL_GUI_QNODE_HPP_ */

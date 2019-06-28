@@ -55,22 +55,22 @@
     <material>Gazebo/Grey</material>
   </gazebo>
 
-  <!-- grip main link -->
-  <gazebo reference="grip_main_link">
+  <!-- gripper main link -->
+  <gazebo reference="gripper_main_link">
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
     <material>Gazebo/Grey</material>
   </gazebo>
 
-  <!-- grip link -->
-  <gazebo reference="grip_link">
+  <!-- gripper link -->
+  <gazebo reference="gripper_link">
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
     <material>Gazebo/Grey</material>
   </gazebo>
 
-  <!-- grip 1 link -->
-  <gazebo reference="grip_1_link">
+  <!-- gripper 1 link -->
+  <gazebo reference="gripper_sub_link">
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
     <material>Gazebo/Grey</material>

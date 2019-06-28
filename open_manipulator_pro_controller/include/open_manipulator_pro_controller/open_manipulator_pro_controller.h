@@ -64,6 +64,7 @@ class OpenManipulatorController
 
   // ROS Parameters
   bool using_platform_;
+  bool with_gripper_;
   bool using_moveit_;
   double control_period_;
 

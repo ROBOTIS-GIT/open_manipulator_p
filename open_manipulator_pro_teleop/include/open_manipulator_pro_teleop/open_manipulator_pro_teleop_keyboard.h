@@ -38,6 +38,9 @@ class OpenManipulatorTeleop
   // ROS NodeHandle
   ros::NodeHandle node_handle_;
   ros::NodeHandle priv_node_handle_;
+  
+  // ROS Parameters
+  bool with_gripper_;
 
   ros::ServiceClient goal_joint_space_path_from_present_client_;
   ros::ServiceClient goal_task_space_path_from_present_position_only_client_;
