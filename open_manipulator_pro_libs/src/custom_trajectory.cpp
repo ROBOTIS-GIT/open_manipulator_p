@@ -1,5 +1,5 @@
 ﻿/*******************************************************************************
-* Copyright 2018 ROBOTIS CO., LTD.
+* Copyright 2019 ROBOTIS CO., LTD.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,16 +16,15 @@
 
 /* Authors: Darby Lim, Hye-Jong KIM, Ryan Shim, Yong-Ho Na */
 
-#include "../include/open_manipulator_pro_libs/custom_trajectory.h"
+#include "../include/open_manipulator_pro_libs/custom_trajectory.hpp"
 
 using namespace custom_trajectory;
 using namespace Eigen;
 
-
 /*****************************************************************************
 ** Line
 *****************************************************************************/
-void Line::initLine(double move_time, TaskWaypoint start, TaskWaypoint delta)
+void Line::init_line(double move_time, TaskWaypoint start, TaskWaypoint delta)
 {
   move_time_ = move_time;
   acc_dec_time_ = move_time_ * 0.2;
@@ -43,7 +42,7 @@ void Line::initLine(double move_time, TaskWaypoint start, TaskWaypoint delta)
   vel_max_.at(Z_AXIS) = delta.kinematic.position(Z_AXIS)/(move_time_ - acc_dec_time_);
 }
 
-TaskWaypoint Line::drawLine(double time_var)
+TaskWaypoint Line::draw_line(double time_var)
 {
   TaskWaypoint pose;
 
@@ -83,22 +82,20 @@ TaskWaypoint Line::drawLine(double time_var)
 
 TaskWaypoint Line::getTaskWaypoint(double tick)
 {
-  return drawLine(tick);
+  return draw_line(tick);
 }
-
 
 void Line::makeTaskTrajectory(double move_time, TaskWaypoint start, const void *arg)
 {
   TaskWaypoint *c_arg = (TaskWaypoint *)arg;
-  initLine(move_time, start, c_arg[0]);
+  init_line(move_time, start, c_arg[0]);
 }
 void Line::setOption(const void *arg) {}
-
 
 /*****************************************************************************
 ** Circle
 *****************************************************************************/
-void Circle::initCircle(double move_time, TaskWaypoint start, double radius, double revolution, double start_angular_position)
+void Circle::init_circle(double move_time, TaskWaypoint start, double radius, double revolution, double start_angular_position)
 {
   start_pose_ = start;
 
@@ -122,7 +119,7 @@ void Circle::initCircle(double move_time, TaskWaypoint start, double radius, dou
   coefficient_ = path_generator_.getCoefficient();
 }
 
-TaskWaypoint Circle::drawCircle(double tick)
+TaskWaypoint Circle::draw_circle(double tick)
 {
   // get time variable
   double get_time_var = 0.0;
@@ -158,22 +155,21 @@ TaskWaypoint Circle::drawCircle(double tick)
 
 TaskWaypoint Circle::getTaskWaypoint(double tick)
 {
-  return drawCircle(tick);
+  return draw_circle(tick);
 }
 
 void Circle::makeTaskTrajectory(double move_time, TaskWaypoint start, const void *arg)
 {
   double *get_arg_ = (double *)arg;
-  initCircle(move_time, start, get_arg_[0], get_arg_[1], get_arg_[2]);
+  init_circle(move_time, start, get_arg_[0], get_arg_[1], get_arg_[2]);
 }
 
-void Circle::setOption(const void *arg){}
-
+void Circle::setOption(const void *arg) {}
 
 /*****************************************************************************
 ** Rhombus
 *****************************************************************************/
-void Rhombus::initRhombus(double move_time, TaskWaypoint start, double radius, double revolution, double start_angular_position)
+void Rhombus::init_rhombus(double move_time, TaskWaypoint start, double radius, double revolution, double start_angular_position)
 {
   start_pose_ = start;
 
@@ -197,8 +193,7 @@ void Rhombus::initRhombus(double move_time, TaskWaypoint start, double radius, d
   coefficient_ = path_generator_.getCoefficient();
 }
 
-
-TaskWaypoint Rhombus::drawRhombus(double tick)
+TaskWaypoint Rhombus::draw_rhombus(double tick)
 {
   // get time variable
   double get_time_var = 0.0;
@@ -234,7 +229,6 @@ TaskWaypoint Rhombus::drawRhombus(double tick)
     traj[0] = get_time_var / (PI/2) - 4;
     traj[1] = - get_time_var / (PI/2) + 4;
   }
-  
 
   diff_pose[0] = traj[0]*cos(start_angular_position_) - traj[1]*sin(start_angular_position_);
   diff_pose[1] = traj[0]*sin(start_angular_position_) + traj[1]*cos(start_angular_position_);
@@ -253,24 +247,22 @@ TaskWaypoint Rhombus::drawRhombus(double tick)
   return pose;
 }
 
-
 void Rhombus::makeTaskTrajectory(double move_time, TaskWaypoint start, const void *arg)
 {
   double *get_arg_ = (double *)arg;
-  initRhombus(move_time, start, get_arg_[0], get_arg_[1], get_arg_[2]);
+  init_rhombus(move_time, start, get_arg_[0], get_arg_[1], get_arg_[2]);
 }
 
 TaskWaypoint Rhombus::getTaskWaypoint(double tick)
 {
-  return drawRhombus(tick);
+  return draw_rhombus(tick);
 }
 void Rhombus::setOption(const void *arg){}
-
 
 /*****************************************************************************
 ** Heart
 *****************************************************************************/
-void Heart::initHeart(double move_time, TaskWaypoint start, double radius, double revolution, double start_angular_position)
+void Heart::init_heart(double move_time, TaskWaypoint start, double radius, double revolution, double start_angular_position)
 {
   start_pose_ = start;
 
@@ -294,7 +286,7 @@ void Heart::initHeart(double move_time, TaskWaypoint start, double radius, doubl
   coefficient_ = path_generator_.getCoefficient();
 }
 
-TaskWaypoint Heart::drawHeart(double tick)
+TaskWaypoint Heart::draw_heart(double tick)
 {
   // get time variable
   double get_time_var = 0.0;
@@ -336,11 +328,12 @@ TaskWaypoint Heart::drawHeart(double tick)
 void Heart::makeTaskTrajectory(double move_time, TaskWaypoint start, const void *arg)
 {
   double *get_arg_ = (double *)arg;
-  initHeart(move_time, start, get_arg_[0], get_arg_[1], get_arg_[2]);
+  init_heart(move_time, start, get_arg_[0], get_arg_[1], get_arg_[2]);
 }
+
 void Heart::setOption(const void *arg){}
 
 TaskWaypoint Heart::getTaskWaypoint(double tick)
 {
-  return drawHeart(tick);
+  return draw_heart(tick);
 }

@@ -1,5 +1,5 @@
-﻿/*******************************************************************************
-* Copyright 2018 ROBOTIS CO., LTD.
+/*******************************************************************************
+* Copyright 2019 ROBOTIS CO., LTD.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,65 +14,73 @@
 * limitations under the License.
 *******************************************************************************/
 
-/* Authors: Darby Lim, Hye-Jong KIM, Ryan Shim, Yong-Ho Na */
+/* Authors: Ryan Shim */
 
-#include "open_manipulator_pro_teleop/open_manipulator_pro_teleop_joystick.h"
+#include "open_manipulator_pro_teleop/open_manipulator_pro_teleop_joystick.hpp"
 
-OpenManipulatorTeleop::OpenManipulatorTeleop()
-    :node_handle_(""),
-     priv_node_handle_("~"),
-     with_gripper_(false)
+namespace open_manipulator_pro_teleop_joystick
 {
-  with_gripper_ = priv_node_handle_.param<bool>("with_gripper", false);
+OpenManipulatorProTeleopJoystick::OpenManipulatorProTeleopJoystick()
+: Node("open_manipulator_pro_teleop_joystick")
+{
+  /************************************************************
+  ** Initialise ROS Parameters
+  ************************************************************/
+  this->declare_parameter(
+    "use_gripper",
+    rclcpp::ParameterValue(false),
+    rcl_interfaces::msg::ParameterDescriptor());
+
+  this->get_parameter("use_gripper", use_gripper_);
+
+  /*****************************************************************************
+  ** Initialise joint angle and kinematic position size 
+  *****************************************************************************/
   present_joint_angle_.resize(NUM_OF_JOINT);
   present_kinematic_position_.resize(3);
 
-  initClient();
-  initSubscriber();
+  /*****************************************************************************
+  ** Initialise Subscribers
+  *****************************************************************************/
+  joint_states_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
+    "open_manipulator_pro/joint_states", 10, std::bind(&OpenManipulatorProTeleopJoystick::joint_states_callback, this, std::placeholders::_1));
+  kinematics_pose_sub_ = this->create_subscription<open_manipulator_msgs::msg::KinematicsPose>(
+    "open_manipulator_pro/kinematics_pose", 10, std::bind(&OpenManipulatorProTeleopJoystick::kinematics_pose_callback, this, std::placeholders::_1));
+  joy_command_sub_ = this->create_subscription<sensor_msgs::msg::Joy>(
+    "joy", 10, std::bind(&OpenManipulatorProTeleopJoystick::joy_callback, this, std::placeholders::_1));
 
-  ROS_INFO("OpenManipulator initialization");
+  /*****************************************************************************
+  ** Initialise Clients
+  *****************************************************************************/
+  goal_joint_space_path_client_ = this->create_client<open_manipulator_msgs::srv::SetJointPosition>("open_manipulator_pro/goal_joint_space_path");
+  goal_tool_control_client_ = this->create_client<open_manipulator_msgs::srv::SetJointPosition>("open_manipulator_pro/goal_tool_control");
+  goal_task_space_path_from_present_position_only_client_ = this->create_client<open_manipulator_msgs::srv::SetKinematicsPose>("open_manipulator_pro/goal_task_space_path_from_present_position_only");
+
+  RCLCPP_INFO(this->get_logger(), "OpenManipulator Initialised");
 }
 
-OpenManipulatorTeleop::~OpenManipulatorTeleop()
-{
-  if(ros::isStarted()) {
-    ros::shutdown(); // explicitly needed since we use ros::start();
-    ros::waitForShutdown();
-  }
-}
+OpenManipulatorProTeleopJoystick::~OpenManipulatorProTeleopJoystick() {}
 
-void OpenManipulatorTeleop::initClient()
-{
-  goal_task_space_path_from_present_position_only_client_ = node_handle_.serviceClient<open_manipulator_msgs::SetKinematicsPose>("goal_task_space_path_from_present_position_only");
-  goal_joint_space_path_client_ = node_handle_.serviceClient<open_manipulator_msgs::SetJointPosition>("goal_joint_space_path");
-  goal_tool_control_client_ = node_handle_.serviceClient<open_manipulator_msgs::SetJointPosition>("goal_tool_control");
-
-}
-void OpenManipulatorTeleop::initSubscriber()
-{
-  joint_states_sub_ = node_handle_.subscribe("joint_states", 10, &OpenManipulatorTeleop::jointStatesCallback, this);
-  kinematics_pose_sub_ = node_handle_.subscribe("kinematics_pose", 10, &OpenManipulatorTeleop::kinematicsPoseCallback, this);
-  joy_command_sub_ = node_handle_.subscribe("joy", 10, &OpenManipulatorTeleop::joyCallback, this);
-}
-
-void OpenManipulatorTeleop::jointStatesCallback(const sensor_msgs::JointState::ConstPtr &msg)
+/*****************************************************************************
+** Callback Functions
+*****************************************************************************/
+void OpenManipulatorProTeleopJoystick::joint_states_callback(const sensor_msgs::msg::JointState::SharedPtr msg)
 {
   std::vector<double> temp_angle;
   temp_angle.resize(NUM_OF_JOINT);
   for(std::vector<int>::size_type i = 0; i < msg->name.size(); i ++)
   {
-    if (!msg->name.at(i).compare("joint1"))  temp_angle.at(0) = (msg->position.at(i));
-    else if (!msg->name.at(i).compare("joint2"))  temp_angle.at(1) = (msg->position.at(i));
-    else if (!msg->name.at(i).compare("joint3"))  temp_angle.at(2) = (msg->position.at(i));
-    else if (!msg->name.at(i).compare("joint4"))  temp_angle.at(3) = (msg->position.at(i));
+    if(!msg->name.at(i).compare("joint1"))  temp_angle.at(0) = (msg->position.at(i));
+    else if(!msg->name.at(i).compare("joint2"))  temp_angle.at(1) = (msg->position.at(i));
+    else if(!msg->name.at(i).compare("joint3"))  temp_angle.at(2) = (msg->position.at(i));
+    else if(!msg->name.at(i).compare("joint4"))  temp_angle.at(3) = (msg->position.at(i));
     else if (!msg->name.at(i).compare("joint5"))  temp_angle.at(4) = (msg->position.at(i));
     else if (!msg->name.at(i).compare("joint6"))  temp_angle.at(5) = (msg->position.at(i));
   }
   present_joint_angle_ = temp_angle;
-
 }
 
-void OpenManipulatorTeleop::kinematicsPoseCallback(const open_manipulator_msgs::KinematicsPose::ConstPtr &msg)
+void OpenManipulatorProTeleopJoystick::kinematics_pose_callback(const open_manipulator_msgs::msg::KinematicsPose::SharedPtr msg)
 {
   std::vector<double> temp_position;
   temp_position.push_back(msg->pose.position.x);
@@ -80,134 +88,84 @@ void OpenManipulatorTeleop::kinematicsPoseCallback(const open_manipulator_msgs::
   temp_position.push_back(msg->pose.position.z);
   present_kinematic_position_ = temp_position;
 }
-void OpenManipulatorTeleop::joyCallback(const sensor_msgs::Joy::ConstPtr &msg)
-{
-  if (msg->axes.at(1) >= 0.9) setGoal("x+");
-  else if (msg->axes.at(1) <= -0.9) setGoal("x-");
-  else if (msg->axes.at(0) >=  0.9) setGoal("y+");
-  else if (msg->axes.at(0) <= -0.9) setGoal("y-");
-  else if (msg->buttons.at(3) == 1) setGoal("z+");
-  else if (msg->buttons.at(0) == 1) setGoal("z-");
-  else if (msg->buttons.at(5) == 1) setGoal("home");
-  else if (msg->buttons.at(4) == 1) setGoal("init");
 
-  if (with_gripper_)
+void OpenManipulatorProTeleopJoystick::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
+{
+  if(msg->axes.at(1) >= 0.9) set_goal("x+");
+  else if(msg->axes.at(1) <= -0.9) set_goal("x-");
+  else if(msg->axes.at(0) >=  0.9) set_goal("y+");
+  else if(msg->axes.at(0) <= -0.9) set_goal("y-");
+  else if(msg->buttons.at(3) == 1) set_goal("z+");
+  else if(msg->buttons.at(0) == 1) set_goal("z-");
+  else if(msg->buttons.at(5) == 1) set_goal("home");
+  else if(msg->buttons.at(4) == 1) set_goal("init");
+
+  if (use_gripper_)
   {
-    if (msg->buttons.at(2) == 1) setGoal("gripper close");
-    else if (msg->buttons.at(1) == 1) setGoal("gripper open");
+    if(msg->buttons.at(2) == 1) set_goal("gripper close");
+    else if(msg->buttons.at(1) == 1) set_goal("gripper open");
   }
 }
 
-std::vector<double> OpenManipulatorTeleop::getPresentJointAngle()
+/*****************************************************************************
+** Callback Functions and Relevant Functions
+*****************************************************************************/
+void OpenManipulatorProTeleopJoystick::set_goal(const char* str)
 {
-  return present_joint_angle_;
-}
-std::vector<double> OpenManipulatorTeleop::getPresentKinematicsPose()
-{
-  return present_kinematic_position_;
-}
-
-bool OpenManipulatorTeleop::setJointSpacePath(std::vector<std::string> joint_name, std::vector<double> joint_angle, double path_time)
-{
-  open_manipulator_msgs::SetJointPosition srv;
-  srv.request.joint_position.joint_name = joint_name;
-  srv.request.joint_position.position = joint_angle;
-  srv.request.path_time = path_time;
-
-  if(goal_joint_space_path_client_.call(srv))
-  {
-    return srv.response.is_planned;
-  }
-  return false;
-}
-
-bool OpenManipulatorTeleop::setToolControl(std::vector<double> joint_angle)
-{
-  open_manipulator_msgs::SetJointPosition srv;
-  srv.request.joint_position.joint_name.push_back(priv_node_handle_.param<std::string>("end_effector_name", "gripper"));
-  srv.request.joint_position.position = joint_angle;
-
-  if(goal_tool_control_client_.call(srv))
-  {
-    return srv.response.is_planned;
-  }
-  return false;
-}
-
-bool OpenManipulatorTeleop::setTaskSpacePathFromPresentPositionOnly(std::vector<double> kinematics_pose, double path_time)
-{
-  open_manipulator_msgs::SetKinematicsPose srv;
-  srv.request.planning_group = priv_node_handle_.param<std::string>("end_effector_name", "gripper");
-  srv.request.kinematics_pose.pose.position.x = kinematics_pose.at(0);
-  srv.request.kinematics_pose.pose.position.y = kinematics_pose.at(1);
-  srv.request.kinematics_pose.pose.position.z = kinematics_pose.at(2);
-  srv.request.path_time = path_time;
-
-  if(goal_task_space_path_from_present_position_only_client_.call(srv))
-  {
-    return srv.response.is_planned;
-  }
-  return false;
-}
-
-void OpenManipulatorTeleop::setGoal(const char* str)
-{
-  std::vector<double> goalPose;  goalPose.resize(3, 0.0);
-  std::vector<double> goalJoint; goalJoint.resize(6, 0.0);
+  std::vector<double> goalPose;  goalPose.resize(3,0);
+  std::vector<double> goalJoint; goalJoint.resize(4,0);
 
   if(str == "x+")
   {
     printf("increase(++) x axis in cartesian space\n");
     goalPose.at(0) = DELTA;
-    setTaskSpacePathFromPresentPositionOnly(goalPose, PATH_TIME);
+    set_task_space_path_from_present_position_only(goalPose, PATH_TIME);
   }
   else if(str == "x-")
   {
     printf("decrease(--) x axis in cartesian space\n");
     goalPose.at(0) = -DELTA;
-    setTaskSpacePathFromPresentPositionOnly(goalPose, PATH_TIME);
+    set_task_space_path_from_present_position_only(goalPose, PATH_TIME);
   }
   else if(str == "y+")
   {
     printf("increase(++) y axis in cartesian space\n");
     goalPose.at(1) = DELTA;
-    setTaskSpacePathFromPresentPositionOnly(goalPose, PATH_TIME);
+    set_task_space_path_from_present_position_only(goalPose, PATH_TIME);
   }
   else if(str == "y-")
   {
     printf("decrease(--) y axis in cartesian space\n");
     goalPose.at(1) = -DELTA;
-    setTaskSpacePathFromPresentPositionOnly(goalPose, PATH_TIME);
+    set_task_space_path_from_present_position_only(goalPose, PATH_TIME);
   }
   else if(str == "z+")
   {
     printf("increase(++) z axis in cartesian space\n");
     goalPose.at(2) = DELTA;
-    setTaskSpacePathFromPresentPositionOnly(goalPose, PATH_TIME);
+    set_task_space_path_from_present_position_only(goalPose, PATH_TIME);
   }
   else if(str == "z-")
   {
     printf("decrease(--) z axis in cartesian space\n");
     goalPose.at(2) = -DELTA;
-    setTaskSpacePathFromPresentPositionOnly(goalPose, PATH_TIME);
+    set_task_space_path_from_present_position_only(goalPose, PATH_TIME);
   }
-
   else if(str == "gripper open")
   {
     printf("open gripper\n");
     std::vector<double> joint_angle;
 
-    joint_angle.push_back(1.135);
-    setToolControl(joint_angle);
+    joint_angle.push_back(0.01);
+    set_tool_control(joint_angle);
   }
   else if(str == "gripper close")
   {
     printf("close gripper\n");
     std::vector<double> joint_angle;
-    joint_angle.push_back(0.0);
-    setToolControl(joint_angle);
+    joint_angle.push_back(-0.01);
+    set_tool_control(joint_angle);
   }
-
   else if(str == "home")
   {
     printf("home pose\n");
@@ -221,7 +179,7 @@ void OpenManipulatorTeleop::setGoal(const char* str)
     joint_name.push_back("joint4"); joint_angle.push_back(0.0);
     joint_name.push_back("joint5"); joint_angle.push_back(PI/8);
     joint_name.push_back("joint6"); joint_angle.push_back(0.0);
-    setJointSpacePath(joint_name, joint_angle, path_time);
+    set_joint_space_path(joint_name, joint_angle, path_time);
   }
   else if(str == "init")
   {
@@ -236,20 +194,75 @@ void OpenManipulatorTeleop::setGoal(const char* str)
     joint_name.push_back("joint4"); joint_angle.push_back(0.0);
     joint_name.push_back("joint5"); joint_angle.push_back(0.0);
     joint_name.push_back("joint6"); joint_angle.push_back(0.0);
-    setJointSpacePath(joint_name, joint_angle, path_time);
+    set_joint_space_path(joint_name, joint_angle, path_time);
   }
 }
 
-int main(int argc, char **argv)
+bool OpenManipulatorProTeleopJoystick::set_joint_space_path(std::vector<std::string> joint_name, std::vector<double> joint_angle, double path_time)
 {
-  // Init ROS node
-  ros::init(argc, argv, "open_manipulator_TELEOP");
-  OpenManipulatorTeleop openManipulatorTeleop;
+  auto request = std::make_shared<open_manipulator_msgs::srv::SetJointPosition::Request>();
+  request->joint_position.joint_name = joint_name;
+  request->joint_position.position = joint_angle;
+  request->path_time = path_time;
+  
+  using ServiceResponseFuture = rclcpp::Client<open_manipulator_msgs::srv::SetJointPosition>::SharedFuture;
+  auto response_received_callback = [this](ServiceResponseFuture future) {
+      auto result = future.get();
+      return result->is_planned;
+  };
+  auto future_result = goal_joint_space_path_client_->async_send_request(request, response_received_callback);
 
-  ROS_INFO("OpenManipulator teleoperation using joystick start");
+  return false;
+}
 
-  ros::spin();
+bool OpenManipulatorProTeleopJoystick::set_tool_control(std::vector<double> joint_angle)
+{
+  auto request = std::make_shared<open_manipulator_msgs::srv::SetJointPosition::Request>();
+  request->joint_position.joint_name.push_back("gripper");
+  request->joint_position.position = joint_angle;
 
-  printf("Teleop. is finished\n");
+  using ServiceResponseFuture = rclcpp::Client<open_manipulator_msgs::srv::SetJointPosition>::SharedFuture;
+  auto response_received_callback = [this](ServiceResponseFuture future) {
+      auto result = future.get();
+      return result->is_planned;
+  };
+  auto future_result = goal_tool_control_client_->async_send_request(request, response_received_callback);
+
+  return false;
+}
+
+bool OpenManipulatorProTeleopJoystick::set_task_space_path_from_present_position_only(std::vector<double> kinematics_pose, double path_time)
+{
+  auto request = std::make_shared<open_manipulator_msgs::srv::SetKinematicsPose::Request>();
+  request->planning_group = "gripper";
+  request->kinematics_pose.pose.position.x = kinematics_pose.at(0);
+  request->kinematics_pose.pose.position.y = kinematics_pose.at(1);
+  request->kinematics_pose.pose.position.z = kinematics_pose.at(2);
+  request->path_time = path_time;
+
+
+  using ServiceResponseFuture = rclcpp::Client<open_manipulator_msgs::srv::SetKinematicsPose>::SharedFuture;
+  auto response_received_callback = [this](ServiceResponseFuture future) {
+      auto result = future.get();
+      return result->is_planned;
+  };
+  auto future_result = goal_task_space_path_from_present_position_only_client_->async_send_request(request, response_received_callback);
+
+  return false;
+}
+
+}  // namespace open_manipulator_pro_teleop_joystick
+
+/*****************************************************************************
+** Main
+*****************************************************************************/
+int main(int argc, char *argv[])
+{
+  rclcpp::init(argc, argv);
+
+  rclcpp::spin(std::make_shared<open_manipulator_pro_teleop_joystick::OpenManipulatorProTeleopJoystick>());
+
+  rclcpp::shutdown();
+
   return 0;
 }

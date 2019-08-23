@@ -1,5 +1,5 @@
 ﻿/*******************************************************************************
-* Copyright 2018 ROBOTIS CO., LTD.
+* Copyright 2019 ROBOTIS CO., LTD.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 
 /* Authors: Darby Lim, Hye-Jong KIM, Ryan Shim, Yong-Ho Na */
 
-#include "../include/open_manipulator_pro_libs/open_manipulator_pro.h"
+#include "../include/open_manipulator_pro_libs/open_manipulator_pro.hpp"
 
-OpenManipulator::OpenManipulator()
-{}
-OpenManipulator::~OpenManipulator()
+OpenManipulatorPro::OpenManipulatorPro() {}
+
+OpenManipulatorPro::~OpenManipulatorPro()
 {
   delete kinematics_;
   delete actuator_;
@@ -29,7 +29,7 @@ OpenManipulator::~OpenManipulator()
     delete custom_trajectory_[index];
 }
 
-void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING usb_port, STRING baud_rate, float control_loop_time, bool with_gripper)
+void OpenManipulatorPro::init_open_manipulator_pro(bool using_actual_robot_state, STRING usb_port, STRING baud_rate, float control_loop_time, bool with_gripper)
 {
   /*****************************************************************************
   ** Initialize Manipulator Parameter
@@ -196,7 +196,6 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
     void *p_joint_dxl_mode_arg = &joint_dxl_mode_arg;
     setJointActuatorMode(JOINT_DYNAMIXEL, jointDxlId, p_joint_dxl_mode_arg);
 
-
     /*****************************************************************************
     ** Initialize Tool Actuator
     *****************************************************************************/
@@ -247,9 +246,8 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
   addCustomTrajectory(CUSTOM_TRAJECTORY_HEART, custom_trajectory_[3]);
 }
 
-void OpenManipulator::processOpenManipulator(double present_time, bool using_actual_robot_state, bool with_gripper)
+void OpenManipulatorPro::process_open_manipulator_pro(double present_time, bool using_actual_robot_state, bool with_gripper)
 {
- 
   JointWaypoint goal_joint_value = getJointGoalValueFromTrajectory(present_time);
   JointWaypoint goal_tool_value;
   
@@ -264,7 +262,7 @@ void OpenManipulator::processOpenManipulator(double present_time, bool using_act
     if (!onoff)
       goal_tool_value = getToolGoalValue();
     else
-      goal_tool_value = distanceToAngle(getToolGoalValue());
+      goal_tool_value = distance_to_angle(getToolGoalValue());
   }
 
   receiveAllJointActuatorValue();
@@ -276,7 +274,7 @@ void OpenManipulator::processOpenManipulator(double present_time, bool using_act
     if (using_actual_robot_state)
     {
         getManipulator()->setJointValue(tool_component_name.at(0), 
-                                        angleToDistance(receiveAllToolActuatorValue()).at(0));
+                                        angle_to_distance(receiveAllToolActuatorValue()).at(0));
     }
   }
   
@@ -286,7 +284,7 @@ void OpenManipulator::processOpenManipulator(double present_time, bool using_act
   solveForwardKinematics();
 }
 
-JointWaypoint OpenManipulator::distanceToAngle(JointWaypoint distance)
+JointWaypoint OpenManipulatorPro::distance_to_angle(JointWaypoint distance)
 {
   // distance (m) -> angle (rad) 
   double angle = 1.135 - distance.at(0).position; // / 0.109 * 1.135;
@@ -300,7 +298,7 @@ JointWaypoint OpenManipulator::distanceToAngle(JointWaypoint distance)
   return result_vector;
 }
 
-JointWaypoint OpenManipulator::angleToDistance(JointWaypoint angle)
+JointWaypoint OpenManipulatorPro::angle_to_distance(JointWaypoint angle)
 {
   // angle (rad) -> distance (m) 
   double distance = (1.135 - angle.at(0).position); /// 1.135 * 0.109;

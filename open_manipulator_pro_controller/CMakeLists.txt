@@ -1,89 +1,133 @@
 ﻿################################################################################
 # Set minimum required version of cmake, project name and compile options
 ################################################################################
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(open_manipulator_pro_controller)
 
-add_compile_options(-std=c++11)
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
 
 ################################################################################
-# Find catkin packages and libraries for catkin and system dependencies
+# Find and load build settings from external packages
 ################################################################################
-find_package(catkin REQUIRED COMPONENTS
-    roscpp
-    std_msgs
-    sensor_msgs
-    geometry_msgs
-    moveit_msgs
-    trajectory_msgs
-    open_manipulator_msgs
-    robotis_manipulator
-    open_manipulator_pro_libs
-    moveit_core
-    moveit_ros_planning
-    moveit_ros_planning_interface
-    cmake_modules
-)
-find_package(Boost REQUIRED)
+find_package(ament_cmake REQUIRED)
+find_package(cmake_modules REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(open_manipulator_msgs REQUIRED)
+find_package(open_manipulator_pro_libs REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(robotis_manipulator REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(trajectory_msgs REQUIRED)
 
-################################################################################
-# Setup for python modules and scripts
-################################################################################
+# If you want to use MoveIt!, change OFF to ON.
+set(USE_MOVEIT OFF)
+
+if (USE_MOVEIT)
+  #find_package(moveit_core REQUIRED)
+  #find_package(moveit_msgs REQUIRED)
+  #find_package(moveit_ros_planning REQUIRED) 
+  #find_package(moveit_ros_planning_interface REQUIRED)
+endif ()
 
 ################################################################################
 # Declare ROS messages, services and actions
 ################################################################################
 
 ################################################################################
-## Declare ROS dynamic reconfigure parameters
-################################################################################
-
-################################################################################
-# Declare catkin specific configuration to be passed to dependent projects
-################################################################################
-catkin_package(
-  INCLUDE_DIRS include
-  CATKIN_DEPENDS roscpp std_msgs sensor_msgs geometry_msgs moveit_msgs trajectory_msgs open_manipulator_msgs robotis_manipulator open_manipulator_pro_libs moveit_core moveit_ros_planning  moveit_ros_planning_interface cmake_modules
-  DEPENDS Boost
-)
-
-################################################################################
 # Build
 ################################################################################
 include_directories(
   include
-  ${catkin_INCLUDE_DIRS}
-  ${Boost_INCLUDE_DIRS}
 )
 
-add_executable(open_manipulator_pro_controller src/open_manipulator_pro_controller.cpp)
-add_dependencies(open_manipulator_pro_controller ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(open_manipulator_pro_controller ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+if(USE_MOVEIT)
+  set(dependencies
+    "cmake_modules"
+    "geometry_msgs" 
+    "open_manipulator_msgs"
+    "open_manipulator_pro_libs" 
+    "rclcpp" 
+    "robotis_manipulator" 
+    "sensor_msgs" 
+    "std_msgs" 
+    "trajectory_msgs" 
+    "moveit_core"
+    "moveit_msgs"
+    "moveit_ros_planning"
+    "moveit_ros_planning_interface"
+  )
+else()
+  set(dependencies
+    "cmake_modules"
+    "geometry_msgs" 
+    "open_manipulator_msgs"
+    "open_manipulator_pro_libs" 
+    "rclcpp" 
+    "robotis_manipulator" 
+    "sensor_msgs" 
+    "std_msgs" 
+    "trajectory_msgs" 
+  )
+endif ()
+
+set(EXEC_NAME "open_manipulator_pro_controller")
+
+add_executable(${EXEC_NAME} src/open_manipulator_pro_controller.cpp)
+ament_target_dependencies(${EXEC_NAME} ${dependencies})
 
 ################################################################################
 # Install
 ################################################################################
-install(TARGETS open_manipulator_pro_controller
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-install(PROGRAMS
-  scripts/create_udev_rules
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}  
-)
-
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-)
-
-install(DIRECTORY launch
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+install(TARGETS ${EXEC_NAME} 
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 install(FILES 99-open-manipulator-cdc.rules
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  DESTINATION share/${PROJECT_NAME}
+)
+
+install(DIRECTORY launch param
+  DESTINATION share/${PROJECT_NAME}
+)
+
+install(PROGRAMS scripts/create_udev_rules
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 ################################################################################
 # Test
 ################################################################################
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+  find_package(ament_cmake_pytest REQUIRED)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+################################################################################
+# Macro for ament package
+################################################################################
+ament_export_include_directories(include)
+ament_export_dependencies(cmake_modules)
+ament_export_dependencies(geometry_msgs)
+ament_export_dependencies(open_manipulator_msgs)
+ament_export_dependencies(open_manipulator_x_libs)
+ament_export_dependencies(rclcpp)
+ament_export_dependencies(robotis_manipulator)
+ament_export_dependencies(std_msgs)
+ament_export_dependencies(sensor_msgs)
+ament_export_dependencies(trajectory_msgs)
+if (USE_MOVEIT)
+  #ament_export_dependencies(moveit_core)
+  #ament_export_dependencies(moveit_msgs)
+  #ament_export_dependencies(moveit_ros_planning)
+  #ament_export_dependencies(moveit_ros_planning_interface)
+endif ()
+ament_package()
