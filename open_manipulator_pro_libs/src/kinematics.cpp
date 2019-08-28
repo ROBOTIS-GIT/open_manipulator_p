@@ -1069,24 +1069,26 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
   JointValue target_angle[6];
   std::vector<JointValue> target_angle_vector;
 
-  // Compute Joint 1
+  //// Position
+  // Compute Joint 1 Angle
   Eigen::VectorXd position = Eigen::VectorXd::Zero(3);
   Eigen::MatrixXd orientation = Eigen::MatrixXd::Zero(3,3);
   position = target_pose.kinematic.position;
   orientation = target_pose.kinematic.orientation;
   double d6 = 0.123;
+
   if (with_gripper_)
   {
-    d6 += 0.1223;
+    auto tool_length = _manipulator.getComponentRelativePositionFromParent(tool_name);
+    d6 += tool_length(0);
   }
   Eigen::Vector3d position_2 = Eigen::VectorXd::Zero(3);
   position_2 << orientation(0,0), orientation(1,0), orientation(2,0);
   Eigen::Vector3d position_3 = Eigen::VectorXd::Zero(3);
   position_3 = position - d6*position_2;
-  if (position_3(0) > 0) target_angle[0].position = atan2(position_3(1), position_3(0));
-  else target_angle[0].position = atan2(position_3(1), position_3(0)) + PI;
+  target_angle[0].position = atan2(position_3(1), position_3(0));
 
-  // Compute Joint 3
+  // Compute Joint 3 Angle
   Eigen::VectorXd position3 = Eigen::VectorXd::Zero(3); 
   Eigen::VectorXd position3_2 = Eigen::VectorXd::Zero(3); 
   position3 << 0.0, 0.0, 0.126;
@@ -1101,38 +1103,61 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
   double phi = acos((l1*l1 + l2*l2 - position3_4.norm()*position3_4.norm()) / (2*l1*l2));
   double alpha1 = atan2(0.030, 0.264);
   double alpha2 = atan2(0.258, 0.030);
-  if (position_3(0) > 0) target_angle[2].position = PI - (phi-alpha1) - alpha2;
-  else target_angle[2].position = PI + (phi-alpha1) - alpha2;
+  target_angle[2].position = PI - (phi-alpha1) - alpha2;
 
-  // Compute Joint 2
+  // Compute Joint 2 Angle
   Eigen::VectorXd position2 = Eigen::VectorXd::Zero(3); 
   Eigen::MatrixXd orientation2 = math::convertRPYToRotationMatrix(0,0,target_angle[0].position);
   position2 = orientation2.inverse() * position3_4;
   double beta1 = atan2(position2(2), position2(0));
   double beta2 = acos((l1*l1 + position3_4.norm()*position3_4.norm() - l2*l2) / (2*l1*position3_4.norm()));
-  if (position_3(0) > 0) target_angle[1].position = (PI/2-alpha1) - fabs(beta1) - beta2;
+  if (position3_4(0) > 0) target_angle[1].position = (PI/2-alpha1) - fabs(beta1) - beta2;
   else target_angle[1].position = (PI/2-alpha1) + fabs(beta1) - beta2;
 
-  // Compute Joint 5
-  Eigen::Vector3d position5 = Eigen::VectorXd::Zero(3); 
-  Eigen::MatrixXd orientation5 = math::convertRPYToRotationMatrix(0,0,target_angle[0].position)
-                                 * math::convertRPYToRotationMatrix(0,target_angle[1].position,0)
-                                 * math::convertRPYToRotationMatrix(0,target_angle[2].position,0);
-  position5 << orientation5(0,0), orientation5(1,0), orientation5(2,0);
-  if (position5(2) > position_2(2)) target_angle[4].position = acos(position5.dot(position_2));
-  else target_angle[4].position = -acos(position5.dot(position_2));
+  //// Orientation
+  // Compute Joint 4, 5, 6 Angles
+  Eigen::MatrixXd orientation_to_joint3 = math::convertRPYToRotationMatrix(0,0,target_angle[0].position)
+                                        * math::convertRPYToRotationMatrix(0,target_angle[1].position,0)
+                                        * math::convertRPYToRotationMatrix(0,target_angle[2].position,0);
+  Eigen::MatrixXd orientation_def = orientation_to_joint3.transpose() * orientation;
 
-  // Compute Joint 4, 6
-  Eigen::MatrixXd orientation4 = Eigen::MatrixXd::Zero(3,3);
-  orientation4 = orientation5.inverse() * orientation;
-  target_angle[3].position = atan2(orientation4(1,0), -orientation4(2,0));
-  target_angle[5].position = atan2(orientation4(0,1), orientation4(0,2));
-  if (target_angle[3].position > PI/2) target_angle[3].position = target_angle[3].position - PI;
-  else if (target_angle[3].position < -PI/2) target_angle[3].position = target_angle[3].position + PI;
-  if (target_angle[5].position > PI/2) target_angle[5].position = target_angle[5].position - PI;
-  else if (target_angle[5].position < -PI/2) target_angle[5].position = target_angle[5].position + PI;
+  if(orientation_def(0,0) <  1.0)
+  {
+    if(orientation_def(0,0) >  -1.0)
+    { 
+      double joint4_angle_present = _manipulator.getJointPosition("joint4");
+      double joint4_angle_temp_1 = atan2(orientation_def(1,0), -orientation_def(2,0));
+      double joint4_angle_temp_2 = atan2(-orientation_def(1,0), orientation_def(2,0));
+
+      if(fabs(joint4_angle_present-joint4_angle_temp_1) < fabs(joint4_angle_present-joint4_angle_temp_2))
+      {
+        log::println("joint4_angle_temp_1", fabs(joint4_angle_present-joint4_angle_temp_1));
+        target_angle[3].position = joint4_angle_temp_1;
+        target_angle[4].position = acos(orientation_def(0,0));
+        target_angle[5].position = atan2(orientation_def(0,1), orientation_def(0,2));
+      }
+      else
+      {
+        log::println("joint4_angle_temp_2", fabs(joint4_angle_present-joint4_angle_temp_2));
+        target_angle[3].position = joint4_angle_temp_2;
+        target_angle[4].position = -acos(orientation_def(0,0));
+        target_angle[5].position = atan2(-orientation_def(0,1), -orientation_def(0,2));
+      }
+    }
+    else        // R(0,0) = -1
+    {
+      target_angle[3].position = _manipulator.getJointPosition("joint4");
+      target_angle[4].position = PI;
+      target_angle[5].position = atan2(-orientation_def(1,2), orientation_def(1,1))+target_angle[3].position;
+    }
+  }
+  else          // R(0,0) = 1
+  {
+    target_angle[3].position = _manipulator.getJointPosition("joint4");
+    target_angle[4].position = 0.0;
+    target_angle[5].position = atan2(-orientation_def(1,2), orientation_def(1,1))-target_angle[3].position;
+  }  
   
-
   // log::println("------------------------------------");
   // log::println("End-effector Pose : ");
   // log::println("position1: ", target_angle[0].position);
