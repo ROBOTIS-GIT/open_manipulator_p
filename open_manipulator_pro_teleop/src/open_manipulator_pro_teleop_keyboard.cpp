@@ -18,6 +18,7 @@
 
 #include "open_manipulator_pro_teleop/open_manipulator_pro_teleop_keyboard.hpp"
 
+using namespace std::placeholders;
 using namespace std::chrono_literals;
 
 namespace open_manipulator_pro_teleop_keyboard
@@ -45,9 +46,9 @@ OpenManipulatorProTeleopKeyboard::OpenManipulatorProTeleopKeyboard()
   ** Initialise Subscribers
   ********************************************************************************/
   joint_states_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
-    "open_manipulator_pro/joint_states", 10, std::bind(&OpenManipulatorProTeleopKeyboard::joint_states_callback, this, std::placeholders::_1));
+    "open_manipulator_pro/joint_states", 10, std::bind(&OpenManipulatorProTeleopKeyboard::joint_states_callback, this, _1));
   kinematics_pose_sub_ = this->create_subscription<open_manipulator_msgs::msg::KinematicsPose>(
-    "open_manipulator_pro/kinematics_pose", 10, std::bind(&OpenManipulatorProTeleopKeyboard::kinematics_pose_callback, this, std::placeholders::_1));
+    "open_manipulator_pro/kinematics_pose", 10, std::bind(&OpenManipulatorProTeleopKeyboard::kinematics_pose_callback, this, _1));
 
   /********************************************************************************
   ** Initialise Clients
@@ -79,7 +80,7 @@ void OpenManipulatorProTeleopKeyboard::joint_states_callback(const sensor_msgs::
 {
   std::vector<double> temp_angle;
   temp_angle.resize(NUM_OF_JOINT);
-  for (std::vector<int>::size_type i = 0; i < msg->name.size(); i ++)
+  for (uint8_t i = 0; i < msg->name.size(); i ++)
   {
     if (!msg->name.at(i).compare("joint1")) temp_angle.at(0) = (msg->position.at(i));
     else if (!msg->name.at(i).compare("joint2")) temp_angle.at(1) = (msg->position.at(i));
