@@ -1,5 +1,5 @@
 ﻿/*******************************************************************************
-* Copyright 2018 ROBOTIS CO., LTD.
+* Copyright 2019 ROBOTIS CO., LTD.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -108,7 +108,9 @@ void QNode::manipulatorStatesCallback(const open_manipulator_msgs::OpenManipulat
 void QNode::jointStatesCallback(const sensor_msgs::JointState::ConstPtr &msg)
 {
   std::vector<double> temp_angle;
-  temp_angle.resize(NUM_OF_JOINT_AND_TOOL);
+  temp_angle.resize(NUM_OF_JOINT_AND_TOOL - 1);
+  if (getWithGripperState()) temp_angle.resize(NUM_OF_JOINT_AND_TOOL);
+
   for(int i = 0; i < msg->name.size(); i ++)
   {
     if     (!msg->name.at(i).compare("joint1"))  temp_angle.at(0) = (msg->position.at(i));
@@ -117,7 +119,11 @@ void QNode::jointStatesCallback(const sensor_msgs::JointState::ConstPtr &msg)
     else if(!msg->name.at(i).compare("joint4"))  temp_angle.at(3) = (msg->position.at(i));
     else if(!msg->name.at(i).compare("joint5"))  temp_angle.at(4) = (msg->position.at(i));
     else if(!msg->name.at(i).compare("joint6"))  temp_angle.at(5) = (msg->position.at(i));
-    else if(!msg->name.at(i).compare("gripper")) temp_angle.at(6) = (msg->position.at(i));
+    
+    if (getWithGripperState())
+    {
+      if(!msg->name.at(i).compare("gripper")) temp_angle.at(6) = (msg->position.at(i));      
+    }
   }
   present_joint_angle_ = temp_angle;
 }
