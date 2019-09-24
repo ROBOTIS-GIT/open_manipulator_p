@@ -77,7 +77,7 @@ void OpenManipulatorProController::init_parameters()
 
   // Get parameter from yaml
   this->get_parameter_or<bool>("use_platform", use_platform_, false);
-  this->get_parameter_or<bool>("use_gripper", use_gripper_ false);
+  this->get_parameter_or<bool>("use_gripper", use_gripper_, false);
   this->get_parameter_or<double>("control_period", control_period_, 0.010);
   this->get_parameter_or<bool>("use_moveit", use_moveit_, false);
 }
