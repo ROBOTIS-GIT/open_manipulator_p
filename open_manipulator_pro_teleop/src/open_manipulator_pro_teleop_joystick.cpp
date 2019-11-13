@@ -14,11 +14,12 @@
 * limitations under the License.
 *******************************************************************************/
 
-/* Authors: Ryan Shim */
+/* Authors: Darby Lim, Hye-Jong KIM, Ryan Shim, Yong-Ho Na */
 
 #include "open_manipulator_pro_teleop/open_manipulator_pro_teleop_joystick.hpp"
 
 using namespace std::placeholders;
+
 
 namespace open_manipulator_pro_teleop_joystick
 {
@@ -56,9 +57,12 @@ OpenManipulatorProTeleopJoystick::OpenManipulatorProTeleopJoystick()
   /*****************************************************************************
   ** Initialise Clients
   *****************************************************************************/
-  goal_joint_space_path_client_ = this->create_client<open_manipulator_msgs::srv::SetJointPosition>("open_manipulator_pro/goal_joint_space_path");
-  goal_tool_control_client_ = this->create_client<open_manipulator_msgs::srv::SetJointPosition>("open_manipulator_pro/goal_tool_control");
-  goal_task_space_path_from_present_position_only_client_ = this->create_client<open_manipulator_msgs::srv::SetKinematicsPose>("open_manipulator_pro/goal_task_space_path_from_present_position_only");
+  goal_joint_space_path_client_ = this->create_client<open_manipulator_msgs::srv::SetJointPosition>(
+    "open_manipulator_pro/goal_joint_space_path");
+  goal_tool_control_client_ = this->create_client<open_manipulator_msgs::srv::SetJointPosition>(
+    "open_manipulator_pro/goal_tool_control");
+  goal_task_space_path_from_present_position_only_client_ = this->create_client<open_manipulator_msgs::srv::SetKinematicsPose>(
+    "open_manipulator_pro/goal_task_space_path_from_present_position_only");
 
   RCLCPP_INFO(this->get_logger(), "OpenManipulator-PRO Teleop Joystick Initialised");
 }

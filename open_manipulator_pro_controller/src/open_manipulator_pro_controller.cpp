@@ -21,6 +21,7 @@
 using namespace std::placeholders;
 using namespace std::chrono_literals;
 
+
 namespace open_manipulator_pro_controller
 {
 OpenManipulatorProController::OpenManipulatorProController(std::string usb_port, std::string baud_rate)

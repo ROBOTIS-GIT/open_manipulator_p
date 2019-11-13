@@ -14,12 +14,13 @@
 * limitations under the License.
 *******************************************************************************/
 
-/* Authors: Ryan Shim */
+/* Authors: Darby Lim, Hye-Jong KIM, Ryan Shim, Yong-Ho Na */
 
 #include "open_manipulator_pro_teleop/open_manipulator_pro_teleop_keyboard.hpp"
 
 using namespace std::placeholders;
 using namespace std::chrono_literals;
+
 
 namespace open_manipulator_pro_teleop_keyboard
 {
@@ -37,13 +38,13 @@ OpenManipulatorProTeleopKeyboard::OpenManipulatorProTeleopKeyboard()
   this->get_parameter("use_gripper", use_gripper_);
 
   /********************************************************************************
-  ** Initialise joint angle and kinematic position size 
+  ** Initialise variables
   ********************************************************************************/
   present_joint_angle_.resize(NUM_OF_JOINT);
   present_kinematic_position_.resize(3);
 
   /********************************************************************************
-  ** Initialise Subscribers
+  ** Initialise ROS subscribers
   ********************************************************************************/
   auto qos = rclcpp::QoS(rclcpp::KeepLast(10));
 
@@ -53,18 +54,22 @@ OpenManipulatorProTeleopKeyboard::OpenManipulatorProTeleopKeyboard()
     "open_manipulator_pro/kinematics_pose", qos, std::bind(&OpenManipulatorProTeleopKeyboard::kinematics_pose_callback, this, _1));
 
   /********************************************************************************
-  ** Initialise Clients
+  ** Initialise ROS clients
   ********************************************************************************/
-  goal_joint_space_path_client_ = this->create_client<open_manipulator_msgs::srv::SetJointPosition>("open_manipulator_pro/goal_joint_space_path");
-  goal_tool_control_client_ = this->create_client<open_manipulator_msgs::srv::SetJointPosition>("open_manipulator_pro/goal_tool_control");
-  goal_task_space_path_from_present_position_only_client_ = this->create_client<open_manipulator_msgs::srv::SetKinematicsPose>("open_manipulator_pro/goal_task_space_path_from_present_position_only");
-  goal_joint_space_path_from_present_client_ = this->create_client<open_manipulator_msgs::srv::SetJointPosition>("open_manipulator_pro/goal_joint_space_path_from_present");
+  goal_joint_space_path_client_ = this->create_client<open_manipulator_msgs::srv::SetJointPosition>(
+    "open_manipulator_pro/goal_joint_space_path");
+  goal_tool_control_client_ = this->create_client<open_manipulator_msgs::srv::SetJointPosition>(
+    "open_manipulator_pro/goal_tool_control");
+  goal_task_space_path_from_present_position_only_client_ = this->create_client<open_manipulator_msgs::srv::SetKinematicsPose>(
+    "open_manipulator_pro/goal_task_space_path_from_present_position_only");
+  goal_joint_space_path_from_present_client_ = this->create_client<open_manipulator_msgs::srv::SetJointPosition>(
+    "open_manipulator_pro/goal_joint_space_path_from_present");
 
   /********************************************************************************
-  ** Display in terminal
+  ** Initialise ROS timers
   ********************************************************************************/
   this->disable_waiting_for_enter();
-  timer_ = this->create_wall_timer(10ms, std::bind(&OpenManipulatorProTeleopKeyboard::display_callback, this));
+  update_timer_ = this->create_wall_timer(10ms, std::bind(&OpenManipulatorProTeleopKeyboard::update_callback, this));
 
   RCLCPP_INFO(this->get_logger(), "OpenManipulator-PRO Teleop Keyboard Initialised");
 }
@@ -455,7 +460,7 @@ void OpenManipulatorProTeleopKeyboard::disable_waiting_for_enter()
   tcsetattr(0, TCSANOW, &newt);     /* Apply settings */
 }
 
-void OpenManipulatorProTeleopKeyboard::display_callback()  
+void OpenManipulatorProTeleopKeyboard::update_callback()  
 {
   this->print_text();  
   
