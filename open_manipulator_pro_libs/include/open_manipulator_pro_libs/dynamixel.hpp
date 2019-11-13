@@ -27,6 +27,7 @@
   #include <dynamixel_workbench_toolbox/dynamixel_workbench.h>
 #endif
 
+
 namespace dynamixel
 {
 #define SYNC_WRITE_HANDLER 0
@@ -174,7 +175,3 @@ class GripperDynamixel : public robotis_manipulator::ToolActuator
 };
 }  // namespace dynamixel
 #endif // DYNAMIXEL_HPP
-
-
-
-

@@ -14,7 +14,7 @@
 * limitations under the License.
 *******************************************************************************/
 
-/* Authors: Ryan Shim */
+/* Authors: Darby Lim, Hye-Jong KIM, Ryan Shim, Yong-Ho Na */
 
 #ifndef OPEN_MANIPULATOR_PRO_TELEOP_JOYSTICK_HPP_
 #define OPEN_MANIPULATOR_PRO_TELEOP_JOYSTICK_HPP_
@@ -22,11 +22,13 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
 #include <sensor_msgs/msg/joy.hpp>
+
 #include "open_manipulator_msgs/srv/set_joint_position.hpp"
 #include "open_manipulator_msgs/srv/set_kinematics_pose.hpp"
 
 #define PI 3.14159265359
 #define NUM_OF_JOINT 6
+
 
 namespace open_manipulator_pro_teleop_joystick
 {

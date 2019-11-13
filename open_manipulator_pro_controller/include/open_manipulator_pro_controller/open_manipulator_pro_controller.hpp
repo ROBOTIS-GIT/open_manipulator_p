@@ -19,30 +19,31 @@
 #ifndef OPEN_MANIPULATOR_PRO_CONTROLLER_HPP
 #define OPEN_MANIPULATOR_PRO_CONTROLLER_HPP
 
-#include <rclcpp/rclcpp.hpp>
-#include <unistd.h>
 #include <chrono>
 #include <cstdio>
 #include <memory>
-#include "open_manipulator_pro_libs/open_manipulator_pro.hpp"
+#include <unistd.h>
 
-// Only if You Have MoveIt! Dependencies
-// #include "open_manipulator_pro_controller/open_manipulator_pro_controller_moveit.hpp"
-
+#include "geometry_msgs/msg/pose_stamped.hpp"
+#include <rclcpp/rclcpp.hpp>
+#include "sensor_msgs/msg/joint_state.hpp"
+#include "std_msgs/msg/empty.hpp"
 #include "std_msgs/msg/float64.hpp"
 #include "std_msgs/msg/string.hpp"
-#include "std_msgs/msg/empty.hpp"
-#include "sensor_msgs/msg/joint_state.hpp"
-#include "geometry_msgs/msg/pose_stamped.hpp"
 #include "trajectory_msgs/msg/joint_trajectory.hpp"
 #include "trajectory_msgs/msg/joint_trajectory_point.hpp"
-#include "open_manipulator_msgs/srv/set_joint_position.hpp"
-#include "open_manipulator_msgs/srv/set_kinematics_pose.hpp"
-#include "open_manipulator_msgs/srv/set_drawing_trajectory.hpp"
-#include "open_manipulator_msgs/srv/set_actuator_state.hpp"
+
 #include "open_manipulator_msgs/srv/get_joint_position.hpp"
 #include "open_manipulator_msgs/srv/get_kinematics_pose.hpp"
 #include "open_manipulator_msgs/msg/open_manipulator_state.hpp"
+#include "open_manipulator_msgs/srv/set_actuator_state.hpp"
+#include "open_manipulator_msgs/srv/set_drawing_trajectory.hpp"
+#include "open_manipulator_msgs/srv/set_joint_position.hpp"
+#include "open_manipulator_msgs/srv/set_kinematics_pose.hpp"
+#include "open_manipulator_pro_libs/open_manipulator_pro.hpp"
+// Only if You Have MoveIt! Dependencies
+// #include "open_manipulator_pro_controller/open_manipulator_pro_controller_moveit.hpp"
+
 
 namespace open_manipulator_pro_controller
 {

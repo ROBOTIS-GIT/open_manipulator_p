@@ -19,8 +19,8 @@
 #ifndef OPEN_MANIPULTOR_PRO_HPP
 #define OPEN_MANIPULTOR_PRO_HPP
 
-#include "dynamixel.hpp"
 #include "custom_trajectory.hpp"
+#include "dynamixel.hpp"
 #include "kinematics.hpp"
 
 #define CUSTOM_TRAJECTORY_SIZE 4
@@ -36,13 +36,20 @@
 #define Y_AXIS robotis_manipulator::math::vector3(0.0, 1.0, 0.0)
 #define Z_AXIS robotis_manipulator::math::vector3(0.0, 0.0, 1.0)
 
+
 class OpenManipulatorPro : public robotis_manipulator::RobotisManipulator
 {
  public:
   OpenManipulatorPro();
   virtual ~OpenManipulatorPro();
 
-  void init_open_manipulator_pro(bool using_actual_robot_state, STRING usb_port = "/dev/ttyUSB0", STRING baud_rate = "1000000", float control_loop_time = 0.010, bool with_gripper = false);
+  void init_open_manipulator_pro(
+    bool using_actual_robot_state, 
+    STRING usb_port = "/dev/ttyUSB0", 
+    STRING baud_rate = "1000000", 
+    float control_loop_time = 0.010, 
+    bool with_gripper = false,
+    std::vector<uint8_t> dxl_id = {1, 2, 3, 4, 5, 6, 7});
   void process_open_manipulator_pro(double present_time, bool using_actual_robot_state, bool with_gripper = false);
   JointWaypoint distance_to_angle(JointWaypoint distance);
   JointWaypoint angle_to_distance(JointWaypoint angle);
