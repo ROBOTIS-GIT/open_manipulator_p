@@ -49,7 +49,7 @@ install(TARGETS ${JOYSTICK_EXEC_NAME} ${KEYBOARD_EXEC_NAME}
   DESTINATION lib/${PROJECT_NAME}  
 )
 
-install(DIRECTORY launch 
+install(DIRECTORY launch param
   DESTINATION share/${PROJECT_NAME}
 )
 

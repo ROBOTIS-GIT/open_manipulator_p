@@ -30,12 +30,11 @@ OpenManipulatorProTeleopKeyboard::OpenManipulatorProTeleopKeyboard()
   /************************************************************
   ** Initialise ROS Parameters
   ************************************************************/
-  this->declare_parameter(
-    "use_gripper",
-    rclcpp::ParameterValue(false),
-    rcl_interfaces::msg::ParameterDescriptor());
+  // Declare parameters that may be set on this node
+  this->declare_parameter("use_gripper");
 
-  this->get_parameter("use_gripper", use_gripper_);
+  // Get parameter from yaml
+  this->get_parameter_or<bool>("use_gripper", use_gripper_, false);
 
   /********************************************************************************
   ** Initialise variables
