@@ -1111,7 +1111,7 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
   position2 = orientation2.inverse() * position3_4;
   double beta1 = atan2(position2(2), position2(0));
   double beta2 = acos((l1*l1 + position3_4.norm()*position3_4.norm() - l2*l2) / (2*l1*position3_4.norm()));
-  if (position3_4(0) > 0) target_angle[1].position = (PI/2-alpha1) - fabs(beta1) - beta2;
+  if (position3_4(2) > 0) target_angle[1].position = (PI/2-alpha1) - fabs(beta1) - beta2;
   else target_angle[1].position = (PI/2-alpha1) + fabs(beta1) - beta2;
 
   //// Orientation
@@ -1129,7 +1129,7 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
       double joint4_angle_temp_1 = atan2(orientation_def(1,0), -orientation_def(2,0));
       double joint4_angle_temp_2 = atan2(-orientation_def(1,0), orientation_def(2,0));
 
-      if(fabs(joint4_angle_present-joint4_angle_temp_1) < fabs(joint4_angle_present-joint4_angle_temp_2))
+      if(fabs(joint4_angle_temp_1-joint4_angle_present) < fabs(joint4_angle_temp_2-joint4_angle_present))
       {
         log::println("joint4_angle_temp_1", fabs(joint4_angle_present-joint4_angle_temp_1));
         target_angle[3].position = joint4_angle_temp_1;
@@ -1167,6 +1167,29 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
   // log::println("position4: ", target_angle[3].position);
   // log::println("position6: ", target_angle[5].position);
   // log::println("------------------------------------");
+
+  if(std::isnan(target_angle[0].position) ||
+    std::isnan(target_angle[1].position) ||
+    std::isnan(target_angle[2].position) ||
+    std::isnan(target_angle[3].position) ||
+    std::isnan(target_angle[4].position) ||
+    std::isnan(target_angle[5].position) )
+  {
+    log::error("Target angle value is NAN!!");
+  return false;
+  }
+
+
+  if(std::isinf(target_angle[0].position) ||
+    std::isinf(target_angle[1].position) ||
+    std::isinf(target_angle[2].position) ||
+    std::isinf(target_angle[3].position) ||
+    std::isinf(target_angle[4].position) ||
+    std::isinf(target_angle[5].position) )
+  {
+    log::error("Target angle value is INF!!");
+  return false;
+  }
 
   target_angle_vector.push_back(target_angle[0]);
   target_angle_vector.push_back(target_angle[1]);
