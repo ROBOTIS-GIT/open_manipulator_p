@@ -1086,7 +1086,8 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
   position_2 << orientation(0,0), orientation(1,0), orientation(2,0);
   Eigen::Vector3d position_3 = Eigen::VectorXd::Zero(3);
   position_3 = position - d6*position_2;
-  target_angle[0].position = atan2(position_3(1), position_3(0));
+  if (position_3(0) == 0) position_3(0) = 0.001;
+  target_angle[0].position = atan(position_3(1) / position_3(0));
 
   // Compute Joint 3 Angle
   Eigen::VectorXd position3 = Eigen::VectorXd::Zero(3); 
@@ -1131,14 +1132,14 @@ bool SolverUsingCRAndGeometry::inverseSolverUsingGeometry(Manipulator *manipulat
 
       if(fabs(joint4_angle_temp_1-joint4_angle_present) < fabs(joint4_angle_temp_2-joint4_angle_present))
       {
-        log::println("joint4_angle_temp_1", fabs(joint4_angle_present-joint4_angle_temp_1));
+        // log::println("joint4_angle_temp_1", fabs(joint4_angle_present-joint4_angle_temp_1));
         target_angle[3].position = joint4_angle_temp_1;
         target_angle[4].position = acos(orientation_def(0,0));
         target_angle[5].position = atan2(orientation_def(0,1), orientation_def(0,2));
       }
       else
       {
-        log::println("joint4_angle_temp_2", fabs(joint4_angle_present-joint4_angle_temp_2));
+        // log::println("joint4_angle_temp_2", fabs(joint4_angle_present-joint4_angle_temp_2));
         target_angle[3].position = joint4_angle_temp_2;
         target_angle[4].position = -acos(orientation_def(0,0));
         target_angle[5].position = atan2(-orientation_def(0,1), -orientation_def(0,2));
