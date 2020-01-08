@@ -1,3 +1,0 @@
-open_manipulator_pro_teleop_joystick:
-  ros__parameters:
-    use_gripper: true
