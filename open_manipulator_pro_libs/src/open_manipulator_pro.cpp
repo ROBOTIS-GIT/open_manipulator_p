@@ -141,17 +141,22 @@ void OpenManipulatorPro::init_open_manipulator_pro(bool using_actual_robot_state
             );
 
   int gripper_id = -1;
-  if (with_gripper) gripper_id = dxl_id[6];
+  double gripper_len = 0.0;
+  if (with_gripper) 
+  {
+    gripper_id = dxl_id[6];
+    gripper_len = 0.1223;    
+  }
 
   addTool("gripper",  // my name
           "joint6",   // parent name
-          math::vector3(0.1223, 0.0, 0.0),                    // relative position
+          math::vector3(gripper_len, 0.0, 0.0),               // relative position
           // math::vector3(0.150, 0.0, 0.0),                  // relative position
-          math::convertRPYToRotationMatrix(0.0, 0.0, 0.0), // relative orientation
-          gripper_id,  // actuator id
+          math::convertRPYToRotationMatrix(0.0, 0.0, 0.0),    // relative orientation
+          gripper_id, // actuator id
           1.1351,     // max gripper limit (0.01 m)
-          -0.001,    // min gripper limit (-0.01 m)
-          1.0,    // Change unit from `meter` to `radian`
+          -0.001,     // min gripper limit (-0.01 m)
+          1.0,        // Change unit from `meter` to `radian`
           3.2218127e-02 * 2,                                                    // mass
           math::inertiaMatrix(9.5568826e-06, 2.8424644e-06, -3.2829197e-10,
                               2.2552871e-05, -3.1463634e-10,
