@@ -253,7 +253,7 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
 
 void OpenManipulator::processOpenManipulator(double present_time, bool using_actual_robot_state, bool with_gripper)
 {
- 
+  // Planning (ik)
   JointWaypoint goal_joint_value = getJointGoalValueFromTrajectory(present_time);
   JointWaypoint goal_tool_value;
   
@@ -271,6 +271,7 @@ void OpenManipulator::processOpenManipulator(double present_time, bool using_act
       goal_tool_value = distanceToAngle(getToolGoalValue());
   }
 
+  // Control (motor)
   receiveAllJointActuatorValue();
   if (with_gripper) 
   {
@@ -287,6 +288,7 @@ void OpenManipulator::processOpenManipulator(double present_time, bool using_act
   if(goal_joint_value.size() != 0) sendAllJointActuatorValue(goal_joint_value);
   if (with_gripper) {if(goal_tool_value.size() != 0) {sendAllToolActuatorValue(goal_tool_value);}}
 
+  // Perception (fk)
   solveForwardKinematics();
 }
 
