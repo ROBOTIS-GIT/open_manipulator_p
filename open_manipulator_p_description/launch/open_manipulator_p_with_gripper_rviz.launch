@@ -2,7 +2,7 @@
   <arg name="use_gui"        default="false" />
 
   <!-- Load the URDF into the ROS Parameter Server -->
-  <include file="$(find open_manipulator_p_description)/launch/open_manipulator_p_upload.launch"/>
+  <include file="$(find open_manipulator_p_description)/launch/open_manipulator_p_with_gripper_upload.launch"/>
 
   <!-- Send joint values --> 
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
@@ -14,5 +14,5 @@
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
 
   <!-- Show in Rviz -->
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find open_manipulator_p_description)/rviz/open_manipulator_p.rviz"/>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find open_manipulator_p_description)/rviz/open_manipulator_p_with_gripper.rviz"/>
 </launch>
