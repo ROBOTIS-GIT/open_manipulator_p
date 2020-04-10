@@ -317,6 +317,7 @@
     <child link="gripper_sub_link"/>
     <limit velocity="6.5" effort="1000" lower="0.0" upper="${740.0/2048.0*pi}" />
     <dynamics damping="0.1" friction="0.0" />
+    <mimic joint="gripper" multiplier="1"/>
   </joint> 
 
   <!-- gripper 1 link -->
@@ -345,14 +346,14 @@
   </link>
 
   <!-- gripper main fixed joint-->
-  <joint name="gripper_main_fixed" type="fixed">
+  <joint name="end_effector_joint" type="fixed">
     <parent link="gripper_main_link"/>
-    <child link="end_effector"/>
+    <child link="end_effector_link"/>
     <origin xyz="0.14 0.0 0.0" rpy="0 0 0" />
   </joint>
 
   <!-- End Effector -->
-  <link name="end_effector">
+  <link name="end_effector_link">
     <visual>
       <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       <geometry>      

@@ -44,11 +44,11 @@
   <!-- gripper_link -->
   <RefLink ref="gripper_link"/>
 
-  <!-- gripper_link_sub -->
+  <!-- gripper_sub_link -->
   <RefLink ref="gripper_sub_link"/>
 
-  <!-- end effector link -->
-  <gazebo reference="end_effector">
+  <!-- end_effector_link -->
+  <gazebo reference="end_effector_link">
     <material>Gazebo/Red</material>
   </gazebo>
 
