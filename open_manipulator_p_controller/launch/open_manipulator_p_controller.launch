@@ -4,16 +4,12 @@
   <arg name="control_period"         default="0.010"/>
   <arg name="use_platform"           default="true"/>
   <arg name="with_gripper"           default="false"/>
-  <arg name="planning_group_name"    default="arm"/>
-  <arg name="moveit_sample_duration" default="0.050"/>
 
   <node name="open_manipulator_p_controller" pkg="open_manipulator_p_controller" type="open_manipulator_p_controller"
-    args="$(arg dynamixel_usb_port) $(arg dynamixel_baud_rate)" output="screen">
+     output="screen" args="$(arg dynamixel_usb_port) $(arg dynamixel_baud_rate)">
     <param name="using_platform"       value="$(arg use_platform)"/>
-    <param name="with_gripper"         value="$(arg with_gripper)"/>
-    <param name="planning_group_name"  value="$(arg planning_group_name)"/>
     <param name="control_period"       value="$(arg control_period)"/>
-    <param name="moveit_sample_duration"  value="$(arg moveit_sample_duration)"/>
+    <param name="with_gripper"         value="$(arg with_gripper)"/>
   </node>
 
 </launch>

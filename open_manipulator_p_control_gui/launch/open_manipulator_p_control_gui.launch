@@ -1,12 +1,9 @@
 <launch>
-  <arg name="robot_name"   default="open_manipulator_p"/>
   <arg name="end_effector" default="gripper"/>
   <arg name="with_gripper" default="false"/>
 
-  <group ns="$(arg robot_name)">
-    <node name="control_gui" pkg="open_manipulator_p_control_gui" type="open_manipulator_p_control_gui" output="screen">
-      <param name="with_gripper"    value="$(arg with_gripper)"/>
-      <remap from="kinematics_pose" to="$(arg end_effector)/kinematics_pose"/>
-    </node>
-  </group>
+  <node name="control_gui" pkg="open_manipulator_p_control_gui" type="open_manipulator_p_control_gui" output="screen">
+    <param name="with_gripper"    value="$(arg with_gripper)"/>
+    <remap from="kinematics_pose" to="$(arg end_effector)/kinematics_pose"/>
+  </node>
 </launch>
