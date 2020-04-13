@@ -196,15 +196,14 @@ void OpenManipulatorTeleop::setGoal(const char* str)
   {
     printf("open gripper\n");
     std::vector<double> joint_angle;
-
-    joint_angle.push_back(1.135);
+    joint_angle.push_back(0.0);
     setToolControl(joint_angle);
   }
   else if(str == "gripper close")
   {
     printf("close gripper\n");
     std::vector<double> joint_angle;
-    joint_angle.push_back(0.0);
+    joint_angle.push_back(1.1);
     setToolControl(joint_angle);
   }
 
