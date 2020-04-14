@@ -366,5 +366,15 @@
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
     </inertial>
   </link>
-  
+
+  <!-- Realsense Camera Joint Position -->
+  <joint name="camera_joint" type="fixed">
+    <axis xyz="0 1 0" />
+    <origin xyz="0.070 0.032 0.052" rpy="0 0 0"/> 
+    <parent link="gripper_main_link"/>
+    <child link="camera_link"/>
+  </joint>
+
+  <link name="camera_link"/>
+    
 </robot>
