@@ -1,33 +1,15 @@
 ﻿<launch>
-  <arg name="use_robot_name"         default="open_manipulator_p"/>
-
   <arg name="dynamixel_usb_port"     default="/dev/ttyUSB0"/>
   <arg name="dynamixel_baud_rate"    default="1000000"/>
-
   <arg name="control_period"         default="0.010"/>
-
   <arg name="use_platform"           default="true"/>
   <arg name="with_gripper"           default="false"/>
 
-  <arg name="use_moveit"             default="false"/>
-  <arg name="planning_group_name"    default="arm"/>
-  <arg name="moveit_sample_duration" default="0.050"/>
-
-  <group if="$(arg use_moveit)">
-    <include file="$(find open_manipulator_p_controller)/launch/open_manipulator_p_moveit.launch">
-      <arg name="robot_name"      value="$(arg use_robot_name)"/>
-      <arg name="sample_duration" value="$(arg moveit_sample_duration)"/>
-      <arg name="with_gripper"    value="$(arg with_gripper)"/>
-    </include>
-  </group>
-
-  <node name="$(arg use_robot_name)" pkg="open_manipulator_p_controller" type="open_manipulator_p_controller" output="screen" args="$(arg dynamixel_usb_port) $(arg dynamixel_baud_rate)">
-      <param name="using_platform"       value="$(arg use_platform)"/>
-      <param name="with_gripper"         value="$(arg with_gripper)"/>
-      <param name="using_moveit"         value="$(arg use_moveit)"/>
-      <param name="planning_group_name"  value="$(arg planning_group_name)"/>
-      <param name="control_period"       value="$(arg control_period)"/>
-      <param name="moveit_sample_duration"  value="$(arg moveit_sample_duration)"/>
+  <node name="open_manipulator_p_controller" pkg="open_manipulator_p_controller" type="open_manipulator_p_controller"
+     output="screen" args="$(arg dynamixel_usb_port) $(arg dynamixel_baud_rate)">
+    <param name="using_platform"       value="$(arg use_platform)"/>
+    <param name="control_period"       value="$(arg control_period)"/>
+    <param name="with_gripper"         value="$(arg with_gripper)"/>
   </node>
 
 </launch>

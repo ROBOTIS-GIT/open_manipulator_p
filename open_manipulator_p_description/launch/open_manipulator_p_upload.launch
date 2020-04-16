@@ -1,0 +1,12 @@
+<launch>
+  <arg name="with_gripper" default="false" />
+
+  <group unless="$(arg with_gripper)">
+    <param name="robot_description"
+      command="$(find xacro)/xacro --inorder '$(find open_manipulator_p_description)/urdf/open_manipulator_p_robot.urdf.xacro'"/>
+  </group>
+  <group if="$(arg with_gripper)">
+    <param name="robot_description"
+      command="$(find xacro)/xacro --inorder '$(find open_manipulator_p_description)/urdf/open_manipulator_p_with_gripper_robot.urdf.xacro'"/>
+  </group>
+</launch>
