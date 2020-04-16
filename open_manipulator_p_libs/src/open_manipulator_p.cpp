@@ -18,8 +18,8 @@
 
 #include "../include/open_manipulator_p_libs/open_manipulator_p.h"
 
-OpenManipulator::OpenManipulator()
-{}
+OpenManipulator::OpenManipulator() {}
+
 OpenManipulator::~OpenManipulator()
 {
   delete kinematics_;
@@ -35,11 +35,11 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
   ** Initialize Manipulator Parameter
   *****************************************************************************/
   addWorld("world",    // world name
-            "joint1"); // child name
+           "joint1");  // child name
 
   addJoint("joint1",   // my name
-            "world",   // parent name
-            "joint2",  // child name
+           "world",    // parent name
+           "joint2",   // child name
             math::vector3(0.0, 0.0, 0.126),                  // relative position
             math::convertRPYToRotationMatrix(0.0, 0.0, 0.0), // relative orientation
             Z_AXIS,    // axis of rotation
@@ -173,7 +173,7 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
   void *p_with_gripper = &with_gripper;
   setKinematicsOption(p_with_gripper);
 
-  if(using_actual_robot_state)
+  if (using_actual_robot_state)
   {
     /*****************************************************************************
     ** Initialize Joint Actuator
@@ -199,7 +199,6 @@ void OpenManipulator::initOpenManipulator(bool using_actual_robot_state, STRING 
     STRING joint_dxl_mode_arg = "position_mode";
     void *p_joint_dxl_mode_arg = &joint_dxl_mode_arg;
     setJointActuatorMode(JOINT_DYNAMIXEL, jointDxlId, p_joint_dxl_mode_arg);
-
 
     /*****************************************************************************
     ** Initialize Tool Actuator
@@ -280,13 +279,13 @@ void OpenManipulator::processOpenManipulator(double present_time, bool using_act
 
     if (using_actual_robot_state)
     {
-        getManipulator()->setJointValue(tool_component_name.at(0), 
-                                        angleToDistance(receiveAllToolActuatorValue()).at(0));
+      getManipulator()->setJointValue(tool_component_name.at(0), 
+                                      angleToDistance(receiveAllToolActuatorValue()).at(0));
     }
   }
   
-  if(goal_joint_value.size() != 0) sendAllJointActuatorValue(goal_joint_value);
-  if (with_gripper) {if(goal_tool_value.size() != 0) {sendAllToolActuatorValue(goal_tool_value);}}
+  if (goal_joint_value.size() != 0) sendAllJointActuatorValue(goal_joint_value);
+  if (with_gripper) {if (goal_tool_value.size() != 0) {sendAllToolActuatorValue(goal_tool_value);}}
 
   // Perception (fk)
   solveForwardKinematics();

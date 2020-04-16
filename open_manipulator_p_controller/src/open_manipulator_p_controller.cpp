@@ -526,7 +526,7 @@ void OpenManipulatorController::process(double time)
 ********************************************************************************/
 void OpenManipulatorController::publishCallback(const ros::TimerEvent&)
 {
-  if (using_platform_ == true)  publishJointStates();
+  if (using_platform_ == true) publishJointStates();
   else publishGazeboCommand();
 
   publishOpenManipulatorStates();
@@ -610,7 +610,6 @@ void OpenManipulatorController::publishGazeboCommand()
   
   // angle (rad) -> distance (m)
   // tool_value.at(0).position = (1.135 - tool_value.at(0).position) / 1.135 * 0.109;
-  tool_value.at(0).position = 1.135 - tool_value.at(0).position;
 
   for (uint8_t i = 0; i < joint_value.size(); i ++)
   {
