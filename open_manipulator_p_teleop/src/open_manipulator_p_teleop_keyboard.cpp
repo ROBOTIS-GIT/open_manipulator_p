@@ -255,7 +255,7 @@ void OpenManipulatorProTeleopKeyboard::set_goal(char ch)
     {
       printf("input : v \topen gripper\n");
       std::vector<double> joint_angle;
-      joint_angle.push_back(1.135);
+      joint_angle.push_back(0.0);
       set_tool_control(joint_angle);
     }
   }
@@ -265,7 +265,7 @@ void OpenManipulatorProTeleopKeyboard::set_goal(char ch)
     {
       printf("input : b \tclose gripper\n");
       std::vector<double> joint_angle;
-      joint_angle.push_back(0.0);
+      joint_angle.push_back(1.1);
       set_tool_control(joint_angle);
     }
   }

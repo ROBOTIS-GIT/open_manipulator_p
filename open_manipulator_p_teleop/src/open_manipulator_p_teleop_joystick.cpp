@@ -166,15 +166,14 @@ void OpenManipulatorProTeleopJoystick::set_goal(const char * str)
   {
     printf("open gripper\n");
     std::vector<double> joint_angle;
-
-    joint_angle.push_back(0.01);
+    joint_angle.push_back(0.0);
     set_tool_control(joint_angle);
   }
   else if (!strcmp(str, "gripper close"))
   {
     printf("close gripper\n");
     std::vector<double> joint_angle;
-    joint_angle.push_back(-0.01);
+    joint_angle.push_back(1.1);
     set_tool_control(joint_angle);
   }
   else if (!strcmp(str, "home"))

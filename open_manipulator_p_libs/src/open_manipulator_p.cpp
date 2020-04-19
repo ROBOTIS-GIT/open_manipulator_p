@@ -295,7 +295,8 @@ void OpenManipulatorP::process_open_manipulator_p(double present_time, bool usin
 JointWaypoint OpenManipulatorP::distance_to_angle(JointWaypoint distance)
 {
   // distance (m) -> angle (rad) 
-  double angle = 1.135 - distance.at(0).position; // / 0.109 * 1.135;
+  double angle = distance.at(0).position; 
+  // double angle = 1.135 - distance.at(0).position; // / 0.109 * 1.135;
 
   JointValue result;
   result.position = angle;
@@ -309,7 +310,8 @@ JointWaypoint OpenManipulatorP::distance_to_angle(JointWaypoint distance)
 JointWaypoint OpenManipulatorP::angle_to_distance(JointWaypoint angle)
 {
   // angle (rad) -> distance (m) 
-  double distance = (1.135 - angle.at(0).position); /// 1.135 * 0.109;
+  double distance = angle.at(0).position;
+  // double distance = 1.135 - angle.at(0).position; /// 1.135 * 0.109;
 
   JointValue result;
   result.position = distance;
