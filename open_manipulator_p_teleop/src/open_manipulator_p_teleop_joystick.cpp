@@ -20,7 +20,6 @@
 
 using namespace std::placeholders;
 
-
 namespace open_manipulator_p_teleop_joystick
 {
 OpenManipulatorProTeleopJoystick::OpenManipulatorProTeleopJoystick()

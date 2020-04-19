@@ -26,7 +26,6 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Parameters
-    robot_name = LaunchConfiguration('robot_name', default='open_manipulator_p')  
     use_gui    = LaunchConfiguration('use_gui',    default='False')  
 
     # File Paths

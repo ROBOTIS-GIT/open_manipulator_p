@@ -31,7 +31,6 @@
 #define PI 3.14159265359
 #define NUM_OF_JOINT 6
 
-
 namespace open_manipulator_p_teleop_keyboard
 {
 class OpenManipulatorProTeleopKeyboard : public rclcpp::Node
@@ -52,6 +51,7 @@ class OpenManipulatorProTeleopKeyboard : public rclcpp::Node
   ** ROS timers
   *****************************************************************************/
   rclcpp::TimerBase::SharedPtr update_timer_;
+  
   void update_callback(); 
 
   /*****************************************************************************
@@ -63,18 +63,18 @@ class OpenManipulatorProTeleopKeyboard : public rclcpp::Node
   void joint_states_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
   void kinematics_pose_callback(const open_manipulator_msgs::msg::KinematicsPose::SharedPtr msg);
 
-  bool set_joint_space_path(std::vector<std::string> joint_name, std::vector<double> joint_angle, double path_time);
-  bool set_task_space_path_from_present_position_only(std::vector<double> kinematics_pose, double path_time);
-  bool set_tool_control(std::vector<double> joint_angle);
-  bool set_joint_space_path_from_present(std::vector<std::string> joint_name, std::vector<double> joint_angle, double path_time);
-
   /*****************************************************************************
-  ** ROS Clients
+  ** ROS Clients and Relevant Functions
   *****************************************************************************/
   rclcpp::Client<open_manipulator_msgs::srv::SetJointPosition>::SharedPtr goal_joint_space_path_client_;
   rclcpp::Client<open_manipulator_msgs::srv::SetJointPosition>::SharedPtr goal_tool_control_client_;
   rclcpp::Client<open_manipulator_msgs::srv::SetKinematicsPose>::SharedPtr goal_task_space_path_from_present_position_only_client_;
   rclcpp::Client<open_manipulator_msgs::srv::SetJointPosition>::SharedPtr goal_joint_space_path_from_present_client_;
+
+  bool set_joint_space_path(std::vector<std::string> joint_name, std::vector<double> joint_angle, double path_time);
+  bool set_task_space_path_from_present_position_only(std::vector<double> kinematics_pose, double path_time);
+  bool set_tool_control(std::vector<double> joint_angle);
+  bool set_joint_space_path_from_present(std::vector<std::string> joint_name, std::vector<double> joint_angle, double path_time);
 
   /*****************************************************************************
   ** Others

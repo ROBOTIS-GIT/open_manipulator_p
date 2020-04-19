@@ -21,10 +21,9 @@
 using namespace std::placeholders;
 using namespace std::chrono_literals;
 
-
 namespace open_manipulator_p_controller
 {
-OpenManipulatorProController::OpenManipulatorProController(std::string usb_port, std::string baud_rate)
+OpenManipulatorPController::OpenManipulatorPController(std::string usb_port, std::string baud_rate)
 : Node("open_manipulator_p_controller")
 {
   /************************************************************
@@ -32,9 +31,9 @@ OpenManipulatorProController::OpenManipulatorProController(std::string usb_port,
   ************************************************************/
   init_parameters();
   
-  // Only if You Have MoveIt! Dependencies
-  // open_manipulator_p_controller_moveit_.init_parameters();
-
+  /************************************************************
+  ** Initialise variables
+  ************************************************************/
   open_manipulator_p_.init_open_manipulator_p(use_platform_, usb_port, baud_rate, control_period_, use_gripper_);
 
   if (use_platform_ == true) RCLCPP_INFO(this->get_logger(), "Succeeded to Initialise OpenManipulator-PRO Controller");
@@ -47,19 +46,14 @@ OpenManipulatorProController::OpenManipulatorProController(std::string usb_port,
   init_subscriber();
   init_server();
 
-  // Only if You Have MoveIt! Dependencies
-  // open_manipulator_p_controller_moveit_.init_publisher();
-  // open_manipulator_p_controller_moveit_.init_subscriber();
-  // open_manipulator_p_controller_moveit_.init_server();
-
   /************************************************************
   ** Start Process and Publish Threads
   ************************************************************/
-  process_timer_ = this->create_wall_timer(10ms, std::bind(&OpenManipulatorProController::process_callback, this));
-  publish_timer_ = this->create_wall_timer(10ms, std::bind(&OpenManipulatorProController::publish_callback, this));
+  process_timer_ = this->create_wall_timer(10ms, std::bind(&OpenManipulatorPController::process_callback, this));
+  publish_timer_ = this->create_wall_timer(10ms, std::bind(&OpenManipulatorPController::publish_callback, this));
 }
 
-OpenManipulatorProController::~OpenManipulatorProController()
+OpenManipulatorPController::~OpenManipulatorPController()
 {
   RCLCPP_INFO(this->get_logger(), "OpenManipulator-PRO Controller Terminated");
   open_manipulator_p_.disableAllActuator();
@@ -68,22 +62,20 @@ OpenManipulatorProController::~OpenManipulatorProController()
 /********************************************************************************
 ** Init Functions
 ********************************************************************************/
-void OpenManipulatorProController::init_parameters()
+void OpenManipulatorPController::init_parameters()
 {
   // Declare parameters that may be set on this node
   this->declare_parameter("use_platform");
-  this->declare_parameter("use_gripper");
   this->declare_parameter("control_period");
-  this->declare_parameter("use_moveit");
+  this->declare_parameter("use_gripper");
 
   // Get parameter from yaml
   this->get_parameter_or<bool>("use_platform", use_platform_, false);
-  this->get_parameter_or<bool>("use_gripper", use_gripper_, false);
   this->get_parameter_or<double>("control_period", control_period_, 0.010);
-  this->get_parameter_or<bool>("use_moveit", use_moveit_, false);
+  this->get_parameter_or<bool>("use_gripper", use_gripper_, false);
 }
 
-void OpenManipulatorProController::init_publisher()
+void OpenManipulatorPController::init_publisher()
 {
   auto qos = rclcpp::QoS(rclcpp::KeepLast(10));
 
@@ -118,50 +110,50 @@ void OpenManipulatorProController::init_publisher()
   }
 }
 
-void OpenManipulatorProController::init_subscriber()
+void OpenManipulatorPController::init_subscriber()
 {
   auto qos = rclcpp::QoS(rclcpp::KeepLast(10));
 
   open_manipulator_p_option_sub_ = this->create_subscription<std_msgs::msg::String>(
-    "open_manipulator_p/option", qos, std::bind(&OpenManipulatorProController::open_manipulator_p_option_callback, this, _1));
+    "open_manipulator_p/option", qos, std::bind(&OpenManipulatorPController::open_manipulator_p_option_callback, this, _1));
 }
 
-void OpenManipulatorProController::init_server()
+void OpenManipulatorPController::init_server()
 {
   goal_joint_space_path_server_ = this->create_service<open_manipulator_msgs::srv::SetJointPosition>(
-    "open_manipulator_p/goal_joint_space_path", std::bind(&OpenManipulatorProController::goal_joint_space_path_callback, this, _1, _2));
+    "open_manipulator_p/goal_joint_space_path", std::bind(&OpenManipulatorPController::goal_joint_space_path_callback, this, _1, _2));
   goal_joint_space_path_to_kinematics_pose_server_ = this->create_service<open_manipulator_msgs::srv::SetKinematicsPose>(
-    "open_manipulator_p/goal_joint_space_path_to_kinematics_pose", std::bind(&OpenManipulatorProController::goal_joint_space_path_to_kinematics_pose_callback, this, _1, _2));
+    "open_manipulator_p/goal_joint_space_path_to_kinematics_pose", std::bind(&OpenManipulatorPController::goal_joint_space_path_to_kinematics_pose_callback, this, _1, _2));
   goal_joint_space_path_to_kinematics_position_server_ = this->create_service<open_manipulator_msgs::srv::SetKinematicsPose>(
-    "open_manipulator_p/goal_joint_space_path_to_kinematics_position", std::bind(&OpenManipulatorProController::goal_joint_space_path_to_kinematics_position_callback, this, _1, _2));
+    "open_manipulator_p/goal_joint_space_path_to_kinematics_position", std::bind(&OpenManipulatorPController::goal_joint_space_path_to_kinematics_position_callback, this, _1, _2));
   goal_joint_space_path_to_kinematics_orientation_server_ = this->create_service<open_manipulator_msgs::srv::SetKinematicsPose>(
-    "open_manipulator_p/goal_joint_space_path_to_kinematics_orientation", std::bind(&OpenManipulatorProController::goal_joint_space_path_to_kinematics_orientation_callback, this, _1, _2));
+    "open_manipulator_p/goal_joint_space_path_to_kinematics_orientation", std::bind(&OpenManipulatorPController::goal_joint_space_path_to_kinematics_orientation_callback, this, _1, _2));
   goal_task_space_path_server_ = this->create_service<open_manipulator_msgs::srv::SetKinematicsPose>(
-    "open_manipulator_p/goal_task_space_path", std::bind(&OpenManipulatorProController::goal_task_space_path_callback, this, _1, _2));
+    "open_manipulator_p/goal_task_space_path", std::bind(&OpenManipulatorPController::goal_task_space_path_callback, this, _1, _2));
   goal_task_space_path_position_only_server_ = this->create_service<open_manipulator_msgs::srv::SetKinematicsPose>(
-    "open_manipulator_p/goal_task_space_path_position_only", std::bind(&OpenManipulatorProController::goal_task_space_path_position_only_callback, this, _1, _2));
+    "open_manipulator_p/goal_task_space_path_position_only", std::bind(&OpenManipulatorPController::goal_task_space_path_position_only_callback, this, _1, _2));
   goal_task_space_path_orientation_only_server_ = this->create_service<open_manipulator_msgs::srv::SetKinematicsPose>(
-    "open_manipulator_p/goal_task_space_path_orientation_only", std::bind(&OpenManipulatorProController::goal_task_space_path_orientation_only_callback, this, _1, _2));
+    "open_manipulator_p/goal_task_space_path_orientation_only", std::bind(&OpenManipulatorPController::goal_task_space_path_orientation_only_callback, this, _1, _2));
   goal_joint_space_path_from_present_server_ = this->create_service<open_manipulator_msgs::srv::SetJointPosition>(
-    "open_manipulator_p/goal_joint_space_path_from_present", std::bind(&OpenManipulatorProController::goal_joint_space_path_from_present_callback, this, _1, _2));
+    "open_manipulator_p/goal_joint_space_path_from_present", std::bind(&OpenManipulatorPController::goal_joint_space_path_from_present_callback, this, _1, _2));
   goal_task_space_path_from_present_server_ = this->create_service<open_manipulator_msgs::srv::SetKinematicsPose>(
-    "open_manipulator_p/goal_task_space_path_from_present", std::bind(&OpenManipulatorProController::goal_task_space_path_from_present_callback, this, _1, _2));
+    "open_manipulator_p/goal_task_space_path_from_present", std::bind(&OpenManipulatorPController::goal_task_space_path_from_present_callback, this, _1, _2));
   goal_task_space_path_from_present_position_only_server_ = this->create_service<open_manipulator_msgs::srv::SetKinematicsPose>(
-    "open_manipulator_p/goal_task_space_path_from_present_position_only", std::bind(&OpenManipulatorProController::goal_task_space_path_from_present_position_only_callback, this, _1, _2));
+    "open_manipulator_p/goal_task_space_path_from_present_position_only", std::bind(&OpenManipulatorPController::goal_task_space_path_from_present_position_only_callback, this, _1, _2));
   goal_task_space_path_from_present_orientation_only_server_ = this->create_service<open_manipulator_msgs::srv::SetKinematicsPose>(
-    "open_manipulator_p/goal_task_space_path_from_present_orientation_only", std::bind(&OpenManipulatorProController::goal_task_space_path_from_present_orientation_only_callback, this, _1, _2));
+    "open_manipulator_p/goal_task_space_path_from_present_orientation_only", std::bind(&OpenManipulatorPController::goal_task_space_path_from_present_orientation_only_callback, this, _1, _2));
   goal_tool_control_server_ = this->create_service<open_manipulator_msgs::srv::SetJointPosition>(
-    "open_manipulator_p/goal_tool_control", std::bind(&OpenManipulatorProController::goal_tool_control_callback, this, _1, _2));
+    "open_manipulator_p/goal_tool_control", std::bind(&OpenManipulatorPController::goal_tool_control_callback, this, _1, _2));
   set_actuator_state_server_ = this->create_service<open_manipulator_msgs::srv::SetActuatorState>(
-    "open_manipulator_p/set_actuator_state", std::bind(&OpenManipulatorProController::set_actuator_state_callback, this, _1, _2));
+    "open_manipulator_p/set_actuator_state", std::bind(&OpenManipulatorPController::set_actuator_state_callback, this, _1, _2));
   goal_drawing_trajectory_server_ = this->create_service<open_manipulator_msgs::srv::SetDrawingTrajectory>(
-    "open_manipulator_p/goal_drawing_trajectory", std::bind(&OpenManipulatorProController::goal_drawing_trajectory_callback, this, _1, _2));
+    "open_manipulator_p/goal_drawing_trajectory", std::bind(&OpenManipulatorPController::goal_drawing_trajectory_callback, this, _1, _2));
 }
 
 /*****************************************************************************
 ** Callback Functions for ROS Subscribers
 *****************************************************************************/
-void OpenManipulatorProController::open_manipulator_p_option_callback(const std_msgs::msg::String::SharedPtr msg)
+void OpenManipulatorPController::open_manipulator_p_option_callback(const std_msgs::msg::String::SharedPtr msg)
 {
   if (msg->data == "print_open_manipulator_p_setting")
     open_manipulator_p_.printManipulatorSetting();
@@ -170,7 +162,7 @@ void OpenManipulatorProController::open_manipulator_p_option_callback(const std_
 /*****************************************************************************
 ** Callback Functions for ROS Servers
 *****************************************************************************/
-void OpenManipulatorProController::goal_joint_space_path_callback(
+void OpenManipulatorPController::goal_joint_space_path_callback(
   const std::shared_ptr<open_manipulator_msgs::srv::SetJointPosition::Request> req,
   const std::shared_ptr<open_manipulator_msgs::srv::SetJointPosition::Response> res)
 {
@@ -185,7 +177,7 @@ void OpenManipulatorProController::goal_joint_space_path_callback(
   return;
 }
 
-void OpenManipulatorProController::goal_joint_space_path_to_kinematics_pose_callback(
+void OpenManipulatorPController::goal_joint_space_path_to_kinematics_pose_callback(
   const std::shared_ptr<open_manipulator_msgs::srv::SetKinematicsPose::Request> req,
   const std::shared_ptr<open_manipulator_msgs::srv::SetKinematicsPose::Response> res)
 {
@@ -207,7 +199,7 @@ void OpenManipulatorProController::goal_joint_space_path_to_kinematics_pose_call
   return;
 }
 
-void OpenManipulatorProController::goal_joint_space_path_to_kinematics_position_callback(
+void OpenManipulatorPController::goal_joint_space_path_to_kinematics_position_callback(
   const std::shared_ptr<open_manipulator_msgs::srv::SetKinematicsPose::Request> req,
   const std::shared_ptr<open_manipulator_msgs::srv::SetKinematicsPose::Response> res)
 {
@@ -222,7 +214,7 @@ void OpenManipulatorProController::goal_joint_space_path_to_kinematics_position_
   return;
 }
 
-void OpenManipulatorProController::goal_joint_space_path_to_kinematics_orientation_callback(
+void OpenManipulatorPController::goal_joint_space_path_to_kinematics_orientation_callback(
   const std::shared_ptr<open_manipulator_msgs::srv::SetKinematicsPose::Request> req,
   const std::shared_ptr<open_manipulator_msgs::srv::SetKinematicsPose::Response> res)
 {
@@ -241,7 +233,7 @@ void OpenManipulatorProController::goal_joint_space_path_to_kinematics_orientati
   return;
 }
 
-void OpenManipulatorProController::goal_task_space_path_callback(
+void OpenManipulatorPController::goal_task_space_path_callback(
   const std::shared_ptr<open_manipulator_msgs::srv::SetKinematicsPose::Request> req,
   const std::shared_ptr<open_manipulator_msgs::srv::SetKinematicsPose::Response> res)
 {
@@ -262,7 +254,7 @@ void OpenManipulatorProController::goal_task_space_path_callback(
   return;
 }
 
-void OpenManipulatorProController::goal_task_space_path_position_only_callback(
+void OpenManipulatorPController::goal_task_space_path_position_only_callback(
   const std::shared_ptr<open_manipulator_msgs::srv::SetKinematicsPose::Request> req,
   const std::shared_ptr<open_manipulator_msgs::srv::SetKinematicsPose::Response> res)
 {
@@ -277,7 +269,7 @@ void OpenManipulatorProController::goal_task_space_path_position_only_callback(
   return;
 }
 
-void OpenManipulatorProController::goal_task_space_path_orientation_only_callback(
+void OpenManipulatorPController::goal_task_space_path_orientation_only_callback(
   const std::shared_ptr<open_manipulator_msgs::srv::SetKinematicsPose::Request> req,
   const std::shared_ptr<open_manipulator_msgs::srv::SetKinematicsPose::Response> res)
 {
@@ -294,7 +286,7 @@ void OpenManipulatorProController::goal_task_space_path_orientation_only_callbac
   return;
 }
 
-void OpenManipulatorProController::goal_joint_space_path_from_present_callback(
+void OpenManipulatorPController::goal_joint_space_path_from_present_callback(
   const std::shared_ptr<open_manipulator_msgs::srv::SetJointPosition::Request> req,
   const std::shared_ptr<open_manipulator_msgs::srv::SetJointPosition::Response> res)
 {
@@ -309,7 +301,7 @@ void OpenManipulatorProController::goal_joint_space_path_from_present_callback(
   return;
 }
 
-void OpenManipulatorProController::goal_task_space_path_from_present_callback(
+void OpenManipulatorPController::goal_task_space_path_from_present_callback(
   const std::shared_ptr<open_manipulator_msgs::srv::SetKinematicsPose::Request> req,
   const std::shared_ptr<open_manipulator_msgs::srv::SetKinematicsPose::Response> res)
 {
@@ -331,7 +323,7 @@ void OpenManipulatorProController::goal_task_space_path_from_present_callback(
   return;
 }
 
-void OpenManipulatorProController::goal_task_space_path_from_present_position_only_callback(
+void OpenManipulatorPController::goal_task_space_path_from_present_position_only_callback(
   const std::shared_ptr<open_manipulator_msgs::srv::SetKinematicsPose::Request> req,
   const std::shared_ptr<open_manipulator_msgs::srv::SetKinematicsPose::Response> res)
 {
@@ -346,7 +338,7 @@ void OpenManipulatorProController::goal_task_space_path_from_present_position_on
   return;
 }
 
-void OpenManipulatorProController::goal_task_space_path_from_present_orientation_only_callback(
+void OpenManipulatorPController::goal_task_space_path_from_present_orientation_only_callback(
   const std::shared_ptr<open_manipulator_msgs::srv::SetKinematicsPose::Request> req,
   const std::shared_ptr<open_manipulator_msgs::srv::SetKinematicsPose::Response> res)
 {
@@ -363,7 +355,7 @@ void OpenManipulatorProController::goal_task_space_path_from_present_orientation
   return;
 }
 
-void OpenManipulatorProController::goal_tool_control_callback(
+void OpenManipulatorPController::goal_tool_control_callback(
   const std::shared_ptr<open_manipulator_msgs::srv::SetJointPosition::Request> req,
   const std::shared_ptr<open_manipulator_msgs::srv::SetJointPosition::Response> res)
 {
@@ -374,7 +366,7 @@ void OpenManipulatorProController::goal_tool_control_callback(
   return;
 }
 
-void OpenManipulatorProController::set_actuator_state_callback(
+void OpenManipulatorPController::set_actuator_state_callback(
   const std::shared_ptr<open_manipulator_msgs::srv::SetActuatorState::Request> req,
   const std::shared_ptr<open_manipulator_msgs::srv::SetActuatorState::Response> res)
 {
@@ -393,7 +385,7 @@ void OpenManipulatorProController::set_actuator_state_callback(
   return;
 }
 
-void OpenManipulatorProController::goal_drawing_trajectory_callback(
+void OpenManipulatorPController::goal_drawing_trajectory_callback(
   const std::shared_ptr<open_manipulator_msgs::srv::SetDrawingTrajectory::Request> req,
   const std::shared_ptr<open_manipulator_msgs::srv::SetDrawingTrajectory::Response> res)
 {
@@ -452,25 +444,22 @@ void OpenManipulatorProController::goal_drawing_trajectory_callback(
 /********************************************************************************
 ** Functions related to processCallback 
 ********************************************************************************/
-void OpenManipulatorProController::process_callback()   
+void OpenManipulatorPController::process_callback()   
 {
   rclcpp::Clock clock(RCL_SYSTEM_TIME);
   rclcpp::Time present_time = clock.now();
   this->process(present_time.seconds());
 }
 
-void OpenManipulatorProController::process(double time)
+void OpenManipulatorPController::process(double time)
 {
   open_manipulator_p_.process_open_manipulator_p(time, use_platform_, use_gripper_);
-
-  // Only if You Have MoveIt! Dependencies
-  // open_manipulator_p_controller_moveit_.moveitTimer(time);
 }
 
 /********************************************************************************
 ** Functions related to publishCallback 
 ********************************************************************************/
-void OpenManipulatorProController::publish_callback()   
+void OpenManipulatorPController::publish_callback()   
 {
   if (use_platform_ == true) publish_joint_states();
   else publish_gazebo_command();
@@ -479,7 +468,7 @@ void OpenManipulatorProController::publish_callback()
   publish_kinematics_pose();
 }
 
-void OpenManipulatorProController::publish_open_manipulator_p_states()
+void OpenManipulatorPController::publish_open_manipulator_p_states()
 {
   open_manipulator_msgs::msg::OpenManipulatorState msg;
   if (open_manipulator_p_.getMovingState())
@@ -495,7 +484,7 @@ void OpenManipulatorProController::publish_open_manipulator_p_states()
   open_manipulator_p_states_pub_->publish(msg);
 }
 
-void OpenManipulatorProController::publish_kinematics_pose()
+void OpenManipulatorPController::publish_kinematics_pose()
 {
   open_manipulator_msgs::msg::KinematicsPose msg;
   auto tools_name = open_manipulator_p_.getManipulator()->getAllToolComponentName();
@@ -518,7 +507,7 @@ void OpenManipulatorProController::publish_kinematics_pose()
   }
 }
 
-void OpenManipulatorProController::publish_joint_states()
+void OpenManipulatorPController::publish_joint_states()
 {
   sensor_msgs::msg::JointState msg;
   msg.header.stamp = rclcpp::Clock().now();
@@ -547,7 +536,7 @@ void OpenManipulatorProController::publish_joint_states()
   open_manipulator_p_joint_states_pub_->publish(msg);
 }
 
-void OpenManipulatorProController::publish_gazebo_command()
+void OpenManipulatorPController::publish_gazebo_command()
 {
   JointWaypoint joint_value = open_manipulator_p_.getAllActiveJointValue();
   JointWaypoint tool_value = open_manipulator_p_.getAllToolValue();
@@ -587,7 +576,7 @@ int main(int argc, char **argv)
   else
     printf("port_name and baud_rate are set to %s, %s \n", usb_port.c_str(), baud_rate.c_str());
 
-  rclcpp::spin(std::make_shared<open_manipulator_p_controller::OpenManipulatorProController>(usb_port, baud_rate));
+  rclcpp::spin(std::make_shared<open_manipulator_p_controller::OpenManipulatorPController>(usb_port, baud_rate));
   rclcpp::shutdown();
 
   return 0;

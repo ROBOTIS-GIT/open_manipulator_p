@@ -37,11 +37,11 @@
 #define Z_AXIS robotis_manipulator::math::vector3(0.0, 0.0, 1.0)
 
 
-class OpenManipulatorPro : public robotis_manipulator::RobotisManipulator
+class OpenManipulatorP : public robotis_manipulator::RobotisManipulator
 {
  public:
-  OpenManipulatorPro();
-  virtual ~OpenManipulatorPro();
+  OpenManipulatorP();
+  virtual ~OpenManipulatorP();
 
   void init_open_manipulator_p(
     bool using_actual_robot_state, 
