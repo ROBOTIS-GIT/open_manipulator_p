@@ -33,11 +33,11 @@
 
 namespace open_manipulator_p_teleop_keyboard
 {
-class OpenManipulatorProTeleopKeyboard : public rclcpp::Node
+class OpenManipulatorPTeleopKeyboard : public rclcpp::Node
 {
  public:
-  OpenManipulatorProTeleopKeyboard();
-  virtual ~OpenManipulatorProTeleopKeyboard();
+  OpenManipulatorPTeleopKeyboard();
+  virtual ~OpenManipulatorPTeleopKeyboard();
 
  private:
   /*****************************************************************************

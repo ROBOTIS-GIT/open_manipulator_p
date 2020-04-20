@@ -23,7 +23,7 @@ using namespace std::chrono_literals;
 
 namespace open_manipulator_p_teleop_keyboard
 {
-OpenManipulatorProTeleopKeyboard::OpenManipulatorProTeleopKeyboard()
+OpenManipulatorPTeleopKeyboard::OpenManipulatorPTeleopKeyboard()
 : Node("open_manipulator_p_teleop_keyboard")
 {
   /************************************************************
@@ -47,9 +47,9 @@ OpenManipulatorProTeleopKeyboard::OpenManipulatorProTeleopKeyboard()
   auto qos = rclcpp::QoS(rclcpp::KeepLast(10));
 
   joint_states_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
-    "joint_states", qos, std::bind(&OpenManipulatorProTeleopKeyboard::joint_states_callback, this, _1));
+    "joint_states", qos, std::bind(&OpenManipulatorPTeleopKeyboard::joint_states_callback, this, _1));
   kinematics_pose_sub_ = this->create_subscription<open_manipulator_msgs::msg::KinematicsPose>(
-    "kinematics_pose", qos, std::bind(&OpenManipulatorProTeleopKeyboard::kinematics_pose_callback, this, _1));
+    "kinematics_pose", qos, std::bind(&OpenManipulatorPTeleopKeyboard::kinematics_pose_callback, this, _1));
 
   /********************************************************************************
   ** Initialise ROS clients
@@ -67,21 +67,21 @@ OpenManipulatorProTeleopKeyboard::OpenManipulatorProTeleopKeyboard()
   ** Initialise ROS timers
   ********************************************************************************/
   this->disable_waiting_for_enter();
-  update_timer_ = this->create_wall_timer(10ms, std::bind(&OpenManipulatorProTeleopKeyboard::update_callback, this));
+  update_timer_ = this->create_wall_timer(10ms, std::bind(&OpenManipulatorPTeleopKeyboard::update_callback, this));
 
-  RCLCPP_INFO(this->get_logger(), "OpenManipulator-PRO Teleop Keyboard Initialised");
+  RCLCPP_INFO(this->get_logger(), "OpenMANIPULATOR-P Teleop Keyboard Initialised");
 }
 
-OpenManipulatorProTeleopKeyboard::~OpenManipulatorProTeleopKeyboard() 
+OpenManipulatorPTeleopKeyboard::~OpenManipulatorPTeleopKeyboard() 
 {
   this->restore_terminal_settings();
-  RCLCPP_INFO(this->get_logger(), "OpenManipulator-PRO Teleop Keyboard Terminated");
+  RCLCPP_INFO(this->get_logger(), "OpenMANIPULATOR-P Teleop Keyboard Terminated");
 }
 
 /********************************************************************************
 ** Callback Functions
 ********************************************************************************/
-void OpenManipulatorProTeleopKeyboard::joint_states_callback(const sensor_msgs::msg::JointState::SharedPtr msg)
+void OpenManipulatorPTeleopKeyboard::joint_states_callback(const sensor_msgs::msg::JointState::SharedPtr msg)
 {
   std::vector<double> temp_angle;
   temp_angle.resize(NUM_OF_JOINT);
@@ -97,7 +97,7 @@ void OpenManipulatorProTeleopKeyboard::joint_states_callback(const sensor_msgs::
   present_joint_angle_ = temp_angle;
 }
 
-void OpenManipulatorProTeleopKeyboard::kinematics_pose_callback(const open_manipulator_msgs::msg::KinematicsPose::SharedPtr msg)
+void OpenManipulatorPTeleopKeyboard::kinematics_pose_callback(const open_manipulator_msgs::msg::KinematicsPose::SharedPtr msg)
 {
   std::vector<double> temp_position;
   temp_position.push_back(msg->pose.position.x);
@@ -109,7 +109,7 @@ void OpenManipulatorProTeleopKeyboard::kinematics_pose_callback(const open_manip
 /********************************************************************************
 ** Callback Functions and Relevant Functions
 ********************************************************************************/
-void OpenManipulatorProTeleopKeyboard::set_goal(char ch)
+void OpenManipulatorPTeleopKeyboard::set_goal(char ch)
 {
   std::vector<double> goalPose; goalPose.resize(3);
   std::vector<double> goalJoint; goalJoint.resize(4);
@@ -304,7 +304,7 @@ void OpenManipulatorProTeleopKeyboard::set_goal(char ch)
   }
 }
 
-bool OpenManipulatorProTeleopKeyboard::set_joint_space_path(std::vector<std::string> joint_name, std::vector<double> joint_angle, double path_time)
+bool OpenManipulatorPTeleopKeyboard::set_joint_space_path(std::vector<std::string> joint_name, std::vector<double> joint_angle, double path_time)
 {
   auto request = std::make_shared<open_manipulator_msgs::srv::SetJointPosition::Request>();
   request->joint_position.joint_name = joint_name;
@@ -322,7 +322,7 @@ bool OpenManipulatorProTeleopKeyboard::set_joint_space_path(std::vector<std::str
   return false;
 }
 
-bool OpenManipulatorProTeleopKeyboard::set_tool_control(std::vector<double> joint_angle)
+bool OpenManipulatorPTeleopKeyboard::set_tool_control(std::vector<double> joint_angle)
 {
   auto request = std::make_shared<open_manipulator_msgs::srv::SetJointPosition::Request>();
   request->joint_position.joint_name.push_back("gripper");
@@ -339,7 +339,7 @@ bool OpenManipulatorProTeleopKeyboard::set_tool_control(std::vector<double> join
   return false;
 }
 
-bool OpenManipulatorProTeleopKeyboard::set_task_space_path_from_present_position_only(std::vector<double> kinematics_pose, double path_time)
+bool OpenManipulatorPTeleopKeyboard::set_task_space_path_from_present_position_only(std::vector<double> kinematics_pose, double path_time)
 {
   auto request = std::make_shared<open_manipulator_msgs::srv::SetKinematicsPose::Request>();
   request->planning_group = "gripper";
@@ -359,7 +359,7 @@ bool OpenManipulatorProTeleopKeyboard::set_task_space_path_from_present_position
   return false;
 }
 
-bool OpenManipulatorProTeleopKeyboard::set_joint_space_path_from_present(std::vector<std::string> joint_name, std::vector<double> joint_angle, double path_time)
+bool OpenManipulatorPTeleopKeyboard::set_joint_space_path_from_present(std::vector<std::string> joint_name, std::vector<double> joint_angle, double path_time)
 {
   auto request = std::make_shared<open_manipulator_msgs::srv::SetJointPosition::Request>();
   request->joint_position.joint_name = joint_name;
@@ -380,11 +380,11 @@ bool OpenManipulatorProTeleopKeyboard::set_joint_space_path_from_present(std::ve
 /********************************************************************************
 ** Other Functions
 ********************************************************************************/
-void OpenManipulatorProTeleopKeyboard::print_text()
+void OpenManipulatorPTeleopKeyboard::print_text()
 {
   printf("\n");
   printf("---------------------------------\n");
-  printf("Control Your OpenManipulator-PRO!\n");
+  printf("Control Your OpenMANIPULATOR-P!\n");
   printf("---------------------------------\n");
   printf("w : increase x axis in task space\n");
   printf("s : decrease x axis in task space\n");
@@ -431,22 +431,22 @@ void OpenManipulatorProTeleopKeyboard::print_text()
   printf("---------------------------\n");  
 }
 
-std::vector<double> OpenManipulatorProTeleopKeyboard::get_present_joint_angle()
+std::vector<double> OpenManipulatorPTeleopKeyboard::get_present_joint_angle()
 {
   return present_joint_angle_;
 }
 
-std::vector<double> OpenManipulatorProTeleopKeyboard::get_present_kinematics_pose()
+std::vector<double> OpenManipulatorPTeleopKeyboard::get_present_kinematics_pose()
 {
   return present_kinematic_position_;
 }
 
-void OpenManipulatorProTeleopKeyboard::restore_terminal_settings()
+void OpenManipulatorPTeleopKeyboard::restore_terminal_settings()
 {
   tcsetattr(0, TCSANOW, &oldt_);  /* Apply saved settings */
 }
 
-void OpenManipulatorProTeleopKeyboard::disable_waiting_for_enter()
+void OpenManipulatorPTeleopKeyboard::disable_waiting_for_enter()
 {
   struct termios newt;
 
@@ -458,7 +458,7 @@ void OpenManipulatorProTeleopKeyboard::disable_waiting_for_enter()
   tcsetattr(0, TCSANOW, &newt);     /* Apply settings */
 }
 
-void OpenManipulatorProTeleopKeyboard::update_callback()  
+void OpenManipulatorPTeleopKeyboard::update_callback()  
 {
   this->print_text();  
   
@@ -473,7 +473,7 @@ void OpenManipulatorProTeleopKeyboard::update_callback()
 int main(int argc, char *argv[])
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<open_manipulator_p_teleop_keyboard::OpenManipulatorProTeleopKeyboard>());
+  rclcpp::spin(std::make_shared<open_manipulator_p_teleop_keyboard::OpenManipulatorPTeleopKeyboard>());
   rclcpp::shutdown();
 
   return 0;

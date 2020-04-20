@@ -36,8 +36,8 @@ OpenManipulatorPController::OpenManipulatorPController(std::string usb_port, std
   ************************************************************/
   open_manipulator_p_.init_open_manipulator_p(use_platform_, usb_port, baud_rate, control_period_, with_gripper_);
 
-  if (use_platform_ == true) RCLCPP_INFO(this->get_logger(), "Succeeded to Initialise OpenManipulator-PRO Controller");
-  else if (use_platform_ == false) RCLCPP_INFO(this->get_logger(), "Ready to Simulate OpenManipulator-PRO on Gazebo");
+  if (use_platform_ == true) RCLCPP_INFO(this->get_logger(), "Succeeded to Initialise OpenMANIPULATOR-P Controller");
+  else if (use_platform_ == false) RCLCPP_INFO(this->get_logger(), "Ready to Simulate OpenMANIPULATOR-P on Gazebo");
 
   /************************************************************
   ** Initialise ROS Publishers, Subscribers and Servers
@@ -55,7 +55,7 @@ OpenManipulatorPController::OpenManipulatorPController(std::string usb_port, std
 
 OpenManipulatorPController::~OpenManipulatorPController()
 {
-  RCLCPP_INFO(this->get_logger(), "OpenManipulator-PRO Controller Terminated");
+  RCLCPP_INFO(this->get_logger(), "OpenMANIPULATOR-P Controller Terminated");
   open_manipulator_p_.disableAllActuator();
 }
 

@@ -31,11 +31,11 @@
 
 namespace open_manipulator_p_teleop_joystick
 {
-class OpenManipulatorProTeleopJoystick : public rclcpp::Node
+class OpenManipulatorPTeleopJoystick : public rclcpp::Node
 {
  public:
-  OpenManipulatorProTeleopJoystick();
-  virtual ~OpenManipulatorProTeleopJoystick();
+  OpenManipulatorPTeleopJoystick();
+  virtual ~OpenManipulatorPTeleopJoystick();
 
  private:
   /*****************************************************************************

@@ -35,7 +35,7 @@ def generate_launch_description():
             'open_manipulator_p_teleop_joystick.yaml'))
 
     return LaunchDescription([
-        LogInfo(msg=['Execute OpenManipulator-PRO teleop joystick!!']),
+        LogInfo(msg=['Execute OpenMANIPULATOR-P teleop joystick!!']),
 
         DeclareLaunchArgument(
             'param_dir',
