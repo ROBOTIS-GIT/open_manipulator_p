@@ -56,7 +56,7 @@ class OpenManipulatorPController : public rclcpp::Node
   *****************************************************************************/
   bool use_platform_;
   double control_period_;
-  bool use_gripper_;
+  bool with_gripper_;
 
   /*****************************************************************************
   ** Variables
@@ -75,12 +75,12 @@ class OpenManipulatorPController : public rclcpp::Node
   /*****************************************************************************
   ** ROS timers
   *****************************************************************************/
+  rclcpp::TimerBase::SharedPtr process_timer_;
+  rclcpp::TimerBase::SharedPtr publish_timer_;
+
   void process_callback(); 
   void publish_callback();  
   void process(double time);
-
-  rclcpp::TimerBase::SharedPtr process_timer_;
-  rclcpp::TimerBase::SharedPtr publish_timer_;
 
   /*****************************************************************************
   ** ROS Publishers, Callback Functions and Relevant Functions

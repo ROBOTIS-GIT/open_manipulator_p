@@ -29,10 +29,10 @@ OpenManipulatorProTeleopJoystick::OpenManipulatorProTeleopJoystick()
   ** Initialise ROS Parameters
   ************************************************************/
   // Declare parameters that may be set on this node
-  this->declare_parameter("use_gripper");
+  this->declare_parameter("with_gripper");
 
   // Get parameter from yaml
-  this->get_parameter_or<bool>("use_gripper", use_gripper_, false);
+  this->get_parameter_or<bool>("with_gripper", with_gripper_, false);
 
   /*****************************************************************************
   ** Initialise joint angle and kinematic position size 
@@ -109,7 +109,7 @@ void OpenManipulatorProTeleopJoystick::joy_callback(const sensor_msgs::msg::Joy:
   else if (msg->buttons.at(5) == 1) set_goal("home");
   else if (msg->buttons.at(4) == 1) set_goal("init");
 
-  if (use_gripper_)
+  if (with_gripper_)
   {
     if (msg->buttons.at(2) == 1) set_goal("gripper close");
     else if (msg->buttons.at(1) == 1) set_goal("gripper open");

@@ -34,7 +34,7 @@ OpenManipulatorPController::OpenManipulatorPController(std::string usb_port, std
   /************************************************************
   ** Initialise variables
   ************************************************************/
-  open_manipulator_p_.init_open_manipulator_p(use_platform_, usb_port, baud_rate, control_period_, use_gripper_);
+  open_manipulator_p_.init_open_manipulator_p(use_platform_, usb_port, baud_rate, control_period_, with_gripper_);
 
   if (use_platform_ == true) RCLCPP_INFO(this->get_logger(), "Succeeded to Initialise OpenManipulator-PRO Controller");
   else if (use_platform_ == false) RCLCPP_INFO(this->get_logger(), "Ready to Simulate OpenManipulator-PRO on Gazebo");
@@ -67,12 +67,12 @@ void OpenManipulatorPController::init_parameters()
   // Declare parameters that may be set on this node
   this->declare_parameter("use_platform");
   this->declare_parameter("control_period");
-  this->declare_parameter("use_gripper");
+  this->declare_parameter("with_gripper");
 
   // Get parameter from yaml
   this->get_parameter_or<bool>("use_platform", use_platform_, false);
   this->get_parameter_or<double>("control_period", control_period_, 0.010);
-  this->get_parameter_or<bool>("use_gripper", use_gripper_, false);
+  this->get_parameter_or<bool>("with_gripper", with_gripper_, false);
 }
 
 void OpenManipulatorPController::init_publisher()
@@ -453,7 +453,7 @@ void OpenManipulatorPController::process_callback()
 
 void OpenManipulatorPController::process(double time)
 {
-  open_manipulator_p_.process_open_manipulator_p(time, use_platform_, use_gripper_);
+  open_manipulator_p_.process_open_manipulator_p(time, use_platform_, with_gripper_);
 }
 
 /********************************************************************************

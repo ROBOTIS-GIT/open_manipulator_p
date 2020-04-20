@@ -2,4 +2,4 @@
   ros__parameters:
     use_platform: true
     control_period: 0.010
-    use_gripper: true
+    with_gripper: true

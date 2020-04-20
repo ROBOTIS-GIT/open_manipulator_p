@@ -30,10 +30,10 @@ OpenManipulatorProTeleopKeyboard::OpenManipulatorProTeleopKeyboard()
   ** Initialise ROS Parameters
   ************************************************************/
   // Declare parameters that may be set on this node
-  this->declare_parameter("use_gripper");
+  this->declare_parameter("with_gripper");
 
   // Get parameter from yaml
-  this->get_parameter_or<bool>("use_gripper", use_gripper_, false);
+  this->get_parameter_or<bool>("with_gripper", with_gripper_, false);
 
   /********************************************************************************
   ** Initialise variables
@@ -251,7 +251,7 @@ void OpenManipulatorProTeleopKeyboard::set_goal(char ch)
   }
   else if (ch == 'v' || ch == 'V')
   {
-    if (use_gripper_)
+    if (with_gripper_)
     {
       printf("input : v \topen gripper\n");
       std::vector<double> joint_angle;
@@ -261,7 +261,7 @@ void OpenManipulatorProTeleopKeyboard::set_goal(char ch)
   }
   else if (ch == 'b' || ch == 'B')
   {
-    if (use_gripper_)
+    if (with_gripper_)
     {
       printf("input : b \tclose gripper\n");
       std::vector<double> joint_angle;
@@ -406,7 +406,7 @@ void OpenManipulatorProTeleopKeyboard::print_text()
   printf("o : increase joint 6 angle\n");
   printf("l : decrease joint 6 angle\n");
   printf("       \n");
-  if (use_gripper_)
+  if (with_gripper_)
   {
     printf("\n");
     printf("v : gripper open\n");

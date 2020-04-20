@@ -26,7 +26,8 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Parameters
-    use_gui    = LaunchConfiguration('use_gui',    default='False')  
+    use_gui = LaunchConfiguration('use_gui', default='False')  
+    with_gripper = LaunchConfiguration('with_gripper', default='False')  
 
     # File Paths
     rviz_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'rviz', 'open_manipulator_p.rviz')

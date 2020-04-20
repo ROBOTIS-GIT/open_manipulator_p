@@ -45,7 +45,7 @@ class OpenManipulatorProTeleopKeyboard : public rclcpp::Node
   *****************************************************************************/
   std::vector<double> present_joint_angle_;
   std::vector<double> present_kinematic_position_;
-  bool use_gripper_;
+  bool with_gripper_;
 
   /*****************************************************************************
   ** ROS timers
