@@ -80,14 +80,14 @@ void OpenManipulatorPController::init_publisher()
   auto qos = rclcpp::QoS(rclcpp::KeepLast(10));
 
   // Publish States
-  open_manipulator_p_states_pub_ = this->create_publisher<open_manipulator_msgs::msg::OpenManipulatorState>("open_manipulator_p/states", qos);
+  open_manipulator_p_states_pub_ = this->create_publisher<open_manipulator_msgs::msg::OpenManipulatorState>("states", qos);
 
   // Publish Joint States
   auto tools_name = open_manipulator_p_.getManipulator()->getAllToolComponentName();
 
   if (use_platform_ == true) // for actual robot
   {
-    open_manipulator_p_joint_states_pub_ = this->create_publisher<sensor_msgs::msg::JointState>("open_manipulator_p/joint_states", qos);
+    open_manipulator_p_joint_states_pub_ = this->create_publisher<sensor_msgs::msg::JointState>("joint_states", qos);
   }
   else // for virtual robot on Gazebo
   {
@@ -97,7 +97,7 @@ void OpenManipulatorPController::init_publisher()
 
     for (auto const & name:joints_name)
     {
-      auto pb = this->create_publisher<std_msgs::msg::Float64>("open_manipulator_p/" + name + "_position/command", qos);
+      auto pb = this->create_publisher<std_msgs::msg::Float64>(name + "_position/command", qos);
       gazebo_goal_joint_position_pub_.push_back(pb);
     }
   }
@@ -105,7 +105,7 @@ void OpenManipulatorPController::init_publisher()
   // Publish Kinematics Pose
   for (auto const & name:tools_name)
   {
-    auto pb = this->create_publisher<open_manipulator_msgs::msg::KinematicsPose>("open_manipulator_p/kinematics_pose", qos);
+    auto pb = this->create_publisher<open_manipulator_msgs::msg::KinematicsPose>("kinematics_pose", qos);
     open_manipulator_p_kinematics_pose_pub_.push_back(pb);
   }
 }
@@ -115,39 +115,39 @@ void OpenManipulatorPController::init_subscriber()
   auto qos = rclcpp::QoS(rclcpp::KeepLast(10));
 
   open_manipulator_p_option_sub_ = this->create_subscription<std_msgs::msg::String>(
-    "open_manipulator_p/option", qos, std::bind(&OpenManipulatorPController::open_manipulator_p_option_callback, this, _1));
+    "option", qos, std::bind(&OpenManipulatorPController::open_manipulator_p_option_callback, this, _1));
 }
 
 void OpenManipulatorPController::init_server()
 {
   goal_joint_space_path_server_ = this->create_service<open_manipulator_msgs::srv::SetJointPosition>(
-    "open_manipulator_p/goal_joint_space_path", std::bind(&OpenManipulatorPController::goal_joint_space_path_callback, this, _1, _2));
+    "goal_joint_space_path", std::bind(&OpenManipulatorPController::goal_joint_space_path_callback, this, _1, _2));
   goal_joint_space_path_to_kinematics_pose_server_ = this->create_service<open_manipulator_msgs::srv::SetKinematicsPose>(
-    "open_manipulator_p/goal_joint_space_path_to_kinematics_pose", std::bind(&OpenManipulatorPController::goal_joint_space_path_to_kinematics_pose_callback, this, _1, _2));
+    "goal_joint_space_path_to_kinematics_pose", std::bind(&OpenManipulatorPController::goal_joint_space_path_to_kinematics_pose_callback, this, _1, _2));
   goal_joint_space_path_to_kinematics_position_server_ = this->create_service<open_manipulator_msgs::srv::SetKinematicsPose>(
-    "open_manipulator_p/goal_joint_space_path_to_kinematics_position", std::bind(&OpenManipulatorPController::goal_joint_space_path_to_kinematics_position_callback, this, _1, _2));
+    "goal_joint_space_path_to_kinematics_position", std::bind(&OpenManipulatorPController::goal_joint_space_path_to_kinematics_position_callback, this, _1, _2));
   goal_joint_space_path_to_kinematics_orientation_server_ = this->create_service<open_manipulator_msgs::srv::SetKinematicsPose>(
-    "open_manipulator_p/goal_joint_space_path_to_kinematics_orientation", std::bind(&OpenManipulatorPController::goal_joint_space_path_to_kinematics_orientation_callback, this, _1, _2));
+    "goal_joint_space_path_to_kinematics_orientation", std::bind(&OpenManipulatorPController::goal_joint_space_path_to_kinematics_orientation_callback, this, _1, _2));
   goal_task_space_path_server_ = this->create_service<open_manipulator_msgs::srv::SetKinematicsPose>(
-    "open_manipulator_p/goal_task_space_path", std::bind(&OpenManipulatorPController::goal_task_space_path_callback, this, _1, _2));
+    "goal_task_space_path", std::bind(&OpenManipulatorPController::goal_task_space_path_callback, this, _1, _2));
   goal_task_space_path_position_only_server_ = this->create_service<open_manipulator_msgs::srv::SetKinematicsPose>(
-    "open_manipulator_p/goal_task_space_path_position_only", std::bind(&OpenManipulatorPController::goal_task_space_path_position_only_callback, this, _1, _2));
+    "goal_task_space_path_position_only", std::bind(&OpenManipulatorPController::goal_task_space_path_position_only_callback, this, _1, _2));
   goal_task_space_path_orientation_only_server_ = this->create_service<open_manipulator_msgs::srv::SetKinematicsPose>(
-    "open_manipulator_p/goal_task_space_path_orientation_only", std::bind(&OpenManipulatorPController::goal_task_space_path_orientation_only_callback, this, _1, _2));
+    "goal_task_space_path_orientation_only", std::bind(&OpenManipulatorPController::goal_task_space_path_orientation_only_callback, this, _1, _2));
   goal_joint_space_path_from_present_server_ = this->create_service<open_manipulator_msgs::srv::SetJointPosition>(
-    "open_manipulator_p/goal_joint_space_path_from_present", std::bind(&OpenManipulatorPController::goal_joint_space_path_from_present_callback, this, _1, _2));
+    "goal_joint_space_path_from_present", std::bind(&OpenManipulatorPController::goal_joint_space_path_from_present_callback, this, _1, _2));
   goal_task_space_path_from_present_server_ = this->create_service<open_manipulator_msgs::srv::SetKinematicsPose>(
-    "open_manipulator_p/goal_task_space_path_from_present", std::bind(&OpenManipulatorPController::goal_task_space_path_from_present_callback, this, _1, _2));
+    "goal_task_space_path_from_present", std::bind(&OpenManipulatorPController::goal_task_space_path_from_present_callback, this, _1, _2));
   goal_task_space_path_from_present_position_only_server_ = this->create_service<open_manipulator_msgs::srv::SetKinematicsPose>(
-    "open_manipulator_p/goal_task_space_path_from_present_position_only", std::bind(&OpenManipulatorPController::goal_task_space_path_from_present_position_only_callback, this, _1, _2));
+    "goal_task_space_path_from_present_position_only", std::bind(&OpenManipulatorPController::goal_task_space_path_from_present_position_only_callback, this, _1, _2));
   goal_task_space_path_from_present_orientation_only_server_ = this->create_service<open_manipulator_msgs::srv::SetKinematicsPose>(
-    "open_manipulator_p/goal_task_space_path_from_present_orientation_only", std::bind(&OpenManipulatorPController::goal_task_space_path_from_present_orientation_only_callback, this, _1, _2));
+    "goal_task_space_path_from_present_orientation_only", std::bind(&OpenManipulatorPController::goal_task_space_path_from_present_orientation_only_callback, this, _1, _2));
   goal_tool_control_server_ = this->create_service<open_manipulator_msgs::srv::SetJointPosition>(
-    "open_manipulator_p/goal_tool_control", std::bind(&OpenManipulatorPController::goal_tool_control_callback, this, _1, _2));
+    "goal_tool_control", std::bind(&OpenManipulatorPController::goal_tool_control_callback, this, _1, _2));
   set_actuator_state_server_ = this->create_service<open_manipulator_msgs::srv::SetActuatorState>(
-    "open_manipulator_p/set_actuator_state", std::bind(&OpenManipulatorPController::set_actuator_state_callback, this, _1, _2));
+    "set_actuator_state", std::bind(&OpenManipulatorPController::set_actuator_state_callback, this, _1, _2));
   goal_drawing_trajectory_server_ = this->create_service<open_manipulator_msgs::srv::SetDrawingTrajectory>(
-    "open_manipulator_p/goal_drawing_trajectory", std::bind(&OpenManipulatorPController::goal_drawing_trajectory_callback, this, _1, _2));
+    "goal_drawing_trajectory", std::bind(&OpenManipulatorPController::goal_drawing_trajectory_callback, this, _1, _2));
 }
 
 /*****************************************************************************
