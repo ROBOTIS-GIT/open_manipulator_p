@@ -1,5 +1,62 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="open_manipulator_p_with_gripper" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Import Rviz colors -->
+  <xacro:include filename="$(find open_manipulator_p_description)/urdf/materials.xacro" />
+
+  <!-- Import all Gazebo-customization elements, including Gazebo colors -->
+  <xacro:include filename="$(find open_manipulator_p_description)/urdf/open_manipulator_p_with_gripper.gazebo.xacro" />
+
+  <!-- Import Transmission -->
+  <xacro:include filename="$(find open_manipulator_p_description)/urdf/open_manipulator_p_with_gripper.transmission.xacro" />
+
+  <!-- Import URDF -->
+  <xacro:include filename="$(find open_manipulator_p_description)/urdf/open_manipulator_p_with_gripper.urdf.xacro" />
+
+  <!-- World -->
+  <link name="world"/>
+
+  <!-- World fixed joint-->
+  <joint name="world_fixed" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="world"/>
+    <child link="link1"/>
+  </joint>
+
+  <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+  <!-- TODO:Xacro files do not work yet -->
+  <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+  <material name="black">
+    <color rgba="0.0 0.0 0.0 1.0"/>
+  </material>
+
+  <material name="white">
+    <color rgba="1.0 1.0 1.0 1.0"/>
+  </material>
+
+  <material name="red">
+    <color rgba="0.8 0.0 0.0 1.0"/>
+  </material>
+
+  <material name="blue">
+    <color rgba="0.0 0.0 0.8 1.0"/>
+  </material>
+
+  <material name="green">
+    <color rgba="0.0 0.8 0.0 1.0"/>
+  </material>
+
+  <material name="grey">
+    <color rgba="0.5 0.5 0.5 1.0"/>
+  </material>
+
+  <material name="orange">
+    <color rgba="${255/255} ${108/255} ${10/255} 1.0"/>
+  </material>
+
+  <material name="brown">
+    <color rgba="${222/255} ${207/255} ${195/255} 1.0"/>
+  </material>
 
   <!-- link 1 -->
   <link name="link1">
@@ -238,5 +295,141 @@
       <!--<inertia ixx="0.00000938" ixy="0.0" ixz="0.0" iyy="0.00000338" iyz="0.0" izz="0.00000635" />-->
     </inertial>
   </link>
+
+  <!-- gripper main fixed joint-->
+  <joint name="end_link_fixed" type="fixed">
+    <parent link="end_link"/>
+    <child link="gripper_main_link"/>
+    <origin xyz="0.007 0.0 0.0" rpy="0 0 0" />
+  </joint>
+
+  <!-- gripper main link -->
+  <link name="gripper_main_link">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://open_manipulator_p_description/meshes/gripper_main_link.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://open_manipulator_p_description/meshes/gripper_main_link.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <mass value="0.509"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+    </inertial>
+  </link>
+
+  <!-- gripper joint -->
+  <joint name="gripper" type="revolute">
+    <axis xyz="0 0 1" />		
+    <origin xyz="0.0552 -0.0400 0" rpy="0 0 -0.4"/>
+    <parent link="gripper_main_link"/>
+    <child link="gripper_link"/>
+    <limit velocity="6.5" effort="1000" lower="0.0" upper="1.1" />
+    <dynamics damping="0.1" friction="0.0" />
+  </joint>
+
+  <!-- gripper link -->
+  <link name="gripper_link">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://open_manipulator_p_description/meshes/gripper_link.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="grey"/>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://open_manipulator_p_description/meshes/gripper_link.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.013"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+    </inertial>
+  </link>
+
+  <!-- gripper joint 1 -->
+  <joint name="gripper_sub" type="revolute">
+    <axis xyz="0 0 -1" />
+    <origin xyz="0.0552 0.0400 0" rpy="0 0 0.4"/>
+    <parent link="gripper_main_link"/>
+    <child link="gripper_sub_link"/>
+    <limit velocity="6.5" effort="1000" lower="0.0" upper="1.1" />
+    <dynamics damping="0.1" friction="0.0" />
+    <mimic joint="gripper" multiplier="1"/>
+  </joint> 
+
+  <!-- gripper 1 link -->
+  <link name="gripper_sub_link">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://open_manipulator_p_description/meshes/gripper_sub_link.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="grey"/>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://open_manipulator_p_description/meshes/gripper_sub_link.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.013"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+    </inertial>
+  </link>
+
+  <!-- gripper main fixed joint-->
+  <joint name="end_effector_joint" type="fixed">
+    <parent link="gripper_main_link"/>
+    <child link="end_effector_link"/>
+    <origin xyz="0.14 0.0 0.0" rpy="0 0 0" />
+  </joint>
+
+  <!-- End Effector -->
+  <link name="end_effector_link">
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <geometry>      
+        <box size = "0.01 0.01 0.01"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <mass value="0.001" /> 
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+    </inertial>
+  </link>
+
+  <!-- Realsense Camera Joint Position -->
+  <joint name="camera_joint" type="fixed">
+    <axis xyz="0 1 0" />
+    <origin xyz="0.070 0.032 0.052" rpy="0 0 0"/> 
+    <parent link="gripper_main_link"/>
+    <child link="camera_link"/>
+  </joint>
+
+  <link name="camera_link"/>
 
 </robot>
