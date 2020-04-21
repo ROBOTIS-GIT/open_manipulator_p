@@ -1,12 +1,12 @@
 ﻿<launch>
-  <arg name="dynamixel_usb_port"     default="/dev/ttyUSB0"/>
-  <arg name="dynamixel_baud_rate"    default="1000000"/>
+  <arg name="usb_port"     default="/dev/ttyUSB0"/>
+  <arg name="baud_rate"    default="1000000"/>
   <arg name="control_period"         default="0.010"/>
   <arg name="use_platform"           default="true"/>
   <arg name="with_gripper"           default="false"/>
 
   <node name="open_manipulator_p_controller" pkg="open_manipulator_p_controller" type="open_manipulator_p_controller"
-     output="screen" args="$(arg dynamixel_usb_port) $(arg dynamixel_baud_rate)">
+     output="screen" args="$(arg usb_port) $(arg baud_rate)">
     <param name="using_platform"       value="$(arg use_platform)"/>
     <param name="control_period"       value="$(arg control_period)"/>
     <param name="with_gripper"         value="$(arg with_gripper)"/>
