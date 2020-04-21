@@ -54,7 +54,7 @@ class OpenManipulatorPController : public rclcpp::Node
   /*****************************************************************************
   ** Parameters
   *****************************************************************************/
-  bool use_platform_;
+  bool sim_;
   double control_period_;
   bool with_gripper_;
 
