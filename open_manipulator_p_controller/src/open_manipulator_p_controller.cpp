@@ -56,7 +56,7 @@ OpenManipulatorPController::OpenManipulatorPController(std::string usb_port, std
 OpenManipulatorPController::~OpenManipulatorPController()
 {
   RCLCPP_INFO(this->get_logger(), "OpenMANIPULATOR-P Controller Terminated");
-  open_manipulator_p_.disableAllActuator();
+  // open_manipulator_p_.disableAllActuator(); // Commented out for safety reason
 }
 
 /********************************************************************************

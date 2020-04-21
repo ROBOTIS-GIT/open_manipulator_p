@@ -33,7 +33,7 @@ OpenManipulatorPTeleopKeyboard::OpenManipulatorPTeleopKeyboard()
   this->declare_parameter("with_gripper");
 
   // Get parameter from yaml
-  this->get_parameter_or<bool>("with_gripper", with_gripper_, false);
+  this->get_parameter_or<bool>("with_gripper", with_gripper_, true);
 
   /********************************************************************************
   ** Initialise variables
@@ -408,7 +408,6 @@ void OpenManipulatorPTeleopKeyboard::print_text()
   printf("       \n");
   if (with_gripper_)
   {
-    printf("\n");
     printf("v : gripper open\n");
     printf("b : gripper close\n");    
   }

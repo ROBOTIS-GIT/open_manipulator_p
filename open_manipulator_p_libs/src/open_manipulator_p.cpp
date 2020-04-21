@@ -280,12 +280,12 @@ void OpenManipulatorP::process_open_manipulator_p(double present_time, bool usin
 
     if (using_actual_robot_state)
     {
-        getManipulator()->setJointValue(tool_component_name.at(0), 
-                                        angle_to_distance(receiveAllToolActuatorValue()).at(0));
+      getManipulator()->setJointValue(tool_component_name.at(0), 
+                                      angle_to_distance(receiveAllToolActuatorValue()).at(0));
     }
   }
   
-  if(goal_joint_value.size() != 0) sendAllJointActuatorValue(goal_joint_value);
+  if (goal_joint_value.size() != 0) sendAllJointActuatorValue(goal_joint_value);
   if (with_gripper) {if(goal_tool_value.size() != 0) {sendAllToolActuatorValue(goal_tool_value);}}
 
   // Perception (fk)
