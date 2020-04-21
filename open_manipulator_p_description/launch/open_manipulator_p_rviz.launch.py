@@ -26,16 +26,14 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Parameters
-    use_gui = LaunchConfiguration('use_gui', default='false')  
-    # with_gripper = LaunchConfiguration('with_gripper', default='false')
+    use_gui = LaunchConfiguration('use_gui', default='true')  
 
     # File Paths
-    # if condition is True:
-        # urdf_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'urdf', 'open_manipulator_p_robot.urdf.xacro')
-        # urdf_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'urdf', 'open_manipulator_p_robot.urdf.xacro')
-        # rviz_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'rviz', 'open_manipulator_p.rviz')
+    # if True:
+    #     urdf_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'urdf', 'open_manipulator_p_robot.urdf.xacro')
+    #     rviz_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'rviz', 'open_manipulator_p.rviz')
     # else:
-    #     # urdf_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'urdf', 'open_manipulator_p_with_gripper_robot.urdf.xacro')
+
     urdf_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'urdf', 'open_manipulator_p_with_gripper_robot.urdf.xacro')
     rviz_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'rviz', 'open_manipulator_p_with_gripper.rviz')
 
