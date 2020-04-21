@@ -16,7 +16,6 @@ endif()
 # Find and load build settings from external packages
 ################################################################################
 find_package(ament_cmake REQUIRED)
-find_package(cmake_modules REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(open_manipulator_msgs REQUIRED)
 find_package(open_manipulator_p_libs REQUIRED)
@@ -34,7 +33,6 @@ include_directories(
 )
 
 set(dependencies
-  "cmake_modules"
   "geometry_msgs" 
   "open_manipulator_msgs"
   "open_manipulator_p_libs" 
@@ -73,10 +71,9 @@ install(PROGRAMS scripts/create_udev_rules
 # Macro for ament package
 ################################################################################
 ament_export_include_directories(include)
-ament_export_dependencies(cmake_modules)
 ament_export_dependencies(geometry_msgs)
 ament_export_dependencies(open_manipulator_msgs)
-ament_export_dependencies(open_manipulator_x_libs)
+ament_export_dependencies(open_manipulator_p_libs)
 ament_export_dependencies(rclcpp)
 ament_export_dependencies(robotis_manipulator)
 ament_export_dependencies(sensor_msgs)

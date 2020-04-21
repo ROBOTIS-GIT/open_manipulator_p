@@ -17,14 +17,13 @@
   <url type="repository">https://github.com/ROBOTIS-GIT/open_manipulator_p</url>
   <url type="bugtracker">https://github.com/ROBOTIS-GIT/open_manipulator_p/issues</url>
   <buildtool_depend>ament_cmake</buildtool_depend>
-  <depend>cmake_modules</depend>
   <depend>geometry_msgs</depend>
   <depend>open_manipulator_msgs</depend>
   <depend>open_manipulator_p_libs</depend>
   <depend>rclcpp</depend>
   <depend>robotis_manipulator</depend>
-  <depend>std_msgs</depend>
   <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
   <depend>trajectory_msgs</depend>
   <export>
     <build_type>ament_cmake</build_type>
