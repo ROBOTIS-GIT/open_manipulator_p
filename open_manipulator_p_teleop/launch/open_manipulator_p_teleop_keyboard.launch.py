@@ -35,7 +35,7 @@ def generate_launch_description():
             'open_manipulator_p_teleop_keyboard.yaml'))
 
     return LaunchDescription([
-        LogInfo(msg=['Execute OpenManipulator-PRO teleop keyboard!!']),
+        LogInfo(msg=['Execute OpenMANIPULATOR-P teleop keyboard!!']),
 
         DeclareLaunchArgument(
             'param_dir',

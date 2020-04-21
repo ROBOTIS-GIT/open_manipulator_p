@@ -41,44 +41,28 @@
 #include "open_manipulator_msgs/srv/set_joint_position.hpp"
 #include "open_manipulator_msgs/srv/set_kinematics_pose.hpp"
 #include "open_manipulator_p_libs/open_manipulator_p.hpp"
-// Only if You Have MoveIt! Dependencies
-// #include "open_manipulator_p_controller/open_manipulator_p_controller_moveit.hpp"
-
 
 namespace open_manipulator_p_controller
 {
-class OpenManipulatorProController : public rclcpp::Node
+class OpenManipulatorPController : public rclcpp::Node
 {
  public:
-  OpenManipulatorProController(std::string usb_port, std::string baud_rate);
-  virtual ~OpenManipulatorProController();
-
-  void process_callback(); 
-  void publish_callback();  
-  double get_control_period() { return control_period_; }
-
-  void process(double time);
-
-  bool calc_planned_path(const std::string planning_group, open_manipulator_msgs::msg::KinematicsPose msg);
-  bool calc_planned_path(const std::string planning_group, open_manipulator_msgs::msg::JointPosition msg);
-
-  rclcpp::TimerBase::SharedPtr process_timer_;
-  rclcpp::TimerBase::SharedPtr publish_timer_;
+  OpenManipulatorPController(std::string usb_port, std::string baud_rate);
+  virtual ~OpenManipulatorPController();
 
  private:
   /*****************************************************************************
   ** Parameters
   *****************************************************************************/
   bool use_platform_;
-  bool use_gripper_;
   double control_period_;
-  bool use_moveit_;
+  bool with_gripper_;
 
+  /*****************************************************************************
+  ** Variables
+  *****************************************************************************/
   // Robotis_manipulator related 
-  OpenManipulatorPro open_manipulator_p_;
-
-  // Only if You Have MoveIt! Dependencies
-  // OpenManipulatorProControllerMoveit open_manipulator_p_controller_moveit_;
+  OpenManipulatorP open_manipulator_p_;
 
   /*****************************************************************************
   ** Init Functions
@@ -87,6 +71,16 @@ class OpenManipulatorProController : public rclcpp::Node
   void init_publisher();
   void init_subscriber();
   void init_server();
+
+  /*****************************************************************************
+  ** ROS timers
+  *****************************************************************************/
+  rclcpp::TimerBase::SharedPtr process_timer_;
+  rclcpp::TimerBase::SharedPtr publish_timer_;
+
+  void process_callback(); 
+  void publish_callback();  
+  void process(double time);
 
   /*****************************************************************************
   ** ROS Publishers, Callback Functions and Relevant Functions

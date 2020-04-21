@@ -2,7 +2,4 @@
   ros__parameters:
     use_platform: true
     control_period: 0.010
-    use_gripper: true
-    use_moveit: false
-    # planning_group_name: "arm"
-    # moveit_sample_duration: 0.050
+    with_gripper: true

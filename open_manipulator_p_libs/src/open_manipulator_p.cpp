@@ -18,10 +18,9 @@
 
 #include "../include/open_manipulator_p_libs/open_manipulator_p.hpp"
 
+OpenManipulatorP::OpenManipulatorP() {}
 
-OpenManipulatorPro::OpenManipulatorPro() {}
-
-OpenManipulatorPro::~OpenManipulatorPro()
+OpenManipulatorP::~OpenManipulatorP()
 {
   delete kinematics_;
   delete actuator_;
@@ -30,7 +29,7 @@ OpenManipulatorPro::~OpenManipulatorPro()
     delete custom_trajectory_[index];
 }
 
-void OpenManipulatorPro::init_open_manipulator_p(bool using_actual_robot_state, STRING usb_port, STRING baud_rate, float control_loop_time, bool with_gripper, std::vector<uint8_t> dxl_id)
+void OpenManipulatorP::init_open_manipulator_p(bool using_actual_robot_state, STRING usb_port, STRING baud_rate, float control_loop_time, bool with_gripper, std::vector<uint8_t> dxl_id)
 {
   /*****************************************************************************
   ** Initialize Manipulator Parameter
@@ -252,7 +251,7 @@ void OpenManipulatorPro::init_open_manipulator_p(bool using_actual_robot_state, 
   addCustomTrajectory(CUSTOM_TRAJECTORY_HEART, custom_trajectory_[3]);
 }
 
-void OpenManipulatorPro::process_open_manipulator_p(double present_time, bool using_actual_robot_state, bool with_gripper)
+void OpenManipulatorP::process_open_manipulator_p(double present_time, bool using_actual_robot_state, bool with_gripper)
 {
   // Planning (ik)
   JointWaypoint goal_joint_value = getJointGoalValueFromTrajectory(present_time);
@@ -293,10 +292,11 @@ void OpenManipulatorPro::process_open_manipulator_p(double present_time, bool us
   solveForwardKinematics();
 }
 
-JointWaypoint OpenManipulatorPro::distance_to_angle(JointWaypoint distance)
+JointWaypoint OpenManipulatorP::distance_to_angle(JointWaypoint distance)
 {
   // distance (m) -> angle (rad) 
-  double angle = 1.135 - distance.at(0).position; // / 0.109 * 1.135;
+  double angle = distance.at(0).position; 
+  // double angle = 1.135 - distance.at(0).position; // / 0.109 * 1.135;
 
   JointValue result;
   result.position = angle;
@@ -307,10 +307,11 @@ JointWaypoint OpenManipulatorPro::distance_to_angle(JointWaypoint distance)
   return result_vector;
 }
 
-JointWaypoint OpenManipulatorPro::angle_to_distance(JointWaypoint angle)
+JointWaypoint OpenManipulatorP::angle_to_distance(JointWaypoint angle)
 {
   // angle (rad) -> distance (m) 
-  double distance = (1.135 - angle.at(0).position); /// 1.135 * 0.109;
+  double distance = angle.at(0).position;
+  // double distance = 1.135 - angle.at(0).position; /// 1.135 * 0.109;
 
   JointValue result;
   result.position = distance;

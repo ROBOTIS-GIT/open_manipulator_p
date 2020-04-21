@@ -37,7 +37,7 @@ def generate_launch_description():
             'open_manipulator_p_controller_params.yaml'))
 
     return LaunchDescription([
-        LogInfo(msg=['Execute OpenManipulator-PRO Controller!!']),
+        LogInfo(msg=['Execute OpenMANIPULATOR-P Controller!!']),
 
         DeclareLaunchArgument(
             'param_dir',
