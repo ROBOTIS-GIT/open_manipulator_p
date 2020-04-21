@@ -152,7 +152,7 @@ void OpenManipulatorTeleop::printText()
 {
   printf("\n");
   printf("---------------------------------\n");
-  printf("Control Your OpenManipulator-PRO!\n");
+  printf("Control Your OpenMANIPULATOR-P!\n");
   printf("---------------------------------\n");
   printf("w : increase x axis in task space\n");
   printf("s : decrease x axis in task space\n");
