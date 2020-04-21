@@ -34,10 +34,10 @@ OpenManipulatorPController::OpenManipulatorPController(std::string usb_port, std
   /************************************************************
   ** Initialise variables
   ************************************************************/
-  open_manipulator_p_.init_open_manipulator_p(use_platform_, usb_port, baud_rate, control_period_, with_gripper_);
+  open_manipulator_p_.init_open_manipulator_p(sim_, usb_port, baud_rate, control_period_, with_gripper_);
 
-  if (use_platform_ == true) RCLCPP_INFO(this->get_logger(), "Succeeded to Initialise OpenMANIPULATOR-P Controller");
-  else if (use_platform_ == false) RCLCPP_INFO(this->get_logger(), "Ready to Simulate OpenMANIPULATOR-P on Gazebo");
+  if (sim_ == false) RCLCPP_INFO(this->get_logger(), "Succeeded to Initialise OpenMANIPULATOR-P Controller");
+  else RCLCPP_INFO(this->get_logger(), "Ready to Simulate OpenMANIPULATOR-P on Gazebo");
 
   /************************************************************
   ** Initialise ROS Publishers, Subscribers and Servers
@@ -65,12 +65,12 @@ OpenManipulatorPController::~OpenManipulatorPController()
 void OpenManipulatorPController::init_parameters()
 {
   // Declare parameters that may be set on this node
-  this->declare_parameter("use_platform");
+  this->declare_parameter("sim");
   this->declare_parameter("control_period");
   this->declare_parameter("with_gripper");
 
   // Get parameter from yaml
-  this->get_parameter_or<bool>("use_platform", use_platform_, false);
+  this->get_parameter_or<bool>("sim", sim_, false);
   this->get_parameter_or<double>("control_period", control_period_, 0.010);
   this->get_parameter_or<bool>("with_gripper", with_gripper_, false);
 }
@@ -85,7 +85,7 @@ void OpenManipulatorPController::init_publisher()
   // Publish Joint States
   auto tools_name = open_manipulator_p_.getManipulator()->getAllToolComponentName();
 
-  if (use_platform_ == true) // for actual robot
+  if (sim_ == false) // for actual robot
   {
     open_manipulator_p_joint_states_pub_ = this->create_publisher<sensor_msgs::msg::JointState>("joint_states", qos);
   }
@@ -453,7 +453,7 @@ void OpenManipulatorPController::process_callback()
 
 void OpenManipulatorPController::process(double time)
 {
-  open_manipulator_p_.process_open_manipulator_p(time, use_platform_, with_gripper_);
+  open_manipulator_p_.process_open_manipulator_p(time, sim_, with_gripper_);
 }
 
 /********************************************************************************
@@ -461,7 +461,7 @@ void OpenManipulatorPController::process(double time)
 ********************************************************************************/
 void OpenManipulatorPController::publish_callback()   
 {
-  if (use_platform_ == true) publish_joint_states();
+  if (sim_ == false) publish_joint_states();
   else publish_gazebo_command();
 
   publish_open_manipulator_p_states();

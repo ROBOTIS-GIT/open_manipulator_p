@@ -29,7 +29,7 @@ OpenManipulatorP::~OpenManipulatorP()
     delete custom_trajectory_[index];
 }
 
-void OpenManipulatorP::init_open_manipulator_p(bool using_actual_robot_state, STRING usb_port, STRING baud_rate, float control_loop_time, bool with_gripper, std::vector<uint8_t> dxl_id)
+void OpenManipulatorP::init_open_manipulator_p(bool sim, STRING usb_port, STRING baud_rate, float control_loop_time, bool with_gripper, std::vector<uint8_t> dxl_id)
 {
   /*****************************************************************************
   ** Initialize Manipulator Parameter
@@ -174,7 +174,7 @@ void OpenManipulatorP::init_open_manipulator_p(bool using_actual_robot_state, ST
   void *p_with_gripper = &with_gripper;
   setKinematicsOption(p_with_gripper);
 
-  if(using_actual_robot_state)
+  if (!sim)
   {
     /*****************************************************************************
     ** Initialize Joint Actuator
@@ -251,7 +251,7 @@ void OpenManipulatorP::init_open_manipulator_p(bool using_actual_robot_state, ST
   addCustomTrajectory(CUSTOM_TRAJECTORY_HEART, custom_trajectory_[3]);
 }
 
-void OpenManipulatorP::process_open_manipulator_p(double present_time, bool using_actual_robot_state, bool with_gripper)
+void OpenManipulatorP::process_open_manipulator_p(double present_time, bool sim, bool with_gripper)
 {
   // Planning (ik)
   JointWaypoint goal_joint_value = getJointGoalValueFromTrajectory(present_time);
@@ -278,7 +278,7 @@ void OpenManipulatorP::process_open_manipulator_p(double present_time, bool usin
     std::vector<Name> tool_component_name;
     tool_component_name = getManipulator()-> getAllToolComponentName();
 
-    if (using_actual_robot_state)
+    if (!sim)
     {
       getManipulator()->setJointValue(tool_component_name.at(0), 
                                       angle_to_distance(receiveAllToolActuatorValue()).at(0));
