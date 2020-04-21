@@ -26,18 +26,18 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Parameters
-    use_gui = LaunchConfiguration('use_gui', default='False')  
-    with_gripper = LaunchConfiguration('with_gripper', default='False')  
+    use_gui = LaunchConfiguration('use_gui', default='false')  
+    # with_gripper = LaunchConfiguration('with_gripper', default='false')
 
     # File Paths
-    if with_gripper == False:
+    # if condition is True:
         # urdf_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'urdf', 'open_manipulator_p_robot.urdf.xacro')
-        urdf_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'urdf', 'open_manipulator_p.urdf.xacro')
-        rviz_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'rviz', 'open_manipulator_p.rviz')
-    else:
-        # urdf_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'urdf', 'open_manipulator_p_with_gripper_robot.urdf.xacro')
-        urdf_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'urdf', 'open_manipulator_p_with_gripper.urdf.xacro')
-        rviz_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'rviz', 'open_manipulator_p_with_gripper.rviz')
+        # urdf_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'urdf', 'open_manipulator_p_robot.urdf.xacro')
+        # rviz_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'rviz', 'open_manipulator_p.rviz')
+    # else:
+    #     # urdf_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'urdf', 'open_manipulator_p_with_gripper_robot.urdf.xacro')
+    urdf_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'urdf', 'open_manipulator_p_with_gripper_robot.urdf.xacro')
+    rviz_file = os.path.join(get_package_share_directory('open_manipulator_p_description'), 'rviz', 'open_manipulator_p_with_gripper.rviz')
 
     return LaunchDescription([
         Node(
@@ -54,12 +54,12 @@ def generate_launch_description():
             node_executable='robot_state_publisher',
             node_name='robot_state_publisher',
             arguments=[urdf_file],
-            output='screen')
+            output='screen'),
 
         Node(
             package='rviz2',
             node_executable='rviz2',
             node_name='rviz2',
             arguments=['-d', rviz_file],
-            output='screen'),
+            output='screen')
     ])
