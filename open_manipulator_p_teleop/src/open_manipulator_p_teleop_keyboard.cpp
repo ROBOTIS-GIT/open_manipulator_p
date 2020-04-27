@@ -19,26 +19,35 @@
 #include "open_manipulator_p_teleop/open_manipulator_p_teleop_keyboard.h"
 
 OpenManipulatorTeleop::OpenManipulatorTeleop()
-    :node_handle_(""),
-     priv_node_handle_("~"),
-     with_gripper_(false)
+: node_handle_(""),
+  priv_node_handle_("~")
 {
+  /************************************************************
+  ** Initialize ROS parameters
+  ************************************************************/
   with_gripper_ = priv_node_handle_.param<bool>("with_gripper", false);
+
+  /*****************************************************************************
+  ** Initialize variables
+  *****************************************************************************/
   present_joint_angle_.resize(NUM_OF_JOINT);
   present_kinematic_position_.resize(3);
 
-  initClient();
+  /************************************************************
+  ** Initialize ROS Subscribers and Clients
+  ************************************************************/
   initSubscriber();
+  initClient();
 
-  ROS_INFO("OpenManipulator initialization");
+  disableWaitingForEnter();
+  ROS_INFO("Start OpenManipulator-P Teleop Keyboard");
 }
 
 OpenManipulatorTeleop::~OpenManipulatorTeleop()
 {
-  if(ros::isStarted()) {
-    ros::shutdown(); // explicitly needed since we use ros::start();
-    ros::waitForShutdown();
-  }
+  restoreTerminalSettings();
+  ROS_INFO("Terminate OpenManipulator-P Teleop Keyboard");
+  ros::shutdown();
 }
 
 void OpenManipulatorTeleop::initClient()
@@ -460,17 +469,11 @@ void OpenManipulatorTeleop::disableWaitingForEnter(void)
 int main(int argc, char **argv)
 {
   // Init ROS node
-  ros::init(argc, argv, "open_manipulator_teleop");
-
+  ros::init(argc, argv, "open_manipulator_p_teleop_keyboard");
   OpenManipulatorTeleop openManipulatorTeleop;
 
-  ROS_INFO("OpenManipulator teleoperation using keyboard start");
-  openManipulatorTeleop.disableWaitingForEnter();
-
-  ros::spinOnce();
-  openManipulatorTeleop.printText();
-
   char ch;
+  openManipulatorTeleop.printText();
   while (ros::ok() && (ch = std::getchar()) != 'q')
   {
     ros::spinOnce();
@@ -478,9 +481,6 @@ int main(int argc, char **argv)
     ros::spinOnce();
     openManipulatorTeleop.setGoal(ch);
   }
-
-  printf("input : q \tTeleop. is finished\n");
-  openManipulatorTeleop.restoreTerminalSettings();
 
   return 0;
 }

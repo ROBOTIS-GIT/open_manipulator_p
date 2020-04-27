@@ -16,13 +16,14 @@
 
 /* Authors: Darby Lim, Hye-Jong KIM, Ryan Shim, Yong-Ho Na */
 
-#ifndef OPEN_MANIPULATOR_TELEOP_H
-#define OPEN_MANIPULATOR_TELEOP_H
+#ifndef OPEN_MANIPULATOR_P_TELEOP_KEYBOARD_H_
+#define OPEN_MANIPULATOR_P_TELEOP_KEYBOARD_H_
+
+#include <termios.h>
 
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
 
-#include <termios.h>
 #include "open_manipulator_msgs/SetJointPosition.h"
 #include "open_manipulator_msgs/SetKinematicsPose.h"
 
@@ -34,53 +35,69 @@
 
 class OpenManipulatorTeleop
 {
- private:
-  // ROS NodeHandle
-  ros::NodeHandle node_handle_;
-  ros::NodeHandle priv_node_handle_;
-  
-  // ROS Parameters
-  bool with_gripper_;
-
-  ros::ServiceClient goal_joint_space_path_from_present_client_;
-  ros::ServiceClient goal_task_space_path_from_present_position_only_client_;
-  ros::ServiceClient goal_joint_space_path_client_;
-  ros::ServiceClient goal_tool_control_client_;
-
-  ros::Subscriber joint_states_sub_;
-  ros::Subscriber kinematics_pose_sub_;
-
-  std::vector<double> present_joint_angle_;
-  std::vector<double> present_kinematic_position_;
-
-  struct termios oldt_;
-
  public:
-
   OpenManipulatorTeleop();
   ~OpenManipulatorTeleop();
 
-  void initClient();
+  // update
+  void printText();
+  void setGoal(char ch);
+
+ private:
+  /*****************************************************************************
+  ** ROS NodeHandle
+  *****************************************************************************/
+  ros::NodeHandle node_handle_;
+  ros::NodeHandle priv_node_handle_;
+  
+  /*****************************************************************************
+  ** ROS Parameters
+  *****************************************************************************/
+  bool with_gripper_;
+
+  /*****************************************************************************
+  ** Variables
+  *****************************************************************************/
+  std::vector<double> present_joint_angle_;
+  std::vector<double> present_kinematic_position_;
+
+  /*****************************************************************************
+  ** Init Functions
+  *****************************************************************************/
   void initSubscriber();
+  void initClient();
+
+  /*****************************************************************************
+  ** ROS Subscribers, Callback Functions and Relevant Functions
+  *****************************************************************************/
+  ros::Subscriber joint_states_sub_;
+  ros::Subscriber kinematics_pose_sub_;
 
   void jointStatesCallback(const sensor_msgs::JointState::ConstPtr &msg);
   void kinematicsPoseCallback(const open_manipulator_msgs::KinematicsPose::ConstPtr &msg);
 
-  std::vector<double> getPresentJointAngle();
-  std::vector<double> getPresentKinematicsPose();
+  /*****************************************************************************
+  ** ROS Clients and Callback Functions
+  *****************************************************************************/
+  ros::ServiceClient goal_joint_space_path_client_;
+  ros::ServiceClient goal_joint_space_path_from_present_client_;
+  ros::ServiceClient goal_task_space_path_from_present_position_only_client_;
+  ros::ServiceClient goal_tool_control_client_;
 
   bool setJointSpacePathFromPresent(std::vector<std::string> joint_name, std::vector<double> joint_angle, double path_time);
   bool setJointSpacePath(std::vector<std::string> joint_name, std::vector<double> joint_angle, double path_time);
   bool setTaskSpacePathFromPresentPositionOnly(std::vector<double> kinematics_pose, double path_time);
-
   bool setToolControl(std::vector<double> joint_angle);
 
-  void printText();
-  void setGoal(char ch);
+  /*****************************************************************************
+  ** Others
+  *****************************************************************************/
+  struct termios oldt_;
 
   void restoreTerminalSettings(void);
   void disableWaitingForEnter(void);
-
+  std::vector<double> getPresentJointAngle();
+  std::vector<double> getPresentKinematicsPose();
 };
 
-#endif //OPEN_MANIPULATOR_TELEOP_H
+#endif //OPEN_MANIPULATOR_P_TELEOP_KEYBOARD_H_

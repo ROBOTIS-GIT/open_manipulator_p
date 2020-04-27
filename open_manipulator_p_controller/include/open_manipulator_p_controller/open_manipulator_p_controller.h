@@ -16,8 +16,8 @@
 
 /* Authors: Darby Lim, Hye-Jong KIM, Ryan Shim, Yong-Ho Na */
 
-#ifndef OPEN_MANIPULATOR_P_CONTROLLER_H
-#define OPEN_MANIPULATOR_P_CONTROLLER_H
+#ifndef OPEN_MANIPULATOR_P_CONTROLLER_H_
+#define OPEN_MANIPULATOR_P_CONTROLLER_H_
 
 #include <boost/thread.hpp>
 #include <unistd.h>
@@ -184,4 +184,4 @@ class OpenManipulatorController
                                     open_manipulator_msgs::GetKinematicsPose::Response &res);
 };
 }
-#endif //OPEN_MANIPULATOR_P_CONTROLLER_H
+#endif //OPEN_MANIPULATOR_P_CONTROLLER_H_
