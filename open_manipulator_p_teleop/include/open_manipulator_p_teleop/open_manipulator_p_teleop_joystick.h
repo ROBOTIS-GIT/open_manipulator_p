@@ -16,14 +16,15 @@
 
 /* Authors: Darby Lim, Hye-Jong KIM, Ryan Shim, Yong-Ho Na */
 
-#ifndef OPEN_MANIPULATOR_TELEOP_H
-#define OPEN_MANIPULATOR_TELEOP_H
+#ifndef OPEN_MANIPULATOR_P_TELEOP_JOYSTICK_H_
+#define OPEN_MANIPULATOR_P_TELEOP_JOYSTICK_H_
+
+#include <termios.h>
 
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
 #include <sensor_msgs/Joy.h>
 
-#include <termios.h>
 #include "open_manipulator_msgs/SetJointPosition.h"
 #include "open_manipulator_msgs/SetKinematicsPose.h"
 
@@ -35,49 +36,56 @@
 
 class OpenManipulatorTeleop
 {
- private:
-  // ROS NodeHandle
-  ros::NodeHandle node_handle_;
-  ros::NodeHandle priv_node_handle_;
-
-  // ROS Parameters
-  bool with_gripper_;
-
-  // ROS Service Clients
-  ros::ServiceClient goal_task_space_path_from_present_position_only_client_;
-  ros::ServiceClient goal_joint_space_path_client_;
-  ros::ServiceClient goal_tool_control_client_;
-
-  // ROS Subscribers
-  ros::Subscriber joint_states_sub_;
-  ros::Subscriber kinematics_pose_sub_;
-  ros::Subscriber joy_command_sub_;
-
-  std::vector<double> present_joint_angle_;
-  std::vector<double> present_kinematic_position_;
-
  public:
-
   OpenManipulatorTeleop();
   ~OpenManipulatorTeleop();
 
+ private:
+  /*****************************************************************************
+  ** ROS NodeHandle
+  *****************************************************************************/
+  ros::NodeHandle node_handle_;
+  ros::NodeHandle priv_node_handle_;
+
+  /*****************************************************************************
+  ** ROS Parameters
+  *****************************************************************************/
+  bool with_gripper_;
+
+  /*****************************************************************************
+  ** Variables
+  *****************************************************************************/
+  std::vector<double> present_joint_angle_;
+  std::vector<double> present_kinematic_position_;
+
+  /*****************************************************************************
+  ** Init Functions
+  *****************************************************************************/
   void initClient();
   void initSubscriber();
+
+  /*****************************************************************************
+  ** ROS Subscribers, Callback Functions and Relevant Functions
+  *****************************************************************************/
+  ros::Subscriber joint_states_sub_;
+  ros::Subscriber kinematics_pose_sub_;
+  ros::Subscriber joy_command_sub_;
 
   void jointStatesCallback(const sensor_msgs::JointState::ConstPtr &msg);
   void kinematicsPoseCallback(const open_manipulator_msgs::KinematicsPose::ConstPtr &msg);
   void joyCallback(const sensor_msgs::Joy::ConstPtr &msg);
 
-  std::vector<double> getPresentJointAngle();
-  std::vector<double> getPresentKinematicsPose();
+  /*****************************************************************************
+  ** ROS Clients and Callback Functions
+  *****************************************************************************/
+  ros::ServiceClient goal_joint_space_path_client_;
+  ros::ServiceClient goal_task_space_path_from_present_position_only_client_;
+  ros::ServiceClient goal_tool_control_client_;
 
   bool setJointSpacePath(std::vector<std::string> joint_name, std::vector<double> joint_angle, double path_time);
-
   bool setTaskSpacePathFromPresentPositionOnly(std::vector<double> kinematics_pose, double path_time);
-
   bool setToolControl(std::vector<double> joint_angle);
-
   void setGoal(const char *str);
 };
 
-#endif //OPEN_MANIPULATOR_TELEOP_H
+#endif // OPEN_MANIPULATOR_P_TELEOP_JOYSTICK_H_
