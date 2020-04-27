@@ -27,9 +27,9 @@ OpenManipulatorTeleop::OpenManipulatorTeleop()
   ************************************************************/
   with_gripper_ = priv_node_handle_.param<bool>("with_gripper", false);
 
-  /*****************************************************************************
+  /************************************************************
   ** Initialize variables
-  *****************************************************************************/
+  ************************************************************/
   present_joint_angle_.resize(NUM_OF_JOINT);
   present_kinematic_position_.resize(3);
 
