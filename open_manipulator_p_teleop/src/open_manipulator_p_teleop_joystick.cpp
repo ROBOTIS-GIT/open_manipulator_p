@@ -50,11 +50,11 @@ OpenManipulatorTeleop::~OpenManipulatorTeleop()
 
 void OpenManipulatorTeleop::initClient()
 {
-  goal_task_space_path_from_present_position_only_client_ = node_handle_.serviceClient<open_manipulator_msgs::SetKinematicsPose>("goal_task_space_path_from_present_position_only");
   goal_joint_space_path_client_ = node_handle_.serviceClient<open_manipulator_msgs::SetJointPosition>("goal_joint_space_path");
+  goal_task_space_path_from_present_position_only_client_ = node_handle_.serviceClient<open_manipulator_msgs::SetKinematicsPose>("goal_task_space_path_from_present_position_only");
   goal_tool_control_client_ = node_handle_.serviceClient<open_manipulator_msgs::SetJointPosition>("goal_tool_control");
-
 }
+
 void OpenManipulatorTeleop::initSubscriber()
 {
   joint_states_sub_ = node_handle_.subscribe("joint_states", 10, &OpenManipulatorTeleop::jointStatesCallback, this);
@@ -66,7 +66,7 @@ void OpenManipulatorTeleop::jointStatesCallback(const sensor_msgs::JointState::C
 {
   std::vector<double> temp_angle;
   temp_angle.resize(NUM_OF_JOINT);
-  for(std::vector<int>::size_type i = 0; i < msg->name.size(); i ++)
+  for (std::vector<int>::size_type i = 0; i < msg->name.size(); i ++)
   {
     if (!msg->name.at(i).compare("joint1"))  temp_angle.at(0) = (msg->position.at(i));
     else if (!msg->name.at(i).compare("joint2"))  temp_angle.at(1) = (msg->position.at(i));
@@ -86,6 +86,7 @@ void OpenManipulatorTeleop::kinematicsPoseCallback(const open_manipulator_msgs::
   temp_position.push_back(msg->pose.position.z);
   present_kinematic_position_ = temp_position;
 }
+
 void OpenManipulatorTeleop::joyCallback(const sensor_msgs::Joy::ConstPtr &msg)
 {
   if (msg->axes.at(1) >= 0.9) setGoal("x+");
@@ -111,7 +112,7 @@ bool OpenManipulatorTeleop::setJointSpacePath(std::vector<std::string> joint_nam
   srv.request.joint_position.position = joint_angle;
   srv.request.path_time = path_time;
 
-  if(goal_joint_space_path_client_.call(srv))
+  if (goal_joint_space_path_client_.call(srv))
   {
     return srv.response.is_planned;
   }
@@ -124,7 +125,7 @@ bool OpenManipulatorTeleop::setToolControl(std::vector<double> joint_angle)
   srv.request.joint_position.joint_name.push_back(priv_node_handle_.param<std::string>("end_effector_name", "gripper"));
   srv.request.joint_position.position = joint_angle;
 
-  if(goal_tool_control_client_.call(srv))
+  if (goal_tool_control_client_.call(srv))
   {
     return srv.response.is_planned;
   }
@@ -140,7 +141,7 @@ bool OpenManipulatorTeleop::setTaskSpacePathFromPresentPositionOnly(std::vector<
   srv.request.kinematics_pose.pose.position.z = kinematics_pose.at(2);
   srv.request.path_time = path_time;
 
-  if(goal_task_space_path_from_present_position_only_client_.call(srv))
+  if (goal_task_space_path_from_present_position_only_client_.call(srv))
   {
     return srv.response.is_planned;
   }
@@ -152,59 +153,57 @@ void OpenManipulatorTeleop::setGoal(const char* str)
   std::vector<double> goalPose;  goalPose.resize(3, 0.0);
   std::vector<double> goalJoint; goalJoint.resize(6, 0.0);
 
-  if(str == "x+")
+  if (str == "x+")
   {
     printf("increase(++) x axis in cartesian space\n");
     goalPose.at(0) = DELTA;
     setTaskSpacePathFromPresentPositionOnly(goalPose, PATH_TIME);
   }
-  else if(str == "x-")
+  else if (str == "x-")
   {
     printf("decrease(--) x axis in cartesian space\n");
     goalPose.at(0) = -DELTA;
     setTaskSpacePathFromPresentPositionOnly(goalPose, PATH_TIME);
   }
-  else if(str == "y+")
+  else if (str == "y+")
   {
     printf("increase(++) y axis in cartesian space\n");
     goalPose.at(1) = DELTA;
     setTaskSpacePathFromPresentPositionOnly(goalPose, PATH_TIME);
   }
-  else if(str == "y-")
+  else if (str == "y-")
   {
     printf("decrease(--) y axis in cartesian space\n");
     goalPose.at(1) = -DELTA;
     setTaskSpacePathFromPresentPositionOnly(goalPose, PATH_TIME);
   }
-  else if(str == "z+")
+  else if (str == "z+")
   {
     printf("increase(++) z axis in cartesian space\n");
     goalPose.at(2) = DELTA;
     setTaskSpacePathFromPresentPositionOnly(goalPose, PATH_TIME);
   }
-  else if(str == "z-")
+  else if (str == "z-")
   {
     printf("decrease(--) z axis in cartesian space\n");
     goalPose.at(2) = -DELTA;
     setTaskSpacePathFromPresentPositionOnly(goalPose, PATH_TIME);
   }
-
-  else if(str == "gripper open")
+  else if (str == "gripper open")
   {
     printf("open gripper\n");
     std::vector<double> joint_angle;
     joint_angle.push_back(0.0);
     setToolControl(joint_angle);
   }
-  else if(str == "gripper close")
+  else if (str == "gripper close")
   {
     printf("close gripper\n");
     std::vector<double> joint_angle;
     joint_angle.push_back(1.1);
     setToolControl(joint_angle);
   }
-
-  else if(str == "home")
+  else if (str == "home")
   {
     printf("home pose\n");
     std::vector<std::string> joint_name;
@@ -219,7 +218,7 @@ void OpenManipulatorTeleop::setGoal(const char* str)
     joint_name.push_back("joint6"); joint_angle.push_back(0.0);
     setJointSpacePath(joint_name, joint_angle, path_time);
   }
-  else if(str == "init")
+  else if (str == "init")
   {
     printf("init pose\n");
 
