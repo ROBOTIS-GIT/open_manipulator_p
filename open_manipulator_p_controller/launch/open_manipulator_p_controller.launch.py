@@ -29,7 +29,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
     # Parameters
     usb_port = LaunchConfiguration('usb_port', default='/dev/ttyUSB0')
-    baud_rate = LaunchConfiguration('baud_rate', default=1000000)
+    baud_rate = LaunchConfiguration('baud_rate', default='1000000')
     param_dir = LaunchConfiguration(
         'param_dir',
         default=os.path.join(
@@ -38,7 +38,15 @@ def generate_launch_description():
             'open_manipulator_p_controller_params.yaml'))
 
     return LaunchDescription([
-        LogInfo(msg=['Execute OpenMANIPULATOR-P Controller!!']),
+        DeclareLaunchArgument(
+            'usb_port',
+            default_value=usb_port,
+            description='Connected USB port'),
+
+        DeclareLaunchArgument(
+           'baud_rate',
+           default_value=baud_rate,
+           description='Set Baudrate'),
 
         DeclareLaunchArgument(
             'param_dir',
@@ -49,7 +57,7 @@ def generate_launch_description():
             package='open_manipulator_p_controller',
             node_executable='open_manipulator_p_controller',
             node_name='open_manipulator_p_controller',
-            arguments=['-d', usb_port, baud_rate],
+            arguments=[usb_port, baud_rate],
             parameters=[param_dir],
             output='screen')
     ])
