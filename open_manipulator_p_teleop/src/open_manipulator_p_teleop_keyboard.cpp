@@ -112,7 +112,7 @@ void OpenManipulatorPTeleopKeyboard::kinematics_pose_callback(const open_manipul
 void OpenManipulatorPTeleopKeyboard::set_goal(char ch)
 {
   std::vector<double> goalPose; goalPose.resize(3);
-  std::vector<double> goalJoint; goalJoint.resize(4);
+  std::vector<double> goalJoint; goalJoint.resize(6);
   const double delta = 0.01;
   const double joint_delta = 0.05;
   double path_time = 0.5;
@@ -153,9 +153,9 @@ void OpenManipulatorPTeleopKeyboard::set_goal(char ch)
     goalPose.at(2) = -delta;
     set_task_space_path_from_present_position_only(goalPose, path_time);
   }
-  else if (ch == 'y' || ch == 'Y')
+  else if (ch == 'r' || ch == 'R')
   {
-    printf("input : y \tincrease(++) joint 1 angle\n");
+    printf("input : r \tincrease(++) joint 1 angle\n");
     std::vector<std::string> joint_name;
     joint_name.push_back("joint1"); goalJoint.at(0) = joint_delta;
     joint_name.push_back("joint2");
@@ -165,9 +165,9 @@ void OpenManipulatorPTeleopKeyboard::set_goal(char ch)
     joint_name.push_back("joint6");
     set_joint_space_path_from_present(joint_name, goalJoint, path_time);
   }
-  else if (ch == 'h' || ch == 'H')
+  else if (ch == 'f' || ch == 'F')
   {
-    printf("input : h \tdecrease(--) joint 1 angle\n");
+    printf("input : f \tdecrease(--) joint 1 angle\n");
     std::vector<std::string> joint_name;
     joint_name.push_back("joint1"); goalJoint.at(0) = -joint_delta;
     joint_name.push_back("joint2");
@@ -177,9 +177,9 @@ void OpenManipulatorPTeleopKeyboard::set_goal(char ch)
     joint_name.push_back("joint6");
     set_joint_space_path_from_present(joint_name, goalJoint, path_time);
   }
-  else if (ch == 'u' || ch == 'U')
+  else if (ch == 't' || ch == 'T')
   {
-    printf("input : u \tincrease(++) joint 2 angle\n");
+    printf("input : t \tincrease(++) joint 2 angle\n");
     std::vector<std::string> joint_name;
     joint_name.push_back("joint1");
     joint_name.push_back("joint2"); goalJoint.at(1) = joint_delta;
@@ -189,9 +189,9 @@ void OpenManipulatorPTeleopKeyboard::set_goal(char ch)
     joint_name.push_back("joint6");
     set_joint_space_path_from_present(joint_name, goalJoint, path_time);
   }
-  else if (ch == 'j' || ch == 'J')
+  else if (ch == 'g' || ch == 'G')
   {
-    printf("input : j \tdecrease(--) joint 2 angle\n");
+    printf("input : g \tdecrease(--) joint 2 angle\n");
     std::vector<std::string> joint_name;
     joint_name.push_back("joint1");
     joint_name.push_back("joint2"); goalJoint.at(1) = -joint_delta;
@@ -201,9 +201,9 @@ void OpenManipulatorPTeleopKeyboard::set_goal(char ch)
     joint_name.push_back("joint6");
     set_joint_space_path_from_present(joint_name, goalJoint, path_time);
   }
-  else if (ch == 'i' || ch == 'I')
+  else if (ch == 'y' || ch == 'Y')
   {
-    printf("input : i \tincrease(++) joint 3 angle\n");
+    printf("input : y \tincrease(++) joint 3 angle\n");
     std::vector<std::string> joint_name;
     joint_name.push_back("joint1");
     joint_name.push_back("joint2");
@@ -213,9 +213,9 @@ void OpenManipulatorPTeleopKeyboard::set_goal(char ch)
     joint_name.push_back("joint6");
     set_joint_space_path_from_present(joint_name, goalJoint, path_time);
   }
-  else if (ch == 'k' || ch == 'K')
+  else if (ch == 'h' || ch == 'H')
   {
-    printf("input : k \tdecrease(--) joint 3 angle\n");
+    printf("input : h \tdecrease(--) joint 3 angle\n");
     std::vector<std::string> joint_name;
     joint_name.push_back("joint1");
     joint_name.push_back("joint2");
@@ -225,9 +225,9 @@ void OpenManipulatorPTeleopKeyboard::set_goal(char ch)
     joint_name.push_back("joint6");
     set_joint_space_path_from_present(joint_name, goalJoint, path_time);
   }
-  else if (ch == 'o' || ch == 'O')
+  else if (ch == 'u' || ch == 'U')
   {
-    printf("input : o \tincrease(++) joint 4 angle\n");
+    printf("input : u \tincrease(++) joint 4 angle\n");
     std::vector<std::string> joint_name;
     joint_name.push_back("joint1");
     joint_name.push_back("joint2");
@@ -237,9 +237,9 @@ void OpenManipulatorPTeleopKeyboard::set_goal(char ch)
     joint_name.push_back("joint6");
     set_joint_space_path_from_present(joint_name, goalJoint, path_time);
   }
-  else if (ch == 'l' || ch == 'L')
+  else if (ch == 'j' || ch == 'J')
   {
-    printf("input : l \tdecrease(--) joint 4 angle\n");
+    printf("input : j \tdecrease(--) joint 4 angle\n");
     std::vector<std::string> joint_name;
     joint_name.push_back("joint1");
     joint_name.push_back("joint2");
@@ -247,6 +247,54 @@ void OpenManipulatorPTeleopKeyboard::set_goal(char ch)
     joint_name.push_back("joint4"); goalJoint.at(3) = -joint_delta;
     joint_name.push_back("joint5");
     joint_name.push_back("joint6");
+    set_joint_space_path_from_present(joint_name, goalJoint, path_time);
+  }
+  else if (ch == 'i' || ch == 'I')
+  {
+    printf("input : i \tincrease(++) joint 5 angle\n");
+    std::vector<std::string> joint_name;
+    joint_name.push_back("joint1");
+    joint_name.push_back("joint2");
+    joint_name.push_back("joint3");
+    joint_name.push_back("joint4");
+    joint_name.push_back("joint5"); goalJoint.at(4) = joint_delta;
+    joint_name.push_back("joint6");
+    set_joint_space_path_from_present(joint_name, goalJoint, path_time);
+  }
+  else if (ch == 'k' || ch == 'K')
+  {
+    printf("input : k \tdecrease(--) joint 5 angle\n");
+    std::vector<std::string> joint_name;
+    joint_name.push_back("joint1");
+    joint_name.push_back("joint2");
+    joint_name.push_back("joint3");
+    joint_name.push_back("joint4");
+    joint_name.push_back("joint5"); goalJoint.at(4) = -joint_delta;
+    joint_name.push_back("joint6");
+    set_joint_space_path_from_present(joint_name, goalJoint, path_time);
+  }
+  else if (ch == 'o' || ch == 'O')
+  {
+    printf("input : o \tincrease(++) joint 6 angle\n");
+    std::vector<std::string> joint_name;
+    joint_name.push_back("joint1");
+    joint_name.push_back("joint2");
+    joint_name.push_back("joint3");
+    joint_name.push_back("joint4");
+    joint_name.push_back("joint5");
+    joint_name.push_back("joint6"); goalJoint.at(5) = joint_delta;
+    set_joint_space_path_from_present(joint_name, goalJoint, path_time);
+  }
+  else if (ch == 'l' || ch == 'L')
+  {
+    printf("input : l \tdecrease(--) joint 6 angle\n");
+    std::vector<std::string> joint_name;
+    joint_name.push_back("joint1");
+    joint_name.push_back("joint2");
+    joint_name.push_back("joint3");
+    joint_name.push_back("joint4");
+    joint_name.push_back("joint5");
+    joint_name.push_back("joint6"); goalJoint.at(5) = -joint_delta;
     set_joint_space_path_from_present(joint_name, goalJoint, path_time);
   }
   else if (ch == 'v' || ch == 'V')
