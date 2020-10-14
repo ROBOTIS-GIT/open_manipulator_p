@@ -1,6 +1,4 @@
 # OpenMANIPULATOR-P
-<img src="https://github.com/ROBOTIS-GIT/emanual/blob/master/assets/images/platform/openmanipulator_pro/logo.png">
-<img src="https://github.com/ROBOTIS-GIT/emanual/blob/master/assets/images/platform/openmanipulator_pro/product_img.resized.png">
 
 ## ROS Packages for OpenMANIPULATOR-P
 
