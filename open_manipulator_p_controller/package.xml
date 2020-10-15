@@ -3,7 +3,7 @@
   <name>open_manipulator_p_controller</name>
   <version>1.0.0</version>
   <description>
-    Package for open_manipulator_p_controller
+    Package for OpenMANIPULATOR-P Controller
   </description>
   <license>Apache 2.0</license>
   <author email="jhshim@robotis.com">Ryan Shim</author>
