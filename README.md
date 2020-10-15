@@ -21,7 +21,7 @@
 - [dynamixel_workbench](https://github.com/ROBOTIS-GIT/dynamixel-workbench)
 
 ## Documents and Videos related to OpenMANIPULATOR-P
-- [ROBOTIS e-Manual for OpenMANIPULATOR-P](http://emanual.robotis.com/docs/en/platform/open_manipulator_p/overview/)
+- [ROBOTIS e-Manual for OpenMANIPULATOR-P](https://emanual.robotis.com/docs/en/platform/openmanipulator_p/overview//overview/)
 - [ROBOTIS e-Manual for RH-P12-RN](http://emanual.robotis.com/docs/en/platform/rh_p12_rn/)
 - [ROBOTIS e-Manual for Dynamixel SDK](http://emanual.robotis.com/docs/en/software/dynamixel/dynamixel_sdk/overview/)
 - [ROBOTIS e-Manual for Dynamixel Workbench](http://emanual.robotis.com/docs/en/software/dynamixel/dynamixel_workbench/)
