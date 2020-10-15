@@ -7,7 +7,7 @@
 |[![GitHub version](https://badge.fury.io/gh/ROBOTIS-GIT%2Fopen_manipulator_p.svg)](https://badge.fury.io/gh/ROBOTIS-GIT%2Fopen_manipulator_p)|[![Build Status](https://travis-ci.org/ROBOTIS-GIT/open_manipulator_p.svg?branch=kinetic-devel)](https://travis-ci.org/ROBOTIS-GIT/open_manipulator_p)|[![Build Status](https://travis-ci.org/ROBOTIS-GIT/open_manipulator_p.svg?branch=melodic-devel)](https://travis-ci.org/ROBOTIS-GIT/open_manipulator_p)|
 
 ## ROBOTIS e-Manual for OpenMANIPULATOR-P
-- [ROBOTIS e-Manual for OpenMANIPULATOR-P](http://emanual.robotis.com/docs/en/platform/openmanipulator_pro/overview/)
+- [ROBOTIS e-Manual for OpenMANIPULATOR-P](https://emanual.robotis.com/docs/en/platform/openmanipulator_p/overview/)
 
 ## Open Source related to OpenMANIPULATOR-P
 - [robotis_manipulator](https://github.com/ROBOTIS-GIT/robotis_manipulator)
